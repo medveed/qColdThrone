@@ -178,10 +178,37 @@ object VkRelayAccount {
         } }
     ).orEmpty()
 
+    const val MAX_HASHES = 30
     fun cachedHashes(): List<String> = read().optJSONArray("hashes")?.let { list -> (0 until list.length()).map(list::getString) }.orEmpty()
+    /**
+     * Removes hashes and ends the VK calls behind them. A call VK refuses to end, or one created before call ids
+     * were kept, is still removed here; returns how many were left running.
+     */
+    fun deleteHashes(drop: Collection<String>): Int = synchronized(hashCreationLock) {
+        val session=read()
+        val ids=session.optJSONObject("callIds") ?: org.json.JSONObject()
+        val kept=org.json.JSONArray()
+        var unfinished=0
+        var token: String?=null
+        for(hash in cachedHashes()) {
+            if(hash !in drop) { kept.put(hash); continue }
+            val id=ids.optString(hash); ids.remove(hash)
+            if(id.isEmpty()) { unfinished++; continue }
+            val current=token ?: runCatching { tokenForCalls(session) }.getOrDefault("").also { token=it }
+            val ended=current.isNotEmpty() && runCatching {
+                client.newCall(VkRelayRequests.finishCall(current,id)).execute().use { response ->
+                    response.isSuccessful && JSONObject(response.body?.string().orEmpty()).has("response")
+                }
+            }.getOrDefault(false)
+            if(!ended) unfinished++
+        }
+        session.put("hashes",kept).put("callIds",ids)
+        writeCurrent(session)
+        unfinished
+    }
     fun hashes(count: Int): List<String> {
       synchronized(hashCreationLock) {
-        require(count in 1..6)
+        require(count in 1..MAX_HASHES)
         val session = read()
         check(session.optString("authClient") == "qwdtt-account-turn") { "Перепривяжите аккаунт VK: способ авторизации обновлён" }
         val cached = session.optJSONArray("hashes")
@@ -217,6 +244,9 @@ object VkRelayAccount {
             val hash = call.optString("join_link").substringAfterLast('/').substringBefore('?').substringBefore('#')
             check(hash.length >= 16 && hash.none { it.isWhitespace() || it == '|' || it == ',' }) { "VK вернул некорректный хеш" }
             hashes.add(hash)
+            call.optString("call_id").takeIf { it.isNotEmpty() }?.let { id ->
+                session.put("callIds",(session.optJSONObject("callIds") ?: JSONObject()).put(hash,id))
+            }
             session.put("hashes",org.json.JSONArray(hashes)); writeCurrent(session)
         }
         return hashes.take(count)
