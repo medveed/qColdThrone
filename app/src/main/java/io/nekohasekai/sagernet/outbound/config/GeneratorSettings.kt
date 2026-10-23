@@ -95,7 +95,7 @@ data class GeneratorSettings(
     val dnsObject: String = "",
     /** dns_final_out: "remote" or "direct". */
     val dnsFinalOut: String = "remote",
-    val dnsOptimistic: Boolean = false,
+    val dnsOptimistic: Boolean = true,
     val dnsOptimisticTimeout: String = "",
     val dnsQueryTimeout: String = "",
     val dnsUseHosts: Boolean = false,

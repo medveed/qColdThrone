@@ -122,15 +122,14 @@ class BaseService {
             if (state != State.Connected || wakeCheck?.isActive == true) return
             wakeCheck = runOnDefaultDispatcher {
                 val proxy = proxy?.takeIf { it.isInitialized() } ?: return@runOnDefaultDispatcher
-                for (attempt in 0..1) {
-                    delay(if (attempt == 0) 2000 else 3000)
-                    if (state != State.Connected || this@Data.proxy !== proxy) return@runOnDefaultDispatcher
-                    val alive = runCatching {
-                        urlTestCurrent(proxy.box, proxy.core, DataStore.testUrl, 5000, exitsThroughVpn(proxy.profile))
-                        true
-                    }.getOrDefault(false)
-                    if (alive) return@runOnDefaultDispatcher
-                }
+                // One short check: every second spent here is a second the browser waits on a dead tunnel.
+                delay(1500)
+                if (state != State.Connected || this@Data.proxy !== proxy) return@runOnDefaultDispatcher
+                val alive = runCatching {
+                    urlTestCurrent(proxy.box, proxy.core, DataStore.testUrl, 3000, exitsThroughVpn(proxy.profile))
+                    true
+                }.getOrDefault(false)
+                if (alive) return@runOnDefaultDispatcher
                 Logs.i("No connection through the tunnel after wake; reconnecting")
                 TestEngine.stopAndJoin()
                 SagerNet.reloadService()

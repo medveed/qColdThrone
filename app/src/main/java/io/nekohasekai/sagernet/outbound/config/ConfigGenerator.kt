@@ -891,6 +891,9 @@ class ConfigGenerator @JvmOverloads constructor(
         }
 
         val allRules = JsonArray()
+        // A Tun without IPv6 cannot carry it: empty AAAA answers send browsers straight to IPv4.
+        if (!state.forTest && settings.vpnMode && !settings.ipv6Enabled)
+            allRules.add(jsonObjectOf("query_type" to JsonArray.of("AAAA"), "action" to "predefined"))
         for (rule in echRules) allRules.add(rule)
         for (rule in headRules) allRules.add(rule)
         for (rule in rules) allRules.add(rule)
@@ -992,6 +995,8 @@ class ConfigGenerator @JvmOverloads constructor(
         }
         rules.add(jsonObjectOf("protocol" to "dns", "action" to "hijack-dns"))
         if (!state.forTest) rules.add(jsonObjectOf("inbound" to Tags.DNS_IN, "action" to "reject"))
+        // QUIC that a proxy carries badly stalls the browser without an error; refused, it falls back to TCP at once.
+        if (!state.forTest) rules.add(jsonObjectOf("network" to "udp", "port" to 443, "action" to "reject"))
         for (rule in profileRules) rules.add(rule)
         if (state.remotePrivateNetworks) {
             // Server-advertised include/exclude routes are matched dynamically by the endpoint.
@@ -1099,7 +1104,8 @@ class ConfigGenerator @JvmOverloads constructor(
         // enabled is unconditional: the same file backs the remote rule-set cache and the auto-selector's last pick.
         experimental["cache_file"] = jsonObjectOf(
             "enabled" to true,
-            "store_fakeip" to settings.dnsPersistCache,
+            // Fake addresses outlive a core restart in the apps' DNS caches, so their mapping must too.
+            "store_fakeip" to (settings.dnsPersistCache || settings.fakeDns),
             "store_dns" to settings.dnsPersistCache,
         )
         state.coreConfig["experimental"] = experimental

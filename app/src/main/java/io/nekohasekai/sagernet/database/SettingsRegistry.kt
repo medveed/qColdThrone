@@ -209,7 +209,7 @@ object SettingsRegistry {
     }
     @JvmField val DNS_CACHE_CAPACITY = int("dns_cache_capacity", 65536) { it >= 0 }
     @JvmField val DNS_QUERY_TIMEOUT = string("dns_query_timeout", "", SettingValidators::isDurationOrEmpty)
-    @JvmField val DNS_OPTIMISTIC = bool("dns_optimistic", false)
+    @JvmField val DNS_OPTIMISTIC = bool("dns_optimistic", true)
     @JvmField val DNS_OPTIMISTIC_TIMEOUT = string("dns_optimistic_timeout", "", SettingValidators::isDurationOrEmpty)
     @JvmField val DNS_DISABLE_CACHE = bool("dns_disable_cache", false)
     @JvmField val DNS_DISABLE_EXPIRE = bool("dns_disable_expire", false)

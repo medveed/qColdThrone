@@ -108,4 +108,14 @@ class RemoteLanAndSharingTest {
         assertTrue(original.ipv6Enabled)
         assertFalse(original.remoteDnsDisableIpv6)
     }
+    @Test fun browsersFallBackFromQuicAndUnusableIpv6() {
+        val proxy=Socks().apply { server="192.0.2.1";serverPort=1080 }
+        val config=JsonInput.parseObject(ConfigGenerator(ProfileProvider { proxy },GeneratorSettings(vpnMode=true,ipv6Enabled=false)).build(1).coreConfig)
+        assertTrue(config.obj("route").array("rules").filterIsInstance<JsonObject>().any {
+            it.string("network")=="udp" && it.string("action")=="reject" && it.int("port")==443
+        })
+        val first=config.obj("dns").array("rules")[0] as JsonObject
+        assertEquals("predefined",first.string("action"))
+        assertTrue(first.array("query_type").contains("AAAA"))
+    }
 }
