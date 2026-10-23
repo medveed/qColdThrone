@@ -91,6 +91,8 @@ internal class UrlTestRunner(session: TestSession) : LatencySweep(session) {
             QwdttPing.Outcome(0, e.readableMessage)
         }
         return if (outcome.error.isEmpty()) ProbeResult(profile.id, latency = outcome.latency)
+        // The handshake a restart killed says nothing about the server.
+        else if (session.cancelled) ProbeResult(profile.id, error = ERROR_ABORTED, measured = false)
         else ProbeResult(profile.id, error = outcome.error)
     }
 

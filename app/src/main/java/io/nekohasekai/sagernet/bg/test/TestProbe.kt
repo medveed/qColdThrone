@@ -275,7 +275,9 @@ internal abstract class LatencySweep(protected val session: TestSession) {
                 } else {
                     for (id in profileIds) {
                         val name = batch.firstOrNull { it.id == id }?.displayName().orEmpty()
-                        results.trySend(ProbeResult(id, error = session.startFailure(name, failure), measured = false))
+                        // A carrier a restart stopped mid-start failed only because of the stop.
+                        val error = if (session.cancelled) ERROR_ABORTED else session.startFailure(name, failure)
+                        results.trySend(ProbeResult(id, error = error, measured = false))
                     }
                 }
             }
@@ -309,7 +311,9 @@ internal abstract class LatencySweep(protected val session: TestSession) {
             Logs.w("Test probe failed to start: ${e.readableMessage}")
             return e.readableMessage
         }
-        probe.profileIds.forEach { emit(ProbeResult(it, error = ERROR_NO_RESULT, measured = false)) }
+        // Unanswered because a restart stopped the probe, not because the server failed.
+        val missing = if (session.cancelled) ERROR_ABORTED else ERROR_NO_RESULT
+        probe.profileIds.forEach { emit(ProbeResult(it, error = missing, measured = false)) }
         return null
     }
 }

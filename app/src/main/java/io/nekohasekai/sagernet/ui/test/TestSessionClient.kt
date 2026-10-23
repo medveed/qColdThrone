@@ -38,6 +38,8 @@ object TestSessionClient {
     private const val CONNECT_TIMEOUT_MS = 15_000L
     private const val STOP_TIMEOUT_MS = 2_000L
     private const val PRUNE_DELAY_MS = 2_000L
+    private const val BUSY_WAIT_MS = 10_000L
+    private const val BUSY_RETRY_MS = 300L
 
     private val scope = CoroutineScope(
         SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, e -> Logs.w(e) }
@@ -334,11 +336,20 @@ object TestSessionClient {
             }
         }
         scope.launch(Dispatchers.IO) {
-            val session = try {
+            fun startRemote() = try {
                 service.startTest(spec, callback)
             } catch (e: Exception) {
                 Logs.w(e)
                 -2
+            }
+            var session = startRemote()
+            // :bg may still be closing the last sweep's probes; a connection check waits for it instead of failing.
+            var waited = 0L
+            while (spec.testCurrent && session == -1 && waited < BUSY_WAIT_MS &&
+                synchronized(lock) { m.running && !m.stopRequested }) {
+                delay(BUSY_RETRY_MS)
+                waited += BUSY_RETRY_MS
+                session = startRemote()
             }
             var stopNow = false
             synchronized(lock) {
