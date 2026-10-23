@@ -14,6 +14,7 @@ import app.qthrone.mobile.database.SagerDatabase
 import app.qthrone.mobile.database.SettingsMapper
 import app.qthrone.mobile.ktx.Logs
 import app.qthrone.mobile.ktx.app
+import app.qthrone.mobile.ktx.readableMessage
 import app.qthrone.mobile.outbound.Outbound
 import app.qthrone.mobile.outbound.`import`.ProfileImport
 import app.qthrone.mobile.route.ProviderRouting
@@ -98,7 +99,7 @@ internal object SubscriptionRefresh {
             val provider = GroupRepo.get(gid)?.subOptions
             if (provider != null && provider.routingProvider.isNotBlank()) {
                 val document = JsonInput.parseObjectOrNull(provider.providerRouting) ?: JsonObject()
-                ProviderGeoAssets.prepare(gid,document)
+                runCatching { ProviderGeoAssets.prepare(gid,document) }.onFailure { SubscriptionQueue.error(gid,it.readableMessage) }
             } else {
             val failures = XrayGeoAssets.ensure(needed)
             if (failures.isNotEmpty()) SubscriptionQueue.error(gid,failures.values.joinToString("\n"))

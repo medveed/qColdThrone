@@ -17,6 +17,8 @@ open class Qwdtt : Outbound("qwdtt"), app.qthrone.mobile.bg.carrier.NativeCarrie
     var mode="wg"
     var hashSource="manual"
     var hashSourceChosen=false
+    // Set when the user edits the hash slots: a subscription refresh then keeps them all.
+    var manualHashesOverride=false
     var rawPort=56003
     var workers=9
     var turnTcp=true
@@ -36,6 +38,7 @@ open class Qwdtt : Outbound("qwdtt"), app.qthrone.mobile.bg.carrier.NativeCarrie
         super.parseFromJson(obj)
         hashSource = if(obj.string("hash_source") == "auto") "auto" else "manual"
         hashSourceChosen = obj.contains("hash_source")
+        manualHashesOverride = obj.bool("manual_hashes_override")
         if(obj.contains("peer")) {
             val peer=LinkParser.parse("udp://"+obj.string("peer"))
             if(!peer.isValid || peer.host.isEmpty()) return false
@@ -89,8 +92,8 @@ open class Qwdtt : Outbound("qwdtt"), app.qthrone.mobile.bg.carrier.NativeCarrie
     override fun exportToJson()=jsonObjectOf("type" to type,"tag" to name,"server" to server,"server_port" to serverPort,
         "hash_source" to hashSource,"password" to password,"hashes" to JsonArray.of(*hashes.toTypedArray()),"mode" to mode,"raw_port" to rawPort,
         "workers" to workers,"turn_tcp" to turnTcp,"obfs" to obfs,"go_dns" to goDns,"device_id" to deviceId,
-        "vk_anon_path" to vkAnonPath,"captcha_mode" to captchaMode)
-    override fun exportIdentity()=exportToJson().also { it.remove("tag");it.remove("device_id");it.remove("hash_source") }
+        "vk_anon_path" to vkAnonPath,"captcha_mode" to captchaMode).also { if(manualHashesOverride) it["manual_hashes_override"]=true }
+    override fun exportIdentity()=exportToJson().also { it.remove("tag");it.remove("device_id");it.remove("hash_source");it.remove("manual_hashes_override") }
     override fun exportToLink():String {
         val url=LinkBuilder("qwdtt");url.host="config";url.plusAsEscape=true
         url.addQueryItem("peer",Hosts.displayAddress(server,serverPort))

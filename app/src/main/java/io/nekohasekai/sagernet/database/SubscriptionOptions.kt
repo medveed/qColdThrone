@@ -92,6 +92,8 @@ data class SubscriptionOptions(
     var serverSortRule: ServerSortRule = ServerSortRule.NONE,
     /** Zero inherits the global HTTP request timeout. */
     var requestTimeoutSeconds: Int = 0,
+    /** Android-only: this subscription's own update period in minutes (30+); zero follows the global setting. */
+    var autoUpdateMinutes: Int = 0,
     var sendHwidInCookie: Boolean = false,
     var allowInsecureRequests: Boolean = false,
     var ignoreNameFilters: Boolean = false,
@@ -132,6 +134,7 @@ data class SubscriptionOptions(
         if (autoSortByPing) json["auto_sort_by_ping"] = true
         if (serverSortRule != ServerSortRule.NONE) json["server_sort_rule"] = serverSortRule.value
         if (requestTimeoutSeconds in 5..300) json["request_timeout_seconds"] = requestTimeoutSeconds
+        if (autoUpdateMinutes >= 30) json["auto_update_minutes"] = autoUpdateMinutes
         if (sendHwidInCookie) json["send_hwid_in_cookie"] = true
         if (allowInsecureRequests) json["allow_insecure_requests"] = true
         if (ignoreNameFilters) json["ignore_name_filters"] = true
@@ -177,6 +180,7 @@ data class SubscriptionOptions(
                 autoSortByPing = json.bool("auto_sort_by_ping"),
                 serverSortRule = ServerSortRule.of(json.int("server_sort_rule")),
                 requestTimeoutSeconds = json.int("request_timeout_seconds").takeIf { it in 5..300 } ?: 0,
+                autoUpdateMinutes = json.int("auto_update_minutes").takeIf { it >= 30 } ?: 0,
                 sendHwidInCookie = json.bool("send_hwid_in_cookie"),
                 allowInsecureRequests = json.bool("allow_insecure_requests"),
                 ignoreNameFilters = json.bool("ignore_name_filters"),

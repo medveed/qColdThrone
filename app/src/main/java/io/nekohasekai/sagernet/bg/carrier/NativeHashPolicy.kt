@@ -61,15 +61,35 @@ object NativeHashPolicy {
             incoming.deviceId=it.deviceId
             incoming.deviceIdProvided=true
             incoming.hashSource = it.hashSource; incoming.hashSourceChosen = true
-            // The subscription owns its leading slots; local trailing slots survive until replaced.
-            if (it.hashSource == "manual") incoming.hashes = mergeSlots(incoming.hashes,it.hashes,
-                if(incoming.type=="csqtt") 6 else 4)
-            incoming.workers=if(incoming is Csqtt) Csqtt.normalizeWorkers(it.workers)
-                else preservedWorkers(it.workers,workerLimit(it),workerLimit(incoming))
-            // WG/RAW and TURN over TCP/UDP are the user's choice, kept like hashes and workers.
+            incoming.manualHashesOverride = it.manualHashesOverride
+            // Slots the user edited stay as they are; otherwise the subscription owns its leading slots
+            // and local trailing slots survive until replaced.
+            if (it.hashSource == "manual") incoming.hashes = if (it.manualHashesOverride) it.hashes
+                else mergeSlots(incoming.hashes,it.hashes,if(incoming.type=="csqtt") 6 else 4)
+            // Everything below is the user's choice, kept like hashes and workers.
             incoming.mode=it.mode
             incoming.turnTcp=it.turnTcp
-            if(incoming is Csqtt && it is Csqtt) incoming.turnTransport=it.turnTransport
+            incoming.captchaMode=it.captchaMode
+            if(incoming.type=="qwdtt") {
+                incoming.rawPort=it.rawPort;incoming.obfs=it.obfs;incoming.vkAnonPath=it.vkAnonPath;incoming.goDns=it.goDns
+            }
+            if(incoming is Csqtt && it is Csqtt) {
+                incoming.turnTransport=it.turnTransport;incoming.srtpMode=it.srtpMode;incoming.obfs=it.obfs
+                incoming.vkAnonPath=it.vkAnonPath;incoming.fingerprint=it.fingerprint;incoming.clientIds=it.clientIds
+                incoming.customTurnIps=it.customTurnIps
+                // An updated token in the subscription wins; a locally entered one survives an absent one.
+                if(incoming.vkAccessToken.isBlank()) incoming.vkAccessToken=it.vkAccessToken
+            }
+            if(incoming is WdttPlus && it is WdttPlus) {
+                incoming.tcpOnly=it.tcpOnly;incoming.turnSni=it.turnSni;incoming.rtMasque=it.rtMasque
+                incoming.rtMasqueServerBootstrap=it.rtMasqueServerBootstrap;incoming.fingerprint=it.fingerprint
+                incoming.clientIds=it.clientIds;incoming.vkCallsPreflight=it.vkCallsPreflight
+            }
+            incoming.workers=when(incoming) {
+                is Csqtt -> Csqtt.normalizeWorkers(it.workers)
+                is WdttPlus -> WdttPlus.normalizeWorkers(it.workers,incoming.maxWorkers)
+                else -> preservedWorkers(it.workers,workerLimit(incoming))
+            }
         }
     }
     fun workerLimit(profile:Qwdtt):Int {
@@ -80,8 +100,8 @@ object NativeHashPolicy {
         if(profile is WdttPlus) return (profile.maxWorkers / 9 * 9).takeIf { it >= 9 }?.coerceAtMost(108) ?: 108
         return (hashes*27).coerceAtMost(108)
     }
-    fun preservedWorkers(previous:Int,previousLimit:Int,currentLimit:Int):Int =
-        if(previous>=previousLimit) currentLimit else previous.coerceIn(9,currentLimit)/9*9
+    /** The user's count stays; it only drops when the new hash slots no longer allow it. */
+    fun preservedWorkers(previous:Int,currentLimit:Int):Int = previous.coerceIn(9,currentLimit)/9*9
     fun mergeSlots(subscription:List<String>, previous:List<String>,limit:Int):List<String> {
         val prefix=subscription.take(limit)
         return (prefix+previous.drop(prefix.size)).distinct().take(limit)

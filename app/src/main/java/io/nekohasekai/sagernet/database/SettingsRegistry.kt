@@ -270,7 +270,7 @@ object SettingsRegistry {
     @JvmField val SUB_CLEAR = bool("sub_clear", false)
     @JvmField val SUB_SHOW_CHANGE_POPUP = bool("sub_show_change_popup", true)
     @JvmField val SUB_SEND_HWID = bool("sub_send_hwid", true)
-    @JvmField val SUB_REQUEST_TIMEOUT = int("sub_request_timeout_seconds", 30) { it in 5..300 }
+    @JvmField val SUB_REQUEST_TIMEOUT = int("sub_request_timeout_seconds", 10) { it in 5..300 }
     @JvmField val SUB_UPDATE_ON_OPEN = bool("sub_update_on_open", false)
     @JvmField val SUB_PING_ON_OPEN = bool("sub_ping_on_open", false)
     @JvmField val SUB_CONNECT_ON_OPEN = bool("sub_connect_on_open", false)

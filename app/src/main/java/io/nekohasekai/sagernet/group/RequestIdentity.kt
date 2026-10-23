@@ -10,7 +10,7 @@ class RequestIdentity(
     @JvmField val userAgent: String,
     @JvmField val sendHwid: Boolean,
     @JvmField val device: DeviceDetails,
-    @JvmField val timeoutSeconds: Int = 30,
+    @JvmField val timeoutSeconds: Int = 10,
     @JvmField val sendHwidInCookie: Boolean = false,
     @JvmField val allowInsecureRequests: Boolean = false,
 ) {

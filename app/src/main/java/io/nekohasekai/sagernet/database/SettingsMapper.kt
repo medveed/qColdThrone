@@ -77,6 +77,7 @@ object SettingsMapper {
             bypassLan = !DataStore.disablePrivateRangeBypass,
             lanSharingEnabled = DataStore.lanSharingEnabled,
             privateRanges = DataStore.vpnPrivateRanges,
+            localLanCidrs = localLanCidrs(),
             perAppEnabled = DataStore.proxyApps,
             perAppBypass = DataStore.bypass,
             perAppPackages = GeneratorSettings.splitLines(DataStore.individual),
@@ -240,4 +241,15 @@ object SettingsMapper {
             e.message ?: e.toString()
         }
     }
+
+    /** "192.168.1.0/24" for each IPv4 address of the underlying network. */
+    private fun localLanCidrs(): List<String> = runCatching {
+        val network = app.qthrone.mobile.SagerNet.underlyingNetwork ?: return emptyList()
+        app.qthrone.mobile.SagerNet.connectivity.getLinkProperties(network)?.linkAddresses.orEmpty()
+            .filter { it.address is java.net.Inet4Address && it.prefixLength in 8..32 }
+            .map { link ->
+                val bits = java.nio.ByteBuffer.wrap(link.address.address).int and (-1 shl (32 - link.prefixLength))
+                java.net.InetAddress.getByAddress(java.nio.ByteBuffer.allocate(4).putInt(bits).array()).hostAddress + "/" + link.prefixLength
+            }
+    }.getOrDefault(emptyList())
 }

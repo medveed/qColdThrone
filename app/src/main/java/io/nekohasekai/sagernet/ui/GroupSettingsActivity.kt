@@ -37,6 +37,7 @@ import app.qthrone.mobile.database.GroupSortMethod
 import app.qthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
 import app.qthrone.mobile.group.DeviceDetails
 import app.qthrone.mobile.group.RequestIdentity
+import app.qthrone.mobile.group.SubscriptionScheduler
 import app.qthrone.mobile.group.SubscriptionNameFilter
 import app.qthrone.mobile.group.ProviderLinks
 import app.qthrone.mobile.ktx.FixedLinearLayoutManager
@@ -89,12 +90,12 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
         private const val KEY_REMOVE_UNAVAILABLE = "groupSubRemoveUnavailable"
         private const val KEY_SORT_RULE = "groupServerSortRule"
         private const val KEY_TIMEOUT = "groupSubRequestTimeout"
+        private const val KEY_AUTO_UPDATE_MINUTES = "groupSubAutoUpdateMinutes"
         private const val KEY_HWID_COOKIE = "groupSubHwidCookie"
         private const val KEY_INSECURE_REQUESTS = "groupSubInsecureRequests"
         private const val KEY_IGNORE_FILTERS = "groupSubIgnoreNameFilters"
         private const val KEY_ALLOW_COLLAPSE = "groupSubAllowCollapse"
         private const val KEY_HIDE_SERVER_SETTINGS = "groupSubHideServerSettings"
-        private const val KEY_FILTER = "groupFilter"
         private const val KEY_NAME_INCLUDE = "groupSubNameInclude"
         private const val KEY_NAME_EXCLUDE = "groupSubNameExclude"
         private val NAME_FILTERS = listOf(
@@ -391,6 +392,7 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
         store.putBoolean(KEY_REMOVE_UNAVAILABLE, options.removeUnavailable)
         store.putString(KEY_SORT_RULE, options.effectiveSortRule.value.toString())
         store.putString(KEY_TIMEOUT, options.requestTimeoutSeconds.toString())
+        store.putString(KEY_AUTO_UPDATE_MINUTES, options.autoUpdateMinutes.toString())
         store.putBoolean(KEY_HWID_COOKIE, options.sendHwidInCookie)
         store.putBoolean(KEY_INSECURE_REQUESTS, options.allowInsecureRequests)
         store.putBoolean(KEY_IGNORE_FILTERS, options.ignoreNameFilters)
@@ -420,6 +422,7 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
             removeUnavailable = flag(KEY_REMOVE_UNAVAILABLE),
             serverSortRule = ServerSortRule.of(text(KEY_SORT_RULE).toIntOrNull() ?: 0),
             requestTimeoutSeconds = text(KEY_TIMEOUT).toIntOrNull()?.takeIf { it in 5..300 } ?: 0,
+            autoUpdateMinutes = text(KEY_AUTO_UPDATE_MINUTES).toIntOrNull()?.takeIf { it >= SubscriptionScheduler.MIN_INTERVAL_MINUTES } ?: 0,
             sendHwidInCookie = flag(KEY_HWID_COOKIE),
             allowInsecureRequests = flag(KEY_INSECURE_REQUESTS),
             ignoreNameFilters = flag(KEY_IGNORE_FILTERS),
@@ -494,6 +497,7 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
             }
             SaveResult.OK
         }
+        if (result == SaveResult.OK) SubscriptionScheduler.schedule()
         when (result) {
             SaveResult.URL_REQUIRED -> Toast.makeText(this, R.string.group_url_required, Toast.LENGTH_SHORT).show()
             else -> finish()
@@ -567,6 +571,21 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
                     val seconds = value?.toString()?.trim()?.toIntOrNull()
                     val valid = seconds != null && (seconds == 0 || seconds in 5..300)
                     if (!valid) Toast.makeText(requireContext(), R.string.sub_settings_timeout_override_error, Toast.LENGTH_SHORT).show()
+                    valid
+                }
+            }
+            findPreference<EditTextPreference>(KEY_AUTO_UPDATE_MINUTES)!!.apply {
+                summaryProvider = Preference.SummaryProvider<EditTextPreference> {
+                    val minutes = it.text?.toIntOrNull() ?: 0
+                    if (minutes > 0) getString(R.string.auto_update_interval_sum, minutes)
+                    else getString(R.string.grp_auto_update_interval_inherit, DataStore.subAutoUpdate.takeIf { it > 0 }
+                        ?.let { global -> getString(R.string.auto_update_interval_sum, global) } ?: getString(R.string.off))
+                }
+                setOnBindEditTextListener { it.inputType = InputType.TYPE_CLASS_NUMBER; it.setSingleLine() }
+                setOnPreferenceChangeListener { _, value ->
+                    val minutes = value?.toString()?.trim()?.toIntOrNull()
+                    val valid = minutes == 0 || (minutes != null && minutes >= SubscriptionScheduler.MIN_INTERVAL_MINUTES)
+                    if (!valid) Toast.makeText(requireContext(), getString(R.string.auto_update_interval_invalid, SubscriptionScheduler.MIN_INTERVAL_MINUTES), Toast.LENGTH_SHORT).show()
                     valid
                 }
             }
@@ -673,17 +692,19 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
                 isVisible = editing
                 setTitle(if(subscription) R.string.group_title_url else R.string.grp_common)
             }
-            for (key in listOf(KEY_AUTO_CLEAR, KEY_SORT_RULE, KEY_FRONT, KEY_LANDING))
+            // The sort rule is part of the editor, next to the name and link.
+            findPreference<Preference>(KEY_SORT_RULE)?.isVisible = editing
+            for (key in listOf(KEY_AUTO_CLEAR, KEY_FRONT, KEY_LANDING))
                 findPreference<Preference>(key)?.isVisible = settings
-            for (key in listOf(KEY_SKIP_AUTO_UPDATE, KEY_SHOW_INFO_CARD, KEY_KEEP_WORKING, KEY_REMOVE_DUPLICATES,
-                KEY_REMOVE_INSECURE, KEY_REMOVE_INVALID, KEY_URL_TEST, KEY_REMOVE_UNAVAILABLE))
+            for (key in listOf(KEY_SKIP_AUTO_UPDATE, KEY_AUTO_UPDATE_MINUTES, KEY_SHOW_INFO_CARD, KEY_ALLOW_COLLAPSE, KEY_KEEP_WORKING,
+                KEY_REMOVE_DUPLICATES, KEY_REMOVE_INSECURE, KEY_REMOVE_INVALID, KEY_URL_TEST, KEY_REMOVE_UNAVAILABLE,
+                KEY_IGNORE_FILTERS) + NAME_FILTERS.map { it.first })
                 findPreference<Preference>(key)?.isVisible = subscription && settings
+            findPreference<Preference>(KEY_AUTO_UPDATE_MINUTES)?.isEnabled = !store.getBoolean(KEY_SKIP_AUTO_UPDATE, false)
             findPreference<PreferenceCategory>(KEY_SUBSCRIPTION)?.apply {
                 isVisible = settings
-                setTitle(if(subscription) R.string.grp_update else R.string.settings)
+                title = if (subscription) null else getString(R.string.settings)
             }
-            findPreference<PreferenceCategory>(KEY_FILTER)?.isVisible = subscription && settings
-            findPreference<PreferenceCategory>("groupPresentation")?.isVisible = subscription && settings
             findPreference<androidx.preference.SwitchPreference>("groupEncryptedSubscription")?.isChecked = ProviderLinks.isEncrypted(DataStore.subscriptionLink)
             val http = DataStore.subscriptionLink.trim().let { it.startsWith("https://", true) || it.startsWith("http://", true) || ProviderLinks.isProviderLink(it) }
             for(key in listOf(KEY_TIMEOUT, KEY_USER_AGENT, KEY_SEND_HWID)+HWID_KEYS)

@@ -46,6 +46,19 @@ class RemoteLanAndSharingTest {
             assertTrue(local>preferred)
         }
     }
+    @Test fun sstpReachesTheServersLanButKeepsThePhonesOwnNetwork() {
+        val profile=app.qthrone.mobile.outbound.types.Sstp().apply { server="vpn.example.org";username="user";password="secret" }
+        val result=ConfigGenerator(ProfileProvider { profile },GeneratorSettings(vpnMode=true,localLanCidrs=listOf("192.168.31.0/24"))).build(1)
+        assertNull(result.error)
+        val config=JsonInput.parseObject(result.coreConfig)
+        val rules=config.obj("route").array("rules").filterIsInstance<JsonObject>()
+        val remote=rules.indexOfFirst { it.bool("ip_is_private") && it.string("outbound")=="proxy" }
+        assertTrue(remote>=0)
+        assertTrue(remote<rules.indexOfFirst { it.bool("ip_is_private") && it.string("outbound")=="direct" })
+        val tun=config.array("inbounds").filterIsInstance<JsonObject>().first { it.string("type")=="tun" }
+        assertFalse(tun.array("route_exclude_address").contains("192.168.0.0/16"))
+        assertTrue(tun.array("route_exclude_address").contains("192.168.31.0/24"))
+    }
     @Test fun explicitUserLanRoutePrecedesServerPreference() {
         val profile=OpenConnect().apply { server="vpn.example.org" }
         val route=app.qthrone.mobile.route.RouteProfile.defaultProfile().apply {

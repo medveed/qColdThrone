@@ -111,6 +111,7 @@ class SagerNet : Application(),
             RemoteRouteUpdater.schedule(keepExisting = true)
             SubscriptionScheduler.schedule(keepExisting = true)
             Widgets.watchSelection(this)
+            app.qthrone.mobile.route.ProviderGeoAssets.listen()
         }
 
         if (BuildConfig.DEBUG) {
@@ -184,12 +185,12 @@ class SagerNet : Application(),
             if (Build.VERSION.SDK_INT >= 26) @RequiresApi(26) {
                 notification.createNotificationChannels(
                     listOf(
+                        // LOW, not MIN: a MIN channel hides the app icon from the status bar on many firmwares.
                         NotificationChannel(
-                            "service-vpn",
+                            "service-vpn-status",
                             application.getText(R.string.service_vpn),
-                            if (Build.VERSION.SDK_INT >= 28) NotificationManager.IMPORTANCE_MIN
-                            else NotificationManager.IMPORTANCE_LOW
-                        ),   // #1355
+                            NotificationManager.IMPORTANCE_LOW
+                        ),
                         NotificationChannel(
                             "service-proxy",
                             application.getText(R.string.service_proxy),
@@ -209,6 +210,8 @@ class SagerNet : Application(),
                         )
                     )
                 )
+                // Importance cannot be raised on an existing channel; the old MIN one is replaced.
+                notification.deleteNotificationChannel("service-vpn")
             }
         }
 

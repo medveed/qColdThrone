@@ -189,6 +189,8 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
         }
         if(type in listOf("qwdtt","csqtt","wdttplus")) {
             result["hashes"]=JsonArray.of(*fields.keys.filter { it.startsWith("hash_") && it != "hash_source" }.map { DataStore.profileCacheStore.getString(cache(it))?.trim().orEmpty() }.filter { it.isNotEmpty() }.toTypedArray())
+            // Hand-edited slots win over the subscription's on the next refresh.
+            if(result.array("hashes").strings()!=document.array("hashes").strings()) result["manual_hashes_override"]=true
         }
         if(type=="olcrtc") {
             val transport=DataStore.profileCacheStore.getString(cache("transport")).orEmpty()

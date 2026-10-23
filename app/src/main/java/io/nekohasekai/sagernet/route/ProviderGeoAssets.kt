@@ -11,12 +11,34 @@ object ProviderGeoAssets {
     data class Status(val file: String = "", val bytes: Long = 0, val total: Long = 0, val error: String = "", val complete: Boolean = false)
     val states = kotlinx.coroutines.flow.MutableStateFlow<Map<Long, Status>>(emptyMap())
     private val expiryScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private fun status(gid: Long, value: Status) {
+    private val action get() = app.packageName + ".PROVIDER_GEO_STATUS"
+
+    private fun show(gid: Long, value: Status) {
         synchronized(states) { states.value = states.value + (gid to value) }
         if (value.complete) expiryScope.launch {
             delay(5000)
-            synchronized(states) { if (states.value[gid] === value) states.value = states.value - gid }
+            synchronized(states) { if (states.value[gid] == value) states.value = states.value - gid }
         }
+    }
+
+    /** Subscriptions refresh in :bg while the home screen is in the main process: every status goes to both. */
+    private fun status(gid: Long, value: Status) {
+        show(gid, value)
+        app.sendBroadcast(android.content.Intent(action).setPackage(app.packageName).putExtra("gid", gid)
+            .putExtra("file", value.file).putExtra("bytes", value.bytes).putExtra("total", value.total)
+            .putExtra("error", value.error).putExtra("complete", value.complete), app.packageName + ".SERVICE")
+    }
+
+    fun dismiss() = synchronized(states) { states.value = emptyMap() }
+
+    /** Called once in the main process. */
+    fun listen() {
+        androidx.core.content.ContextCompat.registerReceiver(app, object : android.content.BroadcastReceiver() {
+            override fun onReceive(context: android.content.Context, intent: android.content.Intent) {
+                show(intent.getLongExtra("gid", 0), Status(intent.getStringExtra("file").orEmpty(), intent.getLongExtra("bytes", 0),
+                    intent.getLongExtra("total", 0), intent.getStringExtra("error").orEmpty(), intent.getBooleanExtra("complete", false)))
+            }
+        }, android.content.IntentFilter(action), app.packageName + ".SERVICE", null, androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED)
     }
     fun url(document: JsonObject, kind: String) = document.string(if (kind == "geoip") "Geoipurl" else "Geositeurl").ifBlank {
         "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/$kind.dat"
@@ -65,11 +87,13 @@ object ProviderGeoAssets {
                 val total = body.contentLength().coerceAtLeast(0)
                 check(total <= 64L * 1024 * 1024) { "Geo file is too large" }
                 body.byteStream().use { input -> temp.outputStream().use { output ->
-                    val buffer = ByteArray(65536); var bytes = 0L
+                    val buffer = ByteArray(65536); var bytes = 0L; var shown = -1L
                     while (true) {
                         val count = input.read(buffer); if (count < 0) break
                         bytes += count; check(bytes <= 64L * 1024 * 1024) { "Geo file is too large" }
-                        output.write(buffer,0,count); status(gid,Status(kind,bytes,total))
+                        output.write(buffer,0,count)
+                        val step = if (total > 0) bytes * 100 / total else bytes / (1024 * 1024)
+                        if (step != shown) { shown = step; status(gid,Status(kind,bytes,total)) }
                     }
                     check(bytes > 0) { "Empty geo file" }
                 } }

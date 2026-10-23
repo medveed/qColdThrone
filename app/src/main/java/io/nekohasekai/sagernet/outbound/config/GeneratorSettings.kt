@@ -58,6 +58,8 @@ data class GeneratorSettings(
     val lanSharingEnabled: Boolean = false,
     /** vpn_private_ranges (SettingsRepo.h:239, defaultTunPrivateRanges); a range a non-direct rule targets stays in the tun. */
     val privateRanges: List<String> = DEFAULT_PRIVATE_RANGES,
+    /** The IPv4 subnets of the phone's current network; they stay outside the tun when a remote LAN is routed. */
+    val localLanCidrs: List<String> = emptyList(),
     /** DataStore.proxyApps: whether [perAppPackages] is applied at all. */
     val perAppEnabled: Boolean = false,
     /** DataStore.bypass: true excludes the listed packages from the tun (`exclude_package`), false routes only them (`include_package`). */

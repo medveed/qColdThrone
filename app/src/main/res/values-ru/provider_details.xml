@@ -28,5 +28,5 @@
     <string name="provider_tunnel_ip">IP-адрес туннеля</string>
     <string name="provider_json_notice">Маршрутизация %1$s не заменяет правила внутри JSON-конфигурации. Используются только геофайлы профиля и DNS туннеля. Поля, которыми управляет провайдер, нельзя изменить.</string>
     <string name="provider_geo_loading">Загрузка геофайлов…</string>
-    <string name="provider_geo_complete">Все файлы успешно загружены</string>
+    <string name="provider_geo_complete">Все файлы были успешно загружены</string>
 </resources>

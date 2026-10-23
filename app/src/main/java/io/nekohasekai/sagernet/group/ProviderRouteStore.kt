@@ -9,8 +9,10 @@ object ProviderRouteStore {
     fun apply(gid: Long, commands: List<ProviderRouting.Command>, fullJson: Boolean = false) {
         if (commands.isEmpty()) return
         if (GroupRepo.get(gid)?.subOptions?.providerIgnoreImport == true) return
+        // A failed geo download shows on the status card and is retried on connect; the routing is saved regardless.
         for (command in commands) command.document?.let {
-            app.qthrone.mobile.route.ProviderGeoAssets.prepare(gid,it)
+            runCatching { app.qthrone.mobile.route.ProviderGeoAssets.prepare(gid,it) }
+                .onFailure { error -> app.qthrone.mobile.ktx.Logs.w("Provider geo files", error) }
         }
         SagerDatabase.instance.runInTransaction {
             val group = GroupRepo.get(gid) ?: return@runInTransaction

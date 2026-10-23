@@ -16,6 +16,7 @@ import androidx.work.multiprocess.RemoteWorkerService
 import com.google.common.util.concurrent.ListenableFuture
 import app.qthrone.mobile.R
 import app.qthrone.mobile.database.DataStore
+import app.qthrone.mobile.database.GroupRepo
 import app.qthrone.mobile.ktx.Logs
 import app.qthrone.mobile.ktx.app
 import app.qthrone.mobile.ktx.runOnDefaultDispatcher
@@ -62,15 +63,29 @@ object SubscriptionScheduler {
         }
     }
 
+    /** A subscription's own period, else sub_auto_update; null when it is not updated automatically. */
+    fun intervalOf(group: app.qthrone.mobile.database.ProxyGroup): Int? {
+        if (group.url.isEmpty() || group.archive || group.skipAutoUpdate) return null
+        return group.subOptions.autoUpdateMinutes.takeIf { it >= MIN_INTERVAL_MINUTES }
+            ?: DataStore.subAutoUpdate.takeIf { it >= MIN_INTERVAL_MINUTES }
+    }
+
+    /** The worker wakes at the shortest period in use; each run refreshes only the subscriptions that are due. */
+    private fun shortestInterval(): Int = GroupRepo.all().mapNotNull(::intervalOf).minOrNull() ?: 0
+
+    /** A run a little early (WorkManager timing) still counts, so a period is never skipped whole. */
+    private fun due(group: app.qthrone.mobile.database.ProxyGroup, interval: Int, now: Long) =
+        now - group.subLastUpdate >= interval * 60L * 9 / 10
+
     /**
-     * (Re)schedules the periodic update from sub_auto_update, or cancels it below [MIN_INTERVAL_MINUTES]. Call it
-     * after the interval changes; [keepExisting] (app start) leaves an already scheduled update alone.
+     * (Re)schedules the periodic update, or cancels it when no subscription updates automatically. Call it after an
+     * interval changes; [keepExisting] (app start) leaves an already scheduled update alone.
      */
     fun schedule(keepExisting: Boolean = false) {
         runOnDefaultDispatcher {
             val workManager = RemoteWorkManager.getInstance(app)
-            val interval = DataStore.subAutoUpdate
             try {
+                val interval = shortestInterval()
                 workManager.cancelUniqueWork(LEGACY_WORK_NAME).await()
                 if (interval < MIN_INTERVAL_MINUTES) {
                     workManager.cancelUniqueWork(WORK_NAME).await()
@@ -78,7 +93,8 @@ object SubscriptionScheduler {
                 }
                 val period = interval * 60L
                 val now = System.currentTimeMillis() / 1000
-                val initialDelay = (DataStore.subAutoUpdateLast + period - now).coerceIn(0L, period)
+                val initialDelay = GroupRepo.all().mapNotNull { group -> intervalOf(group)?.let { group.subLastUpdate + it * 60L - now } }
+                    .minOrNull()?.coerceIn(0L, period) ?: period
                 val request = PeriodicWorkRequest.Builder(UpdateTask::class.java, interval.toLong(), TimeUnit.MINUTES)
                     .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                     .setInitialDelay(initialDelay, TimeUnit.SECONDS)
@@ -111,17 +127,14 @@ object SubscriptionScheduler {
 
     class UpdateTask(appContext: Context, params: WorkerParameters) : RemoteCoroutineWorker(appContext, params) {
         override suspend fun doRemoteWork(): Result {
-            val interval = DataStore.subAutoUpdate
-            // The setting changed without a reschedule (e.g. a restored backup): follow it from now on.
-            if (inputData.getInt(KEY_INTERVAL, interval) != interval) schedule()
-            if (interval < MIN_INTERVAL_MINUTES) return Result.success()
+            // The settings changed without a reschedule (e.g. a restored backup): follow them from now on.
+            if (inputData.getInt(KEY_INTERVAL, 0) != shortestInterval()) schedule()
             val now = System.currentTimeMillis() / 1000
-            // A run within half an interval of the last one is a re-enqueue, not a new period.
-            if (now - DataStore.subAutoUpdateLast < interval * 60L / 2) return Result.success()
-            // Recorded before the run, so a slow job cannot double-fire (PeriodicRunner.cpp:36-49).
+            val groups = GroupRepo.all().filter { group -> intervalOf(group)?.let { due(group, it, now) } == true }
+            if (groups.isEmpty()) return Result.success()
             DataStore.subAutoUpdateLast = now
             Logs.i(app.getString(R.string.subs_auto_update_running, app.getString(R.string.subs_auto_update_task)))
-            SubscriptionQueue.refreshAll(onlyAllowed = true, foreground = false)
+            for (group in groups) SubscriptionQueue.refreshGroup(group.id, false, foreground = false)
             SubscriptionQueue.awaitIdle()
             return Result.success()
         }

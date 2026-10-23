@@ -100,6 +100,7 @@ internal class BuildState(val forTest: Boolean) {
     var xrayToSingTransitioned = false
     var proxyUsesXray = false
     var remotePrivateNetworks = false
+    var sstpRemoteLan = false
     val prerequisites = Prerequisites()
 
     var error = ""

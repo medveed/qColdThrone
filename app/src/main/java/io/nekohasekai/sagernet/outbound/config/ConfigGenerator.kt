@@ -89,7 +89,9 @@ class ConfigGenerator @JvmOverloads constructor(
 
         val state = BuildState(forTest = false)
         val remoteVpnTypes = listOf("openconnect", "openvpn")
-        state.remotePrivateNetworks = settings.vpnMode &&
+        // SSTP advertises no routes: its peer's LAN is every private range except the phone's own network.
+        state.sstpRemoteLan = settings.vpnMode && profile.type == "sstp"
+        state.remotePrivateNetworks = state.sstpRemoteLan || settings.vpnMode &&
             (profile.type in remoteVpnTypes || (profile.type == "chain" &&
                 TypeAccess.chainHops(profile).firstOrNull()?.let { reads.get(it)?.type in remoteVpnTypes } == true))
         val chains = ChainBuilder(reads, buildContext, state, if (settings.enableWarp) WarpHop.outbound(settings) else null)
@@ -558,6 +560,7 @@ class ConfigGenerator @JvmOverloads constructor(
                 addAll(pre.bypassedPrivateRanges)
             }
             if (settings.enableTunRouting && !state.remotePrivateNetworks) addAll(pre.directIpCidrs)
+            if (state.sstpRemoteLan) addAll(settings.localLanCidrs)
         }
         excluded = Cidrs.subtract(excluded, settings.tunIPv4Cidr)
         if (settings.ipv6Enabled) excluded = Cidrs.subtract(excluded, settings.tunIPv6Cidr)
@@ -999,6 +1002,7 @@ class ConfigGenerator @JvmOverloads constructor(
             if (primaryVpn != null) rules.add(jsonObjectOf(
                 "ip_is_private" to true, "preferred_by" to JsonArray.of(Tags.PROXY),
                 "action" to "route", "outbound" to Tags.PROXY))
+            if (state.sstpRemoteLan) rules.add(jsonObjectOf("ip_is_private" to true, "action" to "route", "outbound" to Tags.PROXY))
             if (settings.bypassLan) rules.add(jsonObjectOf(
                 "ip_is_private" to true, "action" to "route", "outbound" to Tags.DIRECT))
         }

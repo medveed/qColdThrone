@@ -6,10 +6,10 @@ import org.junit.Test
 
 class NativeHashPolicyTest {
     @Test fun refreshUsesQwdttHashCeilingAndCsqttIndependentWorkerLimit() {
-        assertEquals(81,NativeHashPolicy.preservedWorkers(108,108,81))
-        assertEquals(108,NativeHashPolicy.preservedWorkers(81,81,108))
-        assertEquals(126,NativeHashPolicy.preservedWorkers(108,108,126))
-        assertEquals(54,NativeHashPolicy.preservedWorkers(54,108,81))
+        assertEquals(81,NativeHashPolicy.preservedWorkers(108,81))
+        // A chosen count stays when a new hash raises the limit (27 of one hash is not "always maximum").
+        assertEquals(27,NativeHashPolicy.preservedWorkers(27,54))
+        assertEquals(54,NativeHashPolicy.preservedWorkers(54,81))
         for(type in listOf("qwdtt","csqtt")) {
             val old=if(type=="csqtt") app.qthrone.mobile.outbound.types.Csqtt() else Qwdtt()
             old.name="workers";old.server="192.0.2.1";old.password="fixture";old.hashSource="manual"
@@ -144,5 +144,26 @@ class NativeHashPolicyTest {
             NativeHashPolicy.preserve(incoming,listOf(stored))
             assertEquals(listOf("sub-new-1","sub-new-2","user-3","user-4"),incoming.hashes)
         }
+    }
+    @Test fun handEditedHashesAndTransportOptionsSurviveRefresh() {
+        val old=app.qthrone.mobile.outbound.types.Csqtt().apply {
+            name="Example";server="192.0.2.1";password="fixture";hashes=listOf("user_hash_1234567890")
+            manualHashesOverride=true;srtpMode="dtls";turnTransport="tcp_tls";vkAccessToken="token";workers=40
+        }
+        val incoming=app.qthrone.mobile.outbound.types.Csqtt().apply {
+            name="Example";server="192.0.2.1";password="fixture";hashes=listOf("sub_hash_1234567890")
+        }
+        NativeHashPolicy.preserve(incoming,listOf(old))
+        assertEquals(old.hashes,incoming.hashes)
+        assertTrue(incoming.manualHashesOverride)
+        assertEquals("dtls",incoming.srtpMode);assertEquals("tcp_tls",incoming.turnTransport)
+        assertEquals("token",incoming.vkAccessToken);assertEquals(40,incoming.workers)
+        val restored=app.qthrone.mobile.outbound.types.Csqtt()
+        assertTrue(restored.parseFromJson(incoming.exportToJson()))
+        assertTrue(restored.manualHashesOverride)
+        val plus=app.qthrone.mobile.outbound.types.WdttPlus().apply { name="Plus";hashes=listOf("a");workers=27;tcpOnly=true;captchaMode="wv" }
+        val plusIncoming=app.qthrone.mobile.outbound.types.WdttPlus().apply { name="Plus";hashes=listOf("a","b") }
+        NativeHashPolicy.preserve(plusIncoming,listOf(plus))
+        assertEquals(27,plusIncoming.workers);assertTrue(plusIncoming.tcpOnly);assertEquals("wv",plusIncoming.captchaMode)
     }
 }

@@ -394,8 +394,8 @@ class MobileHomeFragment : ToolbarFragment() {
                         false
                     }
                 }
-                centre.addView(power, FrameLayout.LayoutParams(dp(224), dp(224), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin=dp(8) })
-                column.addView(centre, LinearLayout.LayoutParams(-1, dp(246)))
+                centre.addView(power, FrameLayout.LayoutParams(dp(188), dp(188), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin=dp(8) })
+                column.addView(centre, LinearLayout.LayoutParams(-1, dp(206)))
                 updateState()
                 val imports = LinearLayout(requireContext())
                 fun importButton(label: String, icon: Int, callback: () -> Unit) = LinearLayout(requireContext()).apply {
@@ -425,6 +425,9 @@ class MobileHomeFragment : ToolbarFragment() {
                     gravity = Gravity.CENTER_VERTICAL; setPadding(dp(16),dp(12),dp(16),dp(12))
                     background = GradientDrawable().apply { setColor(surface); cornerRadius=dp(16).toFloat();setStroke(1,MobilePalette.outline) }
                     visibility = View.GONE
+                    // A tap hides the card; a new download shows it again.
+                    contentDescription = getString(R.string.update_action_hide)
+                    setOnClickListener { app.qthrone.mobile.route.ProviderGeoAssets.dismiss() }
                 }
                 geoStatus = text("",14f).apply { setPadding(0,0,dp(12),0) }
                 geoProgress = ProgressBar(requireContext()).apply { isIndeterminate = true; indeterminateTintList = android.content.res.ColorStateList.valueOf(blue); importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
