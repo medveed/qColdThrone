@@ -36,7 +36,7 @@ class SubscriptionSettingsTest {
         }
         assertTrue(SettingsRegistry.SUB_REQUEST_TIMEOUT.accepts("5"))
         assertTrue(SettingsRegistry.SUB_REQUEST_TIMEOUT.accepts("300"))
-        assertEquals(30, SettingsRegistry.SUB_REQUEST_TIMEOUT.default)
+        assertEquals(10, SettingsRegistry.SUB_REQUEST_TIMEOUT.default)
     }
 
     @Test fun cookieIsOptionalEncodedAndFollowsSendHwid() {
