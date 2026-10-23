@@ -98,6 +98,7 @@ class ProfileListFragment : Fragment(R.layout.layout_profile_list) {
         adapter = ProfileListAdapter(this)
         list.layoutManager = FixedGridLayoutManager(list, if (isCompact) 2 else 1)
         list.adapter = adapter
+        list.itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator().apply { moveDuration = 380; supportsChangeAnimations = false }
         list.setItemViewCacheSize(20)
         list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

@@ -102,6 +102,28 @@ object VkRelayPreferences {
         }
         group.addPreference(hashesPreference)
         hashesPreference.value = DataStore.configurationStore.getString(VkRelayAccount.DEFAULT_SOURCE,"manual").takeIf { it == "auto" } ?: "manual"
+        if(linked && !info.needsRelink) group.addPreference(Preference(context).apply {
+            key="vkRelayCreateHashes"; title="Получить хеши"; isPersistent=false; isSingleLineTitle=false
+            setIcon(R.drawable.ic_mobile_hash)
+            fun describe(saved: Int) {
+                summary=if(saved==0) "Создать звонки VK и сохранить их хеши" else "Сохранено хешей: $saved. Выберите их в настройках профиля или включите Авто"
+            }
+            describe(info.hashes)
+            setOnPreferenceClickListener {
+                val counts=(1..6).map(Int::toString).toTypedArray()
+                MobileAlertDialogBuilder(context).setTitle("Сколько хешей нужно").setItems(counts) { _,index ->
+                    isEnabled=false; summary="Создаются хеши…"
+                    fragment.lifecycleScope.launch {
+                        val result=withContext(Dispatchers.IO) { runCatching { VkRelayAccount.hashes(index+1) } }
+                        val saved=withContext(Dispatchers.IO) { VkRelayAccount.cachedHashes().size }
+                        if(!fragment.isAdded) return@launch
+                        isEnabled=true; describe(saved)
+                        result.exceptionOrNull()?.let { Toast.makeText(context,it.message ?: "Не удалось получить хеши",Toast.LENGTH_LONG).show() }
+                    }
+                }.show()
+                true
+            }
+        })
         group.addPreference(Preference(context).apply {
             key="vkRelayAutoWarning"
             summary="В режиме Авто повышенные риски бана аккаунта ВК, используйте на свой страх и риск."

@@ -94,16 +94,38 @@ object TestSessionClient {
      * when every profile of the spec belongs to one group.
      */
     fun start(spec: TestSpec, groupId: Long): Boolean {
+        var restart: LongArray? = null
         synchronized(lock) {
             clearedResults.removeAll(spec.profileIds.toSet())
             if(model?.running==true && spec.kind==TestSpec.KIND_URL && !spec.testCurrent) {
                 val active=mutableState.value.rows.filterValues { it.phase!=RowPhase.DONE }.keys
                 val waiting=mutableQueuedProfiles.value
-                val ids=spec.profileIds.filter { it !in active && it !in waiting }.toLongArray()
-                if(ids.isNotEmpty()) pendingPings.addLast(spec.copy(profileIds=ids) to groupId)
-                publishQueueLocked()
-                return true
+                val ping=model?.let { it.kind==TestSpec.KIND_URL && !it.testCurrent }==true
+                if(!ping) {
+                    // Speed tests stay exclusive: a ping waits for them.
+                    val ids=spec.profileIds.filter { it !in active && it !in waiting }.toLongArray()
+                    if(ids.isNotEmpty()) pendingPings.addLast(spec.copy(profileIds=ids) to groupId)
+                    publishQueueLocked()
+                    return true
+                }
+                if(spec.profileIds.any { it in active || it in waiting }) {
+                    // Pressing ping again restarts it: the running sweep stops, its unfinished profiles start over.
+                    restart=(spec.profileIds.toList()+active+waiting).distinct().toLongArray()
+                } else {
+                    pendingPings.addLast(spec to groupId)
+                    publishQueueLocked()
+                    return true
+                }
             }
+        }
+        restart?.let { ids ->
+            stop()
+            synchronized(lock) {
+                pendingPings.addLast(spec.copy(profileIds=ids) to groupId)
+                publishQueueLocked()
+                advanceQueueLocked()
+            }
+            return true
         }
         val m = begin(spec.kind, spec.scopeLabel, groupId, spec.testCurrent) ?: return false
         synchronized(lock) { m.setIds(spec.profileIds); publishLocked() }
@@ -122,6 +144,13 @@ object TestSessionClient {
 
     /** Tests every member of group [groupId] in list order. */
     fun startGroup(kind: Int, groupId: Long): Boolean {
+        if (kind == TestSpec.KIND_URL && synchronized(lock) { model?.let { it.running && it.kind == TestSpec.KIND_URL && !it.testCurrent } == true }) {
+            scope.launch(Dispatchers.IO) {
+                val group = GroupRepo.get(groupId) ?: return@launch
+                start(TestSpec(kind, ProfileManager.memberIds(groupId).toLongArray(), scopeLabel = group.displayName(), sortGroupId = groupId), groupId)
+            }
+            return true
+        }
         val m = begin(kind, "", groupId, false) ?: return false
         prepare(m) {
             val group = GroupRepo.get(groupId)
@@ -133,6 +162,8 @@ object TestSessionClient {
 
     /** Tests [profileIds] (a selection or one profile); pass their [groupId] to offer "Sort" afterwards. */
     fun startProfiles(kind: Int, profileIds: List<Long>, groupId: Long = 0L): Boolean {
+        if (kind == TestSpec.KIND_URL && synchronized(lock) { model?.let { it.running && it.kind == TestSpec.KIND_URL && !it.testCurrent } == true })
+            return start(TestSpec(kind, profileIds.distinct().toLongArray()), groupId)
         val m = begin(kind, "", groupId, false) ?: return false
         prepare(m) {
             val ids = profileIds.distinct()

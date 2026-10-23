@@ -1782,13 +1782,13 @@
     <string name="oem_background_summary">Device-specific settings that can stop Throne in the background</string>
 
     <!-- Always-on VPN -->
-    <string name="always_on_vpn">Always-on VPN</string>
+    <string name="always_on_vpn">Kill switch</string>
     <string name="always_on_vpn_off">Off. Set it in the system VPN settings</string>
     <string name="always_on_vpn_on">On: Android starts Throne in VPN mode by itself</string>
     <string name="always_on_vpn_lockdown">On, blocking connections without VPN</string>
     <string name="always_on_vpn_unknown">Set it in the system VPN settings</string>
-    <string name="always_on_vpn_no_profile">Always-on VPN has no profile</string>
-    <string name="always_on_vpn_no_profile_text">Select a profile in Throne; until then the always-on VPN cannot connect.</string>
+    <string name="always_on_vpn_no_profile">Kill switch has no profile</string>
+    <string name="always_on_vpn_no_profile_text">Select a profile in Throne; until then the kill switch cannot connect.</string>
     <string name="auto_connect_superseded">Superseded by the always-on VPN</string>
     <string name="vpn_settings_missing">This device has no VPN settings screen</string>
 

@@ -31,7 +31,7 @@ internal object VkRelayOAuth {
     fun nextAuthorizeUrl(body: String): String? {
         val href = Regex("""location\.href\s*=\s*["']([^"']+)["']""").find(body)?.groupValues?.get(1)
         if(href != null) return href.replace("&amp;","&")
-        return Regex("""(https://login\.vk\.com/\?act=grant_access[^"'\s<]+)""")
+        return Regex("""(https://login\.vk\.(?:com|ru)/\?act=grant_access[^"'\s<]+)""")
             .find(body)?.groupValues?.get(1)?.replace("&amp;","&")
     }
 }

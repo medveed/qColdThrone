@@ -30,8 +30,9 @@ class FixedGridLayoutManager(val recyclerView: RecyclerView, spanCount: Int) :
         }
     }
 
+    // Rows sorted in from off screen slide into place instead of popping in.
     override fun supportsPredictiveItemAnimations(): Boolean {
-        return false
+        return true
     }
 
     fun rowIndexOf(position: Int): Int =

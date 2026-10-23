@@ -299,6 +299,11 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
         val checkButton=Preference(requireContext()).apply {
             title="Проверить хеши";isPersistent=false;setIcon(R.drawable.ic_mobile_hash)
         }
+        // Hashes created under the VK relay settings, picked into this profile's manual slots.
+        val accountButton=Preference(requireContext()).apply {
+            title="Хеши из аккаунта VK";summary="Выбрать хеши, полученные в настройках VK-релея"
+            isPersistent=false;setIcon(R.drawable.ic_mobile_vk)
+        }
         fun refreshEditors() {
             val source=DataStore.profileCacheStore.getString(cache("hash_source"))
             val automatic = source in listOf("auto","auto_js")
@@ -307,6 +312,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
             editors["rt_masque_server_bootstrap"]?.isEnabled=DataStore.profileCacheStore.getString(cache("rt_masque")) == "true"
             editors.filterKeys { it.startsWith("hash_") && it != "hash_source" }.values.forEach { it.isVisible = !automatic }
             checkButton.isVisible=!automatic
+            accountButton.isVisible=!automatic
             checkButton.isEnabled=hashCheck!=null || fields.keys.any { it.startsWith("hash_") && it!="hash_source" && !DataStore.profileCacheStore.getString(cache(it)).isNullOrBlank() }
             editors["raw_port"]?.isEnabled=DataStore.profileCacheStore.getString(cache("mode"))!="wg"
             if(editingOutbound.type in listOf("qwdtt","csqtt","wdttplus")) {
@@ -441,7 +447,33 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
             preferenceScreen.addPreference(preference)
             if(path=="hash_"+(if(editingOutbound.type=="csqtt") 6 else 4)) {
                 preferenceScreen.addPreference(checkButton)
+                preferenceScreen.addPreference(accountButton)
             }
+        }
+        accountButton.setOnPreferenceClickListener {
+            lifecycleScope.launch {
+                val saved=withContext(Dispatchers.IO) { app.qthrone.mobile.bg.carrier.VkRelayAccount.cachedHashes() }
+                val slots=fields.keys.filter { it.startsWith("hash_") && it!="hash_source" }
+                if(saved.isEmpty()) {
+                    Toast.makeText(this@NativeTransportSettingsActivity,"Сначала получите хеши в настройках VK-релея",Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+                val current=slots.mapNotNull { DataStore.profileCacheStore.getString(cache(it))?.trim()?.takeIf(String::isNotEmpty) }
+                val checked=BooleanArray(saved.size) { saved[it] in current || (current.isEmpty() && it<slots.size) }
+                app.qthrone.mobile.ui.MobileAlertDialogBuilder(this@NativeTransportSettingsActivity).setTitle("Хеши из аккаунта VK")
+                    .setMultiChoiceItems(saved.map { it.take(8)+"…"+it.takeLast(4) }.toTypedArray(),checked) { _,index,on -> checked[index]=on }
+                    .setNegativeButton(android.R.string.cancel,null)
+                    .setPositiveButton(android.R.string.ok) { _,_ ->
+                        val chosen=saved.filterIndexed { index,_ -> checked[index] }.take(slots.size)
+                        slots.forEachIndexed { index,slot ->
+                            val value=chosen.getOrElse(index) { "" }
+                            DataStore.profileCacheStore.putString(cache(slot),value)
+                            (editors[slot] as? HashTextPreference)?.apply { text=value;setCheckStatus(null) }
+                        }
+                        refreshEditors()
+                    }.show()
+            }
+            true
         }
         val results=linkedMapOf<Int,String>()
         fun showResults() {

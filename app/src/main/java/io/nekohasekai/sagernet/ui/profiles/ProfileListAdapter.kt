@@ -210,6 +210,7 @@ internal class ProfileListAdapter(private val fragment: ProfileListFragment) :
             }
             return
         }
+        val atTop = !fragment.list.canScrollVertically(-1)
         val old = ArrayList(ids)
         ids.clear()
         ids.addAll(next)
@@ -227,6 +228,8 @@ internal class ProfileListAdapter(private val fragment: ProfileListFragment) :
 
             override fun getChangePayload(oldPosition: Int, newPosition: Int): Any = PAYLOAD_CONTENT
         }).dispatchUpdatesTo(this)
+        // A list at the top stays at the top while a sort moves its first row away.
+        if (atTop) fragment.list.scrollToPosition(0)
     }
 
     fun setQuery(text: String) {

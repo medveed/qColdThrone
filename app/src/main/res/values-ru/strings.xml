@@ -324,10 +324,10 @@
     <string name="adblock_enable_sum">Блокировать рекламу с помощью набора правил adblockfilters</string>
     <string name="allow_beta_update">Разрешить обновления до beta-версий</string>
     <string name="allow_beta_update_sum">Также предлагать предварительные версии при проверке обновлений</string>
-    <string name="always_on_vpn">Всегда активный VPN</string>
+    <string name="always_on_vpn">Kill switch</string>
     <string name="always_on_vpn_lockdown">Вкл., блокировать соединения без VPN</string>
-    <string name="always_on_vpn_no_profile">У всегда активного VPN нет профиля</string>
-    <string name="always_on_vpn_no_profile_text">Выберите профиль в Throne; до этого всегда активный VPN не сможет подключиться.</string>
+    <string name="always_on_vpn_no_profile">У Kill switch нет профиля</string>
+    <string name="always_on_vpn_no_profile_text">Выберите профиль в Throne; до этого Kill switch не сможет подключиться.</string>
     <string name="always_on_vpn_off">Выкл. Настройте в системных настройках VPN</string>
     <string name="always_on_vpn_on">Вкл.: Android сам запускает Throne в режиме VPN</string>
     <string name="always_on_vpn_unknown">Настройте в системных настройках VPN</string>

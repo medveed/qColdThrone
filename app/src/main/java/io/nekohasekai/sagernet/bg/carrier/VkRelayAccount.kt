@@ -69,10 +69,10 @@ object VkRelayAccount {
     fun userId() = read().optString("user")
     fun displayName() = read().optString("name").ifBlank { "VK ID: ${userId()}" }
     fun avatarUrl() = read().optString("avatar")
-    data class UiInfo(val linked: Boolean,val needsRelink: Boolean,val displayName: String)
+    data class UiInfo(val linked: Boolean,val needsRelink: Boolean,val displayName: String,val hashes: Int)
     fun uiInfo(): UiInfo {
         val session=read()
-        return UiInfo(linked(),needsRelink(),session.optString("name").ifBlank { "Аккаунт VK для VK-реле" })
+        return UiInfo(linked(),needsRelink(),session.optString("name").ifBlank { "Аккаунт VK для VK-реле" },session.optJSONArray("hashes")?.length() ?: 0)
     }
     fun refreshIdentity() {
         val session = read()
@@ -114,7 +114,8 @@ object VkRelayAccount {
             for(group in groups) GroupRepo.postReload(group)
         }
     }
-    fun authorizeUrl(state: String): String = "https://oauth.vk.com/authorize?client_id=6287487&display=mobile&redirect_uri=https%3A%2F%2Foauth.vk.com%2Fblank.html&response_type=token&scope=messages&v=5.199&state=$state"
+    // The login screen signs in on m.vk.ru; oauth.vk.com would not see that session and ask to sign in again.
+    fun authorizeUrl(state: String): String = "https://oauth.vk.ru/authorize?client_id=6287487&display=mobile&redirect_uri=https%3A%2F%2Foauth.vk.ru%2Fblank.html&response_type=token&scope=messages&v=5.199&state=$state"
     fun link(token: String,user: String,expiresIn: Long,cookies: Map<String,String>,userAgent: String) {
         require(token.isNotBlank())
         require(cookies.values.any { value -> value.split(';').any { it.trim().startsWith("remixsid=") && it.substringAfter('=').isNotBlank() } })
@@ -177,6 +178,7 @@ object VkRelayAccount {
         } }
     ).orEmpty()
 
+    fun cachedHashes(): List<String> = read().optJSONArray("hashes")?.let { list -> (0 until list.length()).map(list::getString) }.orEmpty()
     fun hashes(count: Int): List<String> {
       synchronized(hashCreationLock) {
         require(count in 1..6)

@@ -774,6 +774,9 @@ class MobileHomeFragment : ToolbarFragment() {
     }
     private fun testMenu(ids: LongArray, label: String, gid: Long, wholeGroup: Boolean=false) {
         TestSessionClient.start(TestSpec(TestSpec.KIND_URL, profileIds=ids,scopeLabel=label,sortGroupId=if(wholeGroup) gid else 0L),gid)
+        // A repeated ping starts its spinner over at once.
+        ids.forEach { latencyViews[it]?.contentDescription=null }
+        updateLatencies()
     }
     private val importFile = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) SubscribeFlows.importFile(requireActivity(), uri)

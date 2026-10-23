@@ -255,7 +255,8 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.findItem(R.id.action_delete)?.isVisible = false
-        menu.findItem(R.id.action_apply)?.isVisible = loaded && DataStore.dirty
+        // An existing group saves itself on close; only a new one is added explicitly.
+        menu.findItem(R.id.action_apply)?.isVisible = loaded && DataStore.dirty && editingId == 0L
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -278,6 +279,10 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
     private fun close() {
         if (!loaded || !DataStore.dirty) {
             finish()
+            return
+        }
+        if (editingId > 0) {
+            lifecycleScope.launch { save() }
             return
         }
         MaterialAlertDialogBuilder(this)
