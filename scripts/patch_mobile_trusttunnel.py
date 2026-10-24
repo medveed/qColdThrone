@@ -31,68 +31,6 @@ def patch(core: Path):
     subprocess.run(["go", "mod", "edit", "-replace=" + module + "=./.qthrone/trusttunnel"], cwd=core, check=True)
     for source in (Path(__file__).resolve().parents[1] / "core-patches" / "mobile").glob("*.go"):
         shutil.copyfile(source, core / "mobile" / source.name)
-    patch_cold_request_hedge(core)
-
-
-# The desktop core's hedged cold request (qThroneDesktop core/internal/probe/urltest.go, 1.8.1).
-COLD_REQUEST_BEFORE = """func urlTestRequests(ctx context.Context, client *http.Client, url string, timeout, firstTimeout time.Duration, twice bool) (time.Duration, error) {
-	duration, err := urlTest(ctx, client, url, firstTimeout)
-	if err == nil && twice {
-		return urlTest(ctx, client, url, timeout)
-	}
-	return duration, err
-}
-"""
-COLD_REQUEST_AFTER = """const ColdRequestHedgeDelay = time.Second
-
-func urlTestRequests(ctx context.Context, client *http.Client, url string, timeout, firstTimeout time.Duration, twice bool) (time.Duration, error) {
-	if !twice {
-		return urlTest(ctx, client, url, firstTimeout)
-	}
-	if _, err := hedgedURLTest(ctx, client, url, firstTimeout, ColdRequestHedgeDelay); err != nil {
-		return 0, err
-	}
-	return urlTest(ctx, client, url, timeout)
-}
-
-func hedgedURLTest(ctx context.Context, client *http.Client, url string, timeout, delay time.Duration) (time.Duration, error) {
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-	type outcome struct {
-		duration time.Duration
-		err      error
-	}
-	results := make(chan outcome, 2)
-	attempt := func() {
-		duration, err := urlTest(ctx, client, url, timeout)
-		results <- outcome{duration, err}
-	}
-	go attempt()
-	hedge := time.NewTimer(delay)
-	defer hedge.Stop()
-	pending := 1
-	for {
-		select {
-		case <-hedge.C:
-			pending++
-			go attempt()
-		case res := <-results:
-			pending--
-			if res.err == nil || pending == 0 {
-				return res.duration, res.err
-			}
-		}
-	}
-}
-"""
-
-
-def patch_cold_request_hedge(core: Path):
-    path = core / "internal" / "probe" / "urltest.go"
-    content = path.read_text()
-    if content.count(COLD_REQUEST_BEFORE) != 1:
-        raise ValueError("URL test cold request changed; review the hedge patch")
-    path.write_text(content.replace(COLD_REQUEST_BEFORE, COLD_REQUEST_AFTER), newline=chr(10))
 
 
 if __name__ == "__main__":

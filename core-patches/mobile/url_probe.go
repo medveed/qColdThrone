@@ -29,8 +29,9 @@ func StartScopedURLTest(current *Instance, platform PlatformInterface, request *
 		ctx = probe.LiveInstance(ctx)
 	}
 	go func() {
+		// Closing Xray can take seconds; a repeated ping must not wait for it.
+		defer func() { go env.close() }()
 		defer handler.OnDone()
-		defer env.close()
 		defer cancel()
 		var mu sync.Mutex
 		failed := make(map[string]bool)
