@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="128" alt="qThroneMobile">
+<img src="docs/screenshots/icon.png" width="128" alt="qThroneMobile">
 
 # qThroneMobile
 
