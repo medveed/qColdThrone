@@ -68,9 +68,10 @@ APK собирает CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml),
 
 - Ядра: [SagerNet/sing-box](https://github.com/SagerNet/sing-box), [XTLS/Xray-core](https://github.com/XTLS/Xray-core), [ThroneCore](https://github.com/ttrroyy/qThrone)
 - Основа клиента: [ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid), [NekoBoxForAndroid](https://github.com/MatsuriDayo/NekoBoxForAndroid), [SagerNet](https://github.com/SagerNet/SagerNet)
-- VK и WebRTC: [proxy-turn-vk-android](https://github.com/SpaceNeuroX/proxy-turn-vk-android) (qWDTT), [amurcanov/csqtt](https://github.com/amurcanov/csqtt), [olcRTC](https://github.com/openlibrecommunity/olcrtc), [OpenFlux](https://github.com/p1neappleXpress/OpenFlux)
+- VK и WebRTC: [proxy-turn-vk-android](https://github.com/SpaceNeuroX/proxy-turn-vk-android), [amurcanov/csqtt](https://github.com/amurcanov/csqtt), [olcRTC](https://github.com/openlibrecommunity/olcrtc), [OpenFlux](https://github.com/p1neappleXpress/OpenFlux)
 - DNS-туннели: [dnstt](https://www.bamsoftware.com/software/dnstt/), [VayDNS](https://github.com/net2share/vaydns), [slipstream-rust](https://github.com/Mygod/slipstream-rust), [MasterDnsVPN](https://github.com/masterking32/MasterDnsVPN), [dnst-url-spec](https://github.com/net2share/dnst-url-spec), [SlipNet](https://github.com/anonvector/SlipNet), [WhiteDNS](https://github.com/WhiteDNS/WhiteDNS-Android)
 - S3 Bypass и TrustTunnel: [s3-bypass](https://github.com/SpaceNeuroX/s3-bypass), [Xray-core-fedarisha](https://github.com/Fedarisha/Xray-core-fedarisha), [sing-trusttunnel](https://github.com/xchacha20-poly1305/sing-trusttunnel), [TrustTunnelClient](https://github.com/TrustTunnel/TrustTunnelClient)
+- SSTP: [SwiftSSTP](https://github.com/alichdrdzn/swiftsstp)
 - Прочее: [routeprofiles](https://github.com/throneproj/routeprofiles), [sing-box-dashboard](https://github.com/SagerNet/sing-box-dashboard), [flag-icons](https://github.com/lipis/flag-icons)
 
 ## Поддержать проект
