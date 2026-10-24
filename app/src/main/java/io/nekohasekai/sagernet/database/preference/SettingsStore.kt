@@ -50,6 +50,8 @@ class SettingsStore(
     }
 
     private fun write(key: String, value: String) {
+        // A screen re-persists its switches on open; an unchanged value must not read as a settings change.
+        if (dao[key] == value) return
         dao.put(SettingEntry(key, value))
         fireChangeListener(key)
     }

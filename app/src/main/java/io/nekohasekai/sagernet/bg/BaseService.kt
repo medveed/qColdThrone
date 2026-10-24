@@ -39,6 +39,9 @@ import moe.matsuri.nb4a.Protocols
 import moe.matsuri.nb4a.utils.Util
 import java.net.UnknownHostException
 
+/** Shorter screen-off spells keep their connections: switching the screen off and on is not sleep. */
+private const val SLEEP_RESET_AFTER_MS = 30_000L
+
 class BaseService {
 
     enum class State(
@@ -80,6 +83,8 @@ class BaseService {
                 Action.REFRESH_WIFI_STATE -> refreshWifiState(ctx)
                 Action.AUTO_SELECTOR_AUTOMATIC -> AutoSelectorRuntime.releasePin(intent.getLongExtra(Action.EXTRA_PROFILE_ID, 0L))
                 PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED -> applyIdleMode()
+                Intent.ACTION_SCREEN_OFF -> screenOffAt = SystemClock.elapsedRealtime()
+                Intent.ACTION_SCREEN_ON -> resetAfterSleep()
 
                 Action.RESET_UPSTREAM_CONNECTIONS -> runOnDefaultDispatcher {
                     proxy?.boxOrNull?.resetNetwork()
@@ -107,6 +112,27 @@ class BaseService {
             DataStore.serviceState = s
             binder.stateChanged(s, msg)
             Widgets.push(service as Context)
+        }
+
+        @Volatile
+        private var screenOffAt = 0L
+
+        /**
+         * Light doze and NAT timeouts kill upstream connections without a device idle event, and the
+         * stale ones then stall traffic and the current-connection test until they time out.
+         */
+        private fun resetAfterSleep() {
+            val off = screenOffAt
+            screenOffAt = 0L
+            if (off == 0L || SystemClock.elapsedRealtime() - off < SLEEP_RESET_AFTER_MS) return
+            runOnDefaultDispatcher {
+                idleLock.withLock {
+                    val box = proxy?.boxOrNull ?: return@withLock
+                    // Leaving device idle resets on its own.
+                    if (pausedBox === box || !DataStore.configurationStore.getBoolean(Key.WAKE_RESET_CONNECTIONS, true)) return@withLock
+                    box.resetNetwork()
+                }
+            }
         }
 
         /** Reads the idle mode when the job runs, so the last of several quick events always wins. */
@@ -608,6 +634,8 @@ class BaseService {
                     addAction(Intent.ACTION_SHUTDOWN)
                     addAction(Action.CLOSE)
                     addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED)
+                    addAction(Intent.ACTION_SCREEN_OFF)
+                    addAction(Intent.ACTION_SCREEN_ON)
                     addAction(Action.RESET_UPSTREAM_CONNECTIONS)
                     addAction(Action.SWITCH_NEXT)
                     addAction(Action.SWITCH_PREVIOUS)
