@@ -682,6 +682,8 @@
     <string name="enable_tls">Включить TLS</string>
     <string name="enable_tun_routing">Маршрутизация TUN</string>
     <string name="enable_tun_routing_sum">Оставлять прямые IP-правила маршрутизирующего профиля вне tun</string>
+    <string name="block_quic">Блокировать QUIC</string>
+    <string name="block_quic_sum">Отклонять QUIC (UDP 443), идущий через прокси: браузер сразу переходит на TCP. Прямой трафик не затрагивается</string>
     <string name="fakeip_disable_ipv6">FakeIP: отключить IPv6</string>
     <string name="fakeip_disable_ipv6_sum">Не выдавать поддельные IPv6-адреса; на AAAA-запросы отвечать пусто</string>
     <string name="fragment_implementation">Реализация</string>

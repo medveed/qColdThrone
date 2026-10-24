@@ -176,6 +176,7 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var lanSharingEnabled by SettingsRegistry.LAN_SHARING_ENABLED
     var vpnPrivateRanges by SettingsRegistry.VPN_PRIVATE_RANGES
     var enableTunRouting by SettingsRegistry.ENABLE_TUN_ROUTING
+    var blockQuic by SettingsRegistry.BLOCK_QUIC
 
     // routing
     var currentRouteId by SettingsRegistry.CURRENT_ROUTE_ID

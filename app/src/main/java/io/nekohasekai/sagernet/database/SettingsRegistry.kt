@@ -175,6 +175,7 @@ object SettingsRegistry {
         ranges.all { SettingValidators.isPrivateRange(it) }
     }
     @JvmField val ENABLE_TUN_ROUTING = bool("enable_tun_routing", false)
+    @JvmField val BLOCK_QUIC = bool("block_quic", true)
 
     // ------------------------------------------------------------------------------------------------ routing
 

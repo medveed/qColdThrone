@@ -583,6 +583,8 @@
     <string name="vpn_ipv6_sum">Give the tun an IPv6 address and route IPv6 through it</string>
     <string name="enable_tun_routing">Tun routing</string>
     <string name="enable_tun_routing_sum">Keep the direct IP rules of the route profile outside the tun</string>
+    <string name="block_quic">Block QUIC</string>
+    <string name="block_quic_sum">Refuse QUIC (UDP 443) sent through a proxy so browsers switch to TCP at once. Direct traffic is not affected</string>
     <string name="bypass_private_ranges">Bypass private ranges</string>
     <string name="bypass_private_ranges_sum">Bypass these private ranges by default. Explicit routing rules and server-advertised VPN networks can take priority.</string>
     <string name="private_ranges">Private ranges</string>
