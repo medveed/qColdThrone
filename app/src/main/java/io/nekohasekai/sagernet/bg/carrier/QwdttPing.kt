@@ -24,6 +24,13 @@ object QwdttPing {
 
     private val result = Regex("^PING_RESULT\\|([0-9]{1,9})$")
 
+    /** Where the app's carrier and test code is blocked right now, for a ping that overran its deadline. */
+    fun stuckThreads(): String = Thread.getAllStackTraces().entries
+        .filter { (_, stack) -> stack.any { it.className.startsWith("app.qthrone.mobile.bg.") } }
+        .joinToString(" | ") { (thread, stack) ->
+            thread.name + " " + thread.state + ": " + stack.take(14).joinToString(" < ") { it.className.substringAfterLast('.') + "." + it.methodName }
+        }
+
     suspend fun measure(profileId: Long, profile: NativeCarrier, timeoutMs: Long): Outcome = withContext(Dispatchers.IO) {
         // Automatic hashes come from VK over blocking calls: a stop interrupts them, the ping's deadline bounds them,
         // and a ping never waits for a sign-in.
