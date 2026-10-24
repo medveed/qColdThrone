@@ -101,6 +101,15 @@ class MobileHomeFragment : ToolbarFragment() {
     private var pulseTarget: View?=null
     private var load: Job? = null
     private var refreshPending = false
+    /** An import writes from the service process, which Room's invalidation does not always report here. */
+    private val groupListener = object : GroupRepo.Listener {
+        private fun changed() { activity?.runOnUiThread { refresh() } }
+        override suspend fun groupAdd(group: ProxyGroup) = changed()
+        override suspend fun groupUpdated(group: ProxyGroup) = changed()
+        override suspend fun groupRemoved(groupId: Long) = changed()
+        override suspend fun groupUpdated(groupId: Long) = changed()
+        override suspend fun groupsReordered() = changed()
+    }
     private fun reorderActive(active: Boolean) {
         reordering=active
         if(active) load?.cancel() else refresh()
@@ -217,6 +226,7 @@ class MobileHomeFragment : ToolbarFragment() {
         observer = object : InvalidationTracker.Observer("groups", "profiles") {
             override fun onInvalidated(tables: Set<String>) { activity?.runOnUiThread { refresh() } }
         }.also { SagerDatabase.instance.invalidationTracker.addObserver(it) }
+        GroupRepo.addListener(groupListener)
         viewLifecycleOwner.lifecycleScope.launch { SubscriptionClient.states.collect { updateSubscriptionButtons() } }
         viewLifecycleOwner.lifecycleScope.launch { app.qthrone.mobile.route.ProviderGeoAssets.states.collect { updateGeoStatus() } }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -271,6 +281,7 @@ class MobileHomeFragment : ToolbarFragment() {
         groupReorder?.cancel();groupReorder=null;profileReorders.values.forEach { it.cancel() };profileReorders.clear();reordering=false
         geoBanner = null; geoStatus = null; geoProgress = null; geoCheck = null
         updateBanner = null
+        GroupRepo.removeListener(groupListener)
         observer?.let { SagerDatabase.instance.invalidationTracker.removeObserver(it) }
         observer = null; load?.cancel(); content = null; powerPulse?.cancel();powerPulse=null;pulseTarget=null; power = null
         currentResultJob?.cancel(); currentResultJob=null
