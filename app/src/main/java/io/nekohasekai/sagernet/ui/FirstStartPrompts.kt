@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.Manifest
 import android.content.ActivityNotFoundException
@@ -6,12 +6,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ui.settings.GeneralSettingsFragment
-import app.qthrone.mobile.utils.BatteryOptimizations
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ui.settings.GeneralSettingsFragment
+import app.qcoldthrone.mobile.utils.BatteryOptimizations
 
 /**
  * The first start: the notification permission (13+), then the battery-optimization exemption, each asked once.

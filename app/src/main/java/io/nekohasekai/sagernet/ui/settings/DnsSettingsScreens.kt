@@ -1,13 +1,13 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SwitchPreference
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.SettingValidators
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.SettingValidators
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.ktx.needReload
 import moe.matsuri.nb4a.ui.EditConfigPreference
 
 /** Routing Settings › DNS: the simple settings, predefined answers and the custom DNS object. */

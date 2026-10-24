@@ -1,12 +1,12 @@
-package app.qthrone.mobile.utils
+package app.qcoldthrone.mobile.utils
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.ktx.listenForPackageChanges
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ktx.listenForPackageChanges
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock

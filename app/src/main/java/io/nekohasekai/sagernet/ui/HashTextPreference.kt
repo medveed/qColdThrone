@@ -1,10 +1,10 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Context
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
 import android.content.res.ColorStateList
 import android.text.SpannableString
 import android.text.Spanned

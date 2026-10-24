@@ -1,4 +1,4 @@
-package app.qthrone.mobile.outbound.link
+package app.qcoldthrone.mobile.outbound.link
 
 /** Query items as QUrlQuery(url.query()) holds them: keys and values in PrettyDecoded form, order preserved. */
 class LinkQuery(@JvmField val items: List<Pair<String, String>>) {

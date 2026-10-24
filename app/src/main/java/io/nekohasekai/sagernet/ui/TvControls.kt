@@ -1,16 +1,16 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Context
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
-import app.qthrone.mobile.Action
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProfileOrder
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.Action
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProfileOrder
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
 
 /** Android TV has no notification shade or widgets: previous / next server sit in the profiles toolbar there. */
 object TvControls {

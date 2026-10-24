@@ -1,10 +1,10 @@
-package app.qthrone.mobile.group
+package app.qcoldthrone.mobile.group
 
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.SubscriptionOptions
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.SubscriptionOptions
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.outbound.Outbound
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 

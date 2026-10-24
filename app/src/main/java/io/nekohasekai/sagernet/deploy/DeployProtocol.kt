@@ -1,4 +1,4 @@
-package app.qthrone.mobile.deploy
+package app.qcoldthrone.mobile.deploy
 
 object DeployProtocol {
     fun safeQwdttServer(bytes: ByteArray): Boolean {

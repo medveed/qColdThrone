@@ -1,4 +1,4 @@
-package app.qthrone.mobile.deploy
+package app.qcoldthrone.mobile.deploy
 
 import org.junit.Assert.*
 import org.junit.Test

@@ -1,7 +1,7 @@
-package app.qthrone.mobile.ktx
+package app.qcoldthrone.mobile.ktx
 
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.SettingsRegistry
 import moe.matsuri.nb4a.utils.CoreLog
 import java.io.InputStream
 import java.io.OutputStream

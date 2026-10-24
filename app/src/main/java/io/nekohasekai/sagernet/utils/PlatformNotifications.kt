@@ -1,4 +1,4 @@
-package app.qthrone.mobile.utils
+package app.qcoldthrone.mobile.utils
 
 import android.app.PendingIntent
 import android.content.Context
@@ -6,8 +6,8 @@ import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.ui.MainActivity
 
 /** The warnings the service posts next to its own notification (channel [CHANNEL_WARNINGS]). */
 object PlatformNotifications {

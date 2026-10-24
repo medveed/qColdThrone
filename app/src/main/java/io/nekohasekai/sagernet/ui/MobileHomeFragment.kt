@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.ClipboardManager
 import android.content.Context
@@ -18,18 +18,18 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.bg.test.TestSpec
-import app.qthrone.mobile.ui.test.TestSessionClient
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.bg.test.TestSpec
+import app.qcoldthrone.mobile.ui.test.TestSessionClient
 import androidx.room.InvalidationTracker
-import app.qthrone.mobile.R
-import app.qthrone.mobile.TrafficFormat
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.database.*
-import app.qthrone.mobile.group.SubscriptionClient
-import app.qthrone.mobile.ui.profile.profileSettingsIntent
-import app.qthrone.mobile.update.UpdateActivity
-import app.qthrone.mobile.update.UpdateDiscovery
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.TrafficFormat
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.database.*
+import app.qcoldthrone.mobile.group.SubscriptionClient
+import app.qcoldthrone.mobile.ui.profile.profileSettingsIntent
+import app.qcoldthrone.mobile.update.UpdateActivity
+import app.qcoldthrone.mobile.update.UpdateDiscovery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -38,13 +38,13 @@ import kotlinx.coroutines.withContext
 
 /** Mobile dashboard backed by the existing Room repositories and subscription queue. */
 class MobileHomeFragment : ToolbarFragment() {
-    private var nativeConnection:app.qthrone.mobile.bg.carrier.NativeConnectionStatus.Snapshot?=null
-    private var nativeTest:app.qthrone.mobile.bg.carrier.NativeConnectionStatus.Snapshot?=null
+    private var nativeConnection:app.qcoldthrone.mobile.bg.carrier.NativeConnectionStatus.Snapshot?=null
+    private var nativeTest:app.qcoldthrone.mobile.bg.carrier.NativeConnectionStatus.Snapshot?=null
     private var nativeReceiverRegistered=false
     private val nativeStatusReceiver=object:android.content.BroadcastReceiver() {
         override fun onReceive(context:Context,intent:Intent) {
-            val stage=runCatching { app.qthrone.mobile.bg.carrier.NativeConnectionStage.valueOf(intent.getStringExtra("stage").orEmpty()) }.getOrNull() ?: return
-            val snapshot=app.qthrone.mobile.bg.carrier.NativeConnectionStatus.Snapshot(intent.getLongExtra("profileId",0),stage)
+            val stage=runCatching { app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.valueOf(intent.getStringExtra("stage").orEmpty()) }.getOrNull() ?: return
+            val snapshot=app.qcoldthrone.mobile.bg.carrier.NativeConnectionStatus.Snapshot(intent.getLongExtra("profileId",0),stage)
             if(intent.getBooleanExtra("testing",false)) nativeTest=snapshot else nativeConnection=snapshot
             updateState()
         }
@@ -78,7 +78,7 @@ class MobileHomeFragment : ToolbarFragment() {
     private var geoProgress: ProgressBar? = null
     private var geoCheck: ImageView? = null
     private fun updateGeoStatus() {
-        val states = app.qthrone.mobile.route.ProviderGeoAssets.states.value.values
+        val states = app.qcoldthrone.mobile.route.ProviderGeoAssets.states.value.values
         val active = states.firstOrNull { !it.complete } ?: states.lastOrNull()
         geoBanner?.visibility = if (active == null) View.GONE else View.VISIBLE
         geoProgress?.visibility = if (active != null && !active.complete && active.error.isBlank()) View.VISIBLE else View.GONE
@@ -203,11 +203,11 @@ class MobileHomeFragment : ToolbarFragment() {
     override fun onViewCreated(view: View, state: Bundle?) {
         super.onViewCreated(view, state)
         androidx.core.content.ContextCompat.registerReceiver(requireContext(),nativeStatusReceiver,
-            android.content.IntentFilter(app.qthrone.mobile.bg.carrier.NativeConnectionStatus.action()),requireContext().packageName+".SERVICE",null,
+            android.content.IntentFilter(app.qcoldthrone.mobile.bg.carrier.NativeConnectionStatus.action()),requireContext().packageName+".SERVICE",null,
             androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED)
         nativeReceiverRegistered=true
         viewLifecycleOwner.lifecycleScope.launch {
-            val snapshots=withContext(Dispatchers.IO) { app.qthrone.mobile.bg.carrier.NativeConnectionStatus.read() to app.qthrone.mobile.bg.carrier.NativeConnectionStatus.read(true) }
+            val snapshots=withContext(Dispatchers.IO) { app.qcoldthrone.mobile.bg.carrier.NativeConnectionStatus.read() to app.qcoldthrone.mobile.bg.carrier.NativeConnectionStatus.read(true) }
             nativeConnection=snapshots.first;nativeTest=snapshots.second;updateState()
         }
         collapsed.clear()
@@ -218,7 +218,7 @@ class MobileHomeFragment : ToolbarFragment() {
             override fun onInvalidated(tables: Set<String>) { activity?.runOnUiThread { refresh() } }
         }.also { SagerDatabase.instance.invalidationTracker.addObserver(it) }
         viewLifecycleOwner.lifecycleScope.launch { SubscriptionClient.states.collect { updateSubscriptionButtons() } }
-        viewLifecycleOwner.lifecycleScope.launch { app.qthrone.mobile.route.ProviderGeoAssets.states.collect { updateGeoStatus() } }
+        viewLifecycleOwner.lifecycleScope.launch { app.qcoldthrone.mobile.route.ProviderGeoAssets.states.collect { updateGeoStatus() } }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { UpdateDiscovery.available.collect { updateReleaseBanner() } }
@@ -330,7 +330,7 @@ class MobileHomeFragment : ToolbarFragment() {
                 return@launch
             }
             val hasServers = groups.any { it.second.isNotEmpty() || it.first.isSubscription }
-            val hwid = app.qthrone.mobile.group.RequestIdentity.applyCustomHwidParams(app.qthrone.mobile.group.DeviceDetails.get(),DataStore.subCustomHwidParams).hwid
+            val hwid = app.qcoldthrone.mobile.group.RequestIdentity.applyCustomHwidParams(app.qcoldthrone.mobile.group.DeviceDetails.get(),DataStore.subCustomHwidParams).hwid
             val nextChromeKey="$surface:$blue:$hasServers:$hwid"
             if(chromeKey != nextChromeKey) {
                 chromeKey=nextChromeKey
@@ -427,7 +427,7 @@ class MobileHomeFragment : ToolbarFragment() {
                     visibility = View.GONE
                     // A tap hides the card; a new download shows it again.
                     contentDescription = getString(R.string.update_action_hide)
-                    setOnClickListener { app.qthrone.mobile.route.ProviderGeoAssets.dismiss() }
+                    setOnClickListener { app.qcoldthrone.mobile.route.ProviderGeoAssets.dismiss() }
                 }
                 geoStatus = text("",14f).apply { setPadding(0,0,dp(12),0) }
                 geoProgress = ProgressBar(requireContext()).apply { isIndeterminate = true; indeterminateTintList = android.content.res.ColorStateList.valueOf(blue); importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
@@ -703,21 +703,21 @@ class MobileHomeFragment : ToolbarFragment() {
             currentPingConnectionAt=if(state.connected) DataStore.mobileConnectedAt else 0L
             currentCheck?.text=getString(R.string.qmobile_check_connection)
         }
-        power?.isEnabled = state != app.qthrone.mobile.bg.BaseService.State.Stopping
+        power?.isEnabled = state != app.qcoldthrone.mobile.bg.BaseService.State.Stopping
         val test=TestSessionClient.state.value
         val testing=test.running && test.kind==TestSpec.KIND_URL
         val snapshot=if(testing && !test.testCurrent) nativeTest?.takeIf {
-            test.rows.containsKey(it.profileId) && test.rows[it.profileId]?.phase!=app.qthrone.mobile.ui.test.RowPhase.DONE
+            test.rows.containsKey(it.profileId) && test.rows[it.profileId]?.phase!=app.qcoldthrone.mobile.ui.test.RowPhase.DONE
         } else nativeConnection?.takeIf {
             it.profileId==(if(state.connected) DataStore.currentProfile else DataStore.selectedProxy)
         }
         val stage=if(testing && test.testCurrent) null else snapshot?.stage
         val caption=if(testing || state.canStop || state.connected) getString(when(stage) {
-            app.qthrone.mobile.bg.carrier.NativeConnectionStage.AUTHORIZING -> R.string.qmobile_vk_authorizing
-            app.qthrone.mobile.bg.carrier.NativeConnectionStage.CAPTCHA -> R.string.qmobile_vk_captcha
-            app.qthrone.mobile.bg.carrier.NativeConnectionStage.WAITING_VK -> R.string.qmobile_vk_waiting
-            app.qthrone.mobile.bg.carrier.NativeConnectionStage.RECONNECTING -> R.string.qmobile_reconnecting
-            app.qthrone.mobile.bg.carrier.NativeConnectionStage.PREPARING, app.qthrone.mobile.bg.carrier.NativeConnectionStage.CONNECTING -> R.string.qmobile_connecting
+            app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.AUTHORIZING -> R.string.qmobile_vk_authorizing
+            app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.CAPTCHA -> R.string.qmobile_vk_captcha
+            app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.WAITING_VK -> R.string.qmobile_vk_waiting
+            app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.RECONNECTING -> R.string.qmobile_reconnecting
+            app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.PREPARING, app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.CONNECTING -> R.string.qmobile_connecting
             else -> if(testing || currentTestArmed) R.string.qmobile_ping_checking else if(state.connected) R.string.qmobile_connected else R.string.qmobile_connecting
         }) else ""
         val description=getString(R.string.qmobile_connect) + ", " + caption.ifEmpty { getString(R.string.qmobile_disconnected) }
@@ -754,7 +754,7 @@ class MobileHomeFragment : ToolbarFragment() {
         val state=TestSessionClient.state.value
         latencyViews.forEach { (id, holder) ->
             val result=state.rows[id].takeUnless { state.testCurrent }
-            val busy=id in TestSessionClient.queuedProfiles.value || (state.running && result != null && result.phase != app.qthrone.mobile.ui.test.RowPhase.DONE)
+            val busy=id in TestSessionClient.queuedProfiles.value || (state.running && result != null && result.phase != app.qcoldthrone.mobile.ui.test.RowPhase.DONE)
             val latency=result?.takeIf { it.ok }?.latency ?: (holder.tag as? Int ?: 0)
             val unavailable=result?.failed==true || (result?.error?.isNotEmpty()==true && !ProxyEntity.isTestAborted(result.error))
             val label=if(unavailable) getString(R.string.qmobile_unavailable) else if(latency>0) "$latency ms" else ""
@@ -802,7 +802,7 @@ class MobileHomeFragment : ToolbarFragment() {
         val link=profile.exportLink().ifBlank { profile.exportJsonLink() }
         swipe.showShareChoices(
             option("URL",R.drawable.ic_mobile_link) { copy(link) },
-            option(getString(R.string.qmobile_qr),R.drawable.ic_mobile_qr) { app.qthrone.mobile.widget.QRCodeDialog(link,profile.displayName()).show(parentFragmentManager,"profile-qr") },
+            option(getString(R.string.qmobile_qr),R.drawable.ic_mobile_qr) { app.qcoldthrone.mobile.widget.QRCodeDialog(link,profile.displayName()).show(parentFragmentManager,"profile-qr") },
             option("JSON",R.drawable.ic_mobile_json) { copy(org.json.JSONObject(profile.outbound.exportToJson().toCompact()).toString(2)) },
         )
     }
@@ -883,7 +883,7 @@ class MobileHomeFragment : ToolbarFragment() {
             val allowInsecure=insecure.isChecked
             viewLifecycleOwner.lifecycleScope.launch {
                 try {
-                    val wrapped=withContext(Dispatchers.IO) { app.qthrone.mobile.group.ProviderLinks.decodeChecked(address) }
+                    val wrapped=withContext(Dispatchers.IO) { app.qcoldthrone.mobile.group.ProviderLinks.decodeChecked(address) }
                     val parsed=android.net.Uri.parse(wrapped?.data ?: address)
                     if(parsed.scheme?.lowercase() !in listOf("https","http") || parsed.host.isNullOrBlank() || parsed.userInfo!=null) {
                         url.error=getString(R.string.qmobile_subscription_url);return@launch
@@ -952,6 +952,7 @@ class MobileHomeFragment : ToolbarFragment() {
             "openconnect" to R.string.action_openconnect,
             "direct" to R.string.action_direct,
             "custom" to R.string.custom_config,
+            "offsiteconfig" to R.string.offsite_config,
             "chain" to R.string.proxy_chain,
         ).map { (type, title) -> type to getString(title) }
         for((type, title) in nativeTypes + originalTypes) {
@@ -965,7 +966,7 @@ class MobileHomeFragment : ToolbarFragment() {
                 setOnClickListener {
                     isEnabled=false
                     sheet.dismiss()
-                    startActivity(Intent(requireContext(),app.qthrone.mobile.ui.profile.settingsActivityFor(type)).putExtra("qmobileProfileType",type))
+                    startActivity(Intent(requireContext(),app.qcoldthrone.mobile.ui.profile.settingsActivityFor(type)).putExtra("qmobileProfileType",type))
                 }
             },LinearLayout.LayoutParams(-1,-2).apply { bottomMargin=dp(8) })
         }

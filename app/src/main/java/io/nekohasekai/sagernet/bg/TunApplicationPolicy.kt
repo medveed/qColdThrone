@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg
+package app.qcoldthrone.mobile.bg
 
 /** Native probe subprocesses cannot protect their sockets; exclude the app UID from every TUN. */
 internal object TunApplicationPolicy {

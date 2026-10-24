@@ -1,13 +1,13 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import androidx.preference.PreferenceDataStore
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.autoselector.AutoSelectorClient
-import app.qthrone.mobile.bg.autoselector.AutoSelectorProfiles
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorClient
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorProfiles
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay

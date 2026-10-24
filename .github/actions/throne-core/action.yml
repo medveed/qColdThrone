@@ -85,7 +85,7 @@ runs:
       shell: bash
       working-directory: ${{ env.THRONE_DIR }}
       run: |
-        sed -i -e 's/ThroneCore.aar/qThroneCore.aar/g' -e 's/-javapkg=io.throneproj/-javapkg=app.qthrone.core/g' -e 's/-libname=throne/-libname=qthrone/g' script/build_android.sh
+        sed -i -e 's/ThroneCore.aar/qThroneCore.aar/g' -e 's/-javapkg=io.throneproj/-javapkg=app.qcoldthrone.core/g' -e 's/-libname=throne/-libname=qthrone/g' script/build_android.sh
         DEST="$GITHUB_WORKSPACE/app/libs" bash script/build_android.sh
     - name: TrustTunnel connection regression
       if: steps.cache.outputs.cache-hit != 'true'
@@ -118,7 +118,7 @@ runs:
         unzip -l app/libs/qThroneCore.aar > "$RUNNER_TEMP/throne-core-aar.txt"
         unzip -p app/libs/qThroneCore.aar classes.jar > "$RUNNER_TEMP/throne-core-classes.jar"
         unzip -l "$RUNNER_TEMP/throne-core-classes.jar" > "$RUNNER_TEMP/throne-core-classes.txt"
-        grep -q 'app/qthrone/core/mobile/Mobile.class' "$RUNNER_TEMP/throne-core-classes.txt"
+        grep -q 'app/qcoldthrone/core/mobile/Mobile.class' "$RUNNER_TEMP/throne-core-classes.txt"
         grep -q 'go/Seq.class' "$RUNNER_TEMP/throne-core-classes.txt"
         # the APK splits (buildSrc Helpers.kt) must match the core targets
         for abi in arm64-v8a armeabi-v7a x86_64; do

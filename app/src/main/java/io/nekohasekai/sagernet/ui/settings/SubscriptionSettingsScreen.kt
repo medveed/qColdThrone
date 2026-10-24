@@ -1,16 +1,16 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreference
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.database.preference.EditTextPreferenceModifiers
-import app.qthrone.mobile.group.DeviceDetails
-import app.qthrone.mobile.group.RequestIdentity
-import app.qthrone.mobile.group.SubscriptionScheduler
-import app.qthrone.mobile.ktx.USER_AGENT
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.database.preference.EditTextPreferenceModifiers
+import app.qcoldthrone.mobile.group.DeviceDetails
+import app.qcoldthrone.mobile.group.RequestIdentity
+import app.qcoldthrone.mobile.group.SubscriptionScheduler
+import app.qcoldthrone.mobile.ktx.USER_AGENT
 import kotlin.math.abs
 
 /**

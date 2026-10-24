@@ -1,19 +1,19 @@
-package app.qthrone.mobile.outbound.types
+package app.qcoldthrone.mobile.outbound.types
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.BuildResult
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.QtStrings
-import app.qthrone.mobile.outbound.SecurityInfo
-import app.qthrone.mobile.outbound.SecurityLevel
-import app.qthrone.mobile.outbound.import.ClashProxy
-import app.qthrone.mobile.outbound.json.JsonArray
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.json.JsonValues
-import app.qthrone.mobile.outbound.link.Hosts
-import app.qthrone.mobile.outbound.link.LinkBuilder
-import app.qthrone.mobile.outbound.link.LinkParser
-import app.qthrone.mobile.outbound.link.ParsedLink
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.BuildResult
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.QtStrings
+import app.qcoldthrone.mobile.outbound.SecurityInfo
+import app.qcoldthrone.mobile.outbound.SecurityLevel
+import app.qcoldthrone.mobile.outbound.import.ClashProxy
+import app.qcoldthrone.mobile.outbound.json.JsonArray
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.JsonValues
+import app.qcoldthrone.mobile.outbound.link.Hosts
+import app.qcoldthrone.mobile.outbound.link.LinkBuilder
+import app.qcoldthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.outbound.link.ParsedLink
 
 /** Peer (wireguard.h:6-25, wireguard.cpp:21-122): the single peer of a wireguard endpoint. */
 class WireGuardPeer {

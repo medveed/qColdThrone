@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,15 +12,15 @@ import android.graphics.Color
 import androidx.lifecycle.lifecycleScope
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.RouteManager
-import app.qthrone.mobile.database.SagerDatabase
-import app.qthrone.mobile.ktx.needReload
-import app.qthrone.mobile.route.OutboundIds
-import app.qthrone.mobile.route.RouteProfile
-import app.qthrone.mobile.route.RouteRule
-import app.qthrone.mobile.route.MobileRouteInput
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.RouteManager
+import app.qcoldthrone.mobile.database.SagerDatabase
+import app.qcoldthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.route.OutboundIds
+import app.qcoldthrone.mobile.route.RouteProfile
+import app.qcoldthrone.mobile.route.RouteRule
+import app.qcoldthrone.mobile.route.MobileRouteInput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -80,7 +80,7 @@ class MobileRoutingFragment : ToolbarFragment() {
                         }.show()
                 })
             }
-            root.addView(line(getString(R.string.qmobile_route_advanced)) { (requireActivity() as MainActivity).displayFragment(SettingsFragment.forScreen("app.qthrone.mobile.ui.settings.RoutingSettingsFragment",getString(R.string.qmobile_route_advanced))) })
+            root.addView(line(getString(R.string.qmobile_route_advanced)) { (requireActivity() as MainActivity).displayFragment(SettingsFragment.forScreen("app.qcoldthrone.mobile.ui.settings.RoutingSettingsFragment",getString(R.string.qmobile_route_advanced))) })
         }
     }
     private fun save(snapshot: RouteProfile, change: (RouteProfile) -> Unit) {

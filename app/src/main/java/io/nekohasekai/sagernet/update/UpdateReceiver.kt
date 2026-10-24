@@ -1,16 +1,16 @@
-package app.qthrone.mobile.update
+package app.qcoldthrone.mobile.update
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import app.qthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.DataStore
 
 /** Not exported: PackageInstaller results and the notification actions (cancel download, skip version). */
 class UpdateReceiver : BroadcastReceiver() {
 
     companion object {
-        const val ACTION_CANCEL = "app.qthrone.mobile.update.CANCEL"
-        const val ACTION_SKIP = "app.qthrone.mobile.update.SKIP"
+        const val ACTION_CANCEL = "app.qcoldthrone.mobile.update.CANCEL"
+        const val ACTION_SKIP = "app.qcoldthrone.mobile.update.SKIP"
         const val EXTRA_VERSION_CODE = "versionCode"
     }
 

@@ -1,8 +1,8 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Context
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.autoselector.AutoSelectorStatus
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorStatus
 
 /** The texts of AutoSelectorView (AutoSelectorMonitor.cpp:21-72) shared by the status line and the stats screen. */
 internal object AutoSelectorTexts {

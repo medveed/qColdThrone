@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -17,18 +17,18 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.databinding.LayoutAddEntityBinding
-import app.qthrone.mobile.databinding.LayoutProfileBinding
-import app.qthrone.mobile.ktx.*
-import app.qthrone.mobile.outbound.types.Chain
-import app.qthrone.mobile.ui.ProfileSelectActivity
-import app.qthrone.mobile.widget.applyInsetPadding
-import app.qthrone.mobile.widget.applyListInsets
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.databinding.LayoutAddEntityBinding
+import app.qcoldthrone.mobile.databinding.LayoutProfileBinding
+import app.qcoldthrone.mobile.ktx.*
+import app.qcoldthrone.mobile.outbound.types.Chain
+import app.qcoldthrone.mobile.ui.ProfileSelectActivity
+import app.qcoldthrone.mobile.widget.applyInsetPadding
+import app.qcoldthrone.mobile.widget.applyListInsets
 import moe.matsuri.nb4a.Protocols.getProtocolColor
 import moe.matsuri.nb4a.proxy.PreferenceBindingManager
 

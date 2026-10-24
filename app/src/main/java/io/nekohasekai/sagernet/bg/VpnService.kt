@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg
+package app.qcoldthrone.mobile.bg
 
 import android.app.Service
 import android.content.Intent
@@ -7,16 +7,16 @@ import android.net.IpPrefix
 import android.net.ProxyInfo
 import android.os.Build
 import android.os.ParcelFileDescriptor
-import app.qthrone.mobile.*
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ktx.*
-import app.qthrone.mobile.ui.VpnRequestActivity
-import app.qthrone.mobile.utils.PlatformNotifications
-import app.qthrone.core.mobile.Mobile
-import app.qthrone.core.mobile.RoutePrefix
-import app.qthrone.core.mobile.RoutePrefixIterator
-import app.qthrone.core.mobile.StringIterator
-import app.qthrone.core.mobile.TunOptions
+import app.qcoldthrone.mobile.*
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ktx.*
+import app.qcoldthrone.mobile.ui.VpnRequestActivity
+import app.qcoldthrone.mobile.utils.PlatformNotifications
+import app.qcoldthrone.core.mobile.Mobile
+import app.qcoldthrone.core.mobile.RoutePrefix
+import app.qcoldthrone.core.mobile.RoutePrefixIterator
+import app.qcoldthrone.core.mobile.StringIterator
+import app.qcoldthrone.core.mobile.TunOptions
 import java.net.InetAddress
 import android.net.VpnService as BaseVpnService
 

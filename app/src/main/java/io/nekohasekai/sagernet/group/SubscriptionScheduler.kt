@@ -1,4 +1,4 @@
-package app.qthrone.mobile.group
+package app.qcoldthrone.mobile.group
 
 import android.content.Context
 import androidx.work.Constraints
@@ -14,12 +14,12 @@ import androidx.work.multiprocess.RemoteListenableWorker
 import androidx.work.multiprocess.RemoteWorkManager
 import androidx.work.multiprocess.RemoteWorkerService
 import com.google.common.util.concurrent.ListenableFuture
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.GroupRepo
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.GroupRepo
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
@@ -64,7 +64,7 @@ object SubscriptionScheduler {
     }
 
     /** A subscription's own period, else sub_auto_update; null when it is not updated automatically. */
-    fun intervalOf(group: app.qthrone.mobile.database.ProxyGroup): Int? {
+    fun intervalOf(group: app.qcoldthrone.mobile.database.ProxyGroup): Int? {
         if (group.url.isEmpty() || group.archive || group.skipAutoUpdate) return null
         return group.subOptions.autoUpdateMinutes.takeIf { it >= MIN_INTERVAL_MINUTES }
             ?: DataStore.subAutoUpdate.takeIf { it >= MIN_INTERVAL_MINUTES }
@@ -74,7 +74,7 @@ object SubscriptionScheduler {
     private fun shortestInterval(): Int = GroupRepo.all().mapNotNull(::intervalOf).minOrNull() ?: 0
 
     /** A run a little early (WorkManager timing) still counts, so a period is never skipped whole. */
-    private fun due(group: app.qthrone.mobile.database.ProxyGroup, interval: Int, now: Long) =
+    private fun due(group: app.qcoldthrone.mobile.database.ProxyGroup, interval: Int, now: Long) =
         now - group.subLastUpdate >= interval * 60L * 9 / 10
 
     /**

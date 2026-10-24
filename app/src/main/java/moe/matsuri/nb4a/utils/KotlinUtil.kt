@@ -1,7 +1,7 @@
 package moe.matsuri.nb4a.utils
 
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.ktx.Logs
 import java.io.File
 
 // SagerNet Class

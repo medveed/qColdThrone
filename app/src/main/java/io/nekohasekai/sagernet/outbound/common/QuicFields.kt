@@ -1,10 +1,10 @@
-package app.qthrone.mobile.outbound.common
+package app.qcoldthrone.mobile.outbound.common
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.QtStrings
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.link.LinkParser
-import app.qthrone.mobile.outbound.link.ParsedLink
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.QtStrings
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.outbound.link.ParsedLink
 
 /**
  * QUICFields (include/configs/common/QUICFields.h, src/configs/common/QUICFields.cpp): built flat into the

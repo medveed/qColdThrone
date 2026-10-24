@@ -1,11 +1,11 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import android.content.Intent
 import androidx.preference.Preference
-import app.qthrone.mobile.R
-import app.qthrone.mobile.update.UpdateActivity
-import app.qthrone.mobile.update.UpdateManager
-import app.qthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.update.UpdateActivity
+import app.qcoldthrone.mobile.update.UpdateManager
+import app.qcoldthrone.mobile.BuildConfig
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle

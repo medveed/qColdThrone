@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg
+package app.qcoldthrone.mobile.bg
 
 import java.io.Closeable
 

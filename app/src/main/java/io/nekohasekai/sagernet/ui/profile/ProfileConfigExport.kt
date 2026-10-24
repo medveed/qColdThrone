@@ -1,8 +1,8 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
-import app.qthrone.mobile.bg.proto.CoreConfigs
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.ktx.toStringPretty
+import app.qcoldthrone.mobile.bg.proto.CoreConfigs
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.ktx.toStringPretty
 import org.json.JSONObject
 
 /** "Export configuration" of the profile share menu: the core config the profile would start with, as pretty JSON. */

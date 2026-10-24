@@ -1,12 +1,12 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
 import android.content.Intent
 import android.util.AtomicFile
 import androidx.core.app.NotificationCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ui.MainActivity
 import java.io.File
 import java.io.RandomAccessFile
 import org.json.JSONObject

@@ -1,15 +1,15 @@
-package app.qthrone.mobile.bg.proto
+package app.qcoldthrone.mobile.bg.proto
 
-import app.qthrone.mobile.bg.CoreRuntime
-import app.qthrone.mobile.bg.test.TestTags
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.ktx.completeWith
-import app.qthrone.mobile.outbound.types.Chain
-import app.qthrone.core.mobile.Instance
-import app.qthrone.core.mobile.Mobile
-import app.qthrone.core.mobile.TestRequest
-import app.qthrone.core.mobile.URLTestHandler
+import app.qcoldthrone.mobile.bg.CoreRuntime
+import app.qcoldthrone.mobile.bg.test.TestTags
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.ktx.completeWith
+import app.qcoldthrone.mobile.outbound.types.Chain
+import app.qcoldthrone.core.mobile.Instance
+import app.qcoldthrone.core.mobile.Mobile
+import app.qcoldthrone.core.mobile.TestRequest
+import app.qcoldthrone.core.mobile.URLTestHandler
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -24,7 +24,7 @@ suspend fun urlTestCurrent(instance: Instance, core: CoreConfig, url: String, ti
     val request = TestRequest().apply {
         testCurrent = true
         this.url = url
-        this.timeoutMs = ProbeTimeout.effective(timeoutMs,app.qthrone.mobile.database.DataStore.baseService?.data?.proxy?.config?.carrierPlans?.isNotEmpty()==true)
+        this.timeoutMs = ProbeTimeout.effective(timeoutMs,app.qcoldthrone.mobile.database.DataStore.baseService?.data?.proxy?.config?.carrierPlans?.isNotEmpty()==true)
         maxConcurrency = 1
         core.outboundTags.forEach(::addOutboundTag)
         if (vpnExit) addVPNEndpointTag(CoreConfig.TAG_PROXY)
@@ -71,9 +71,9 @@ internal fun exitsThroughVpn(profile: ProxyEntity?): Boolean {
 
 /** What a probe box is started with: the config, its Xray half and the tags to measure. */
 internal fun CoreConfig.applyTo(request: TestRequest) {
-    app.qthrone.mobile.bg.carrier.VpnListenerPolicy.check(coreConfig)
-    xrayConfig?.let(app.qthrone.mobile.bg.carrier.VpnListenerPolicy::checkXray)
-    xrayFullConfigs.forEach(app.qthrone.mobile.bg.carrier.VpnListenerPolicy::checkXray)
+    app.qcoldthrone.mobile.bg.carrier.VpnListenerPolicy.check(coreConfig)
+    xrayConfig?.let(app.qcoldthrone.mobile.bg.carrier.VpnListenerPolicy::checkXray)
+    xrayFullConfigs.forEach(app.qcoldthrone.mobile.bg.carrier.VpnListenerPolicy::checkXray)
     request.coreConfig = coreConfig
     request.needXray = needXray
     request.xrayConfig = xrayConfig ?: ""

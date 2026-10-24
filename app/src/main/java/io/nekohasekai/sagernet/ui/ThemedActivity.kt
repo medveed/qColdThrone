@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.res.Configuration
 import android.graphics.Color
@@ -13,9 +13,9 @@ import androidx.core.graphics.ColorUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.Snackbar
-import app.qthrone.mobile.R
-import app.qthrone.mobile.utils.Theme
-import app.qthrone.mobile.widget.applyTopInset
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.utils.Theme
+import app.qcoldthrone.mobile.widget.applyTopInset
 
 abstract class ThemedActivity : AppCompatActivity, androidx.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
     constructor() : super()

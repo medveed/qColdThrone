@@ -1,10 +1,10 @@
-package app.qthrone.mobile.outbound.types
+package app.qcoldthrone.mobile.outbound.types
 
-import app.qthrone.mobile.bg.carrier.CarrierBridgeCredentials
-import app.qthrone.mobile.bg.carrier.CarrierKind
-import app.qthrone.mobile.outbound.OutboundFactory
-import app.qthrone.mobile.outbound.`import`.ProfileImport
-import app.qthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.bg.carrier.CarrierBridgeCredentials
+import app.qcoldthrone.mobile.bg.carrier.CarrierKind
+import app.qcoldthrone.mobile.outbound.OutboundFactory
+import app.qcoldthrone.mobile.outbound.`import`.ProfileImport
+import app.qcoldthrone.mobile.outbound.json.JsonObject
 import org.junit.Assert.*
 import org.junit.Test
 

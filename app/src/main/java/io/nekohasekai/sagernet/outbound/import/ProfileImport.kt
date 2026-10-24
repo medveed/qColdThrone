@@ -1,19 +1,21 @@
-package app.qthrone.mobile.outbound.import
+package app.qcoldthrone.mobile.outbound.import
 
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.OutboundFactory
-import app.qthrone.mobile.outbound.json.JsonArray
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.link.Base64Strict
-import app.qthrone.mobile.group.ProviderLinks
-import app.qthrone.mobile.group.SubscriptionCrypto
-import app.qthrone.mobile.outbound.link.LinkCodec
-import app.qthrone.mobile.outbound.types.Custom
-import app.qthrone.mobile.outbound.types.OpenConnect
-import app.qthrone.mobile.outbound.types.OpenVpn
-import app.qthrone.mobile.outbound.types.Shadowsocks
-import app.qthrone.mobile.outbound.types.WireGuard
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.OutboundFactory
+import app.qcoldthrone.mobile.outbound.json.JsonArray
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.group.ProviderLinks
+import app.qcoldthrone.mobile.group.SubscriptionCrypto
+import app.qcoldthrone.mobile.outbound.link.LinkCodec
+import app.qcoldthrone.mobile.outbound.offsite.OffsiteProtocols
+import app.qcoldthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.mobile.outbound.types.OffsiteConfig
+import app.qcoldthrone.mobile.outbound.types.OpenConnect
+import app.qcoldthrone.mobile.outbound.types.OpenVpn
+import app.qcoldthrone.mobile.outbound.types.Shadowsocks
+import app.qcoldthrone.mobile.outbound.types.WireGuard
 import java.io.ByteArrayOutputStream
 import java.util.zip.Inflater
 
@@ -170,8 +172,10 @@ object ProfileImport {
             // Process heterogeneous arrays independently; one native transport must not hide its neighbours.
             if (doc is JsonArray) {
                 for (item in doc) {
+                    // §8: a document carrying carrier protocols stays one offsite config, also inside a wrapper.
+                    if (item is JsonObject && isOffsiteConfig(item)) produce(offsiteConfig(item, item.toCompact()))
                     // As on the desktop, each Xray config in an array is self-contained and runs verbatim.
-                    if (item is JsonObject && xraySubType(item) == XraySubType.OutboundInJson) Custom.fromXrayFullConfig(item)?.let(::produce)
+                    else if (item is JsonObject && xraySubType(item) == XraySubType.OutboundInJson) Custom.fromXrayFullConfig(item)?.let(::produce)
                     else if (item is JsonObject) json(item, item.toCompact(),jsonDepth+1) else log("Invalid profile JSON item")
                 }
                 return
@@ -187,8 +191,13 @@ object ProfileImport {
                 if (items != null) { json(items, items.toCompact(),jsonDepth+1); return }
                 // The S3 Bypass app's configuration: Xray with the fedarisha outbound our Xray core does not have.
                 if (doc.array("outbounds").any { it is JsonObject && it.string("protocol")=="fedarisha" }) {
-                    val profile=app.qthrone.mobile.outbound.types.S3Bypass.fromXrayConfig(doc)
+                    val profile=app.qcoldthrone.mobile.outbound.types.S3Bypass.fromXrayConfig(doc)
                     if(profile!=null) produce(profile) else log("Invalid S3 Bypass configuration")
+                    return
+                }
+                // §8: a document with carrier protocols in `outbounds` is an Offsite JSON config, not a Custom config.
+                if (isOffsiteConfig(doc)) {
+                    produce(offsiteConfig(doc, text))
                     return
                 }
                 // Like the desktop: an Xray config with its own routing, DNS or balancing runs verbatim,
@@ -224,7 +233,7 @@ object ProfileImport {
                     if(!outbound.invalid && outbound.parseFromJson(doc)) {
                         val exported=outbound.exportToJson()
                         if(doc.all { (key,value) -> exported.contains(key) &&
-                                app.qthrone.mobile.outbound.json.JsonWriter.write(value)==app.qthrone.mobile.outbound.json.JsonWriter.write(exported[key]) }) {
+                                app.qcoldthrone.mobile.outbound.json.JsonWriter.write(value)==app.qcoldthrone.mobile.outbound.json.JsonWriter.write(exported[key]) }) {
                             produce(outbound);return
                         }
                     }
@@ -286,6 +295,23 @@ object ProfileImport {
 
         private fun hasXrayOutbound(outbounds: JsonArray): Boolean =
             outbounds.any { it is JsonObject && it.contains("protocol") }
+
+        /** §8: a document whose `outbounds` contains at least one carrier-backed offsite protocol. */
+        private fun isOffsiteConfig(doc: JsonObject): Boolean =
+            doc.isArray("outbounds") && doc.array("outbounds").any {
+                it is JsonObject && OffsiteProtocols.isOffsite(it.string("protocol"))
+            }
+
+        /** §8: keep the document verbatim and name it from `remarks`, `name` or the first offsite tag. */
+        private fun offsiteConfig(doc: JsonObject, text: String): OffsiteConfig {
+            val firstTag = doc.array("outbounds").firstOrNull {
+                it is JsonObject && OffsiteProtocols.isOffsite(it.string("protocol"))
+            }?.let { (it as JsonObject).string("tag") }.orEmpty()
+            return OffsiteConfig().apply {
+                config = text.trim()
+                name = doc.string("remarks").ifEmpty { doc.string("name") }.ifEmpty { firstTag }
+            }
+        }
 
         /** Parser::singBox (SubscriptionParser.cpp:372-400). */
         private fun singBox(doc: Any, type: SingBoxSubType, jsonDepth: Int) {

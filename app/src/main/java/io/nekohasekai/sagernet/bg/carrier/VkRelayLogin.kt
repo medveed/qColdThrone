@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
 /** qWDTT's three login routes; VK ID's WebView error must advance the route once. */
 internal object VkRelayLogin {

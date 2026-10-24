@@ -1,10 +1,10 @@
-package app.qthrone.mobile.database
+package app.qcoldthrone.mobile.database
 
 import android.database.sqlite.SQLiteCantOpenDatabaseException
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.aidl.TrafficData
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.aidl.TrafficData
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.outbound.Outbound
 import java.io.IOException
 import java.sql.SQLException
 import java.util.concurrent.Callable
@@ -120,14 +120,14 @@ object ProfileManager {
 
     /** ProfilesRepo::AddProfile: appended to group [groupId], the current group when it is not a group id (<= 0). */
     private fun applyNativeDefaults(outbound: Outbound) {
-        if(outbound is app.qthrone.mobile.outbound.types.Qwdtt) {
-            app.qthrone.mobile.bg.carrier.NativeHashPolicy.applyDefaultSource(outbound,
-                DataStore.configurationStore.getString(app.qthrone.mobile.bg.carrier.VkRelayAccount.DEFAULT_SOURCE,"manual"))
+        if(outbound is app.qcoldthrone.mobile.outbound.types.Qwdtt) {
+            app.qcoldthrone.mobile.bg.carrier.NativeHashPolicy.applyDefaultSource(outbound,
+                DataStore.configurationStore.getString(app.qcoldthrone.mobile.bg.carrier.VkRelayAccount.DEFAULT_SOURCE,"manual"))
         }
         // One identity per phone, as the original apps send ANDROID_ID: servers bind passwords to it,
         // so a profile added again must not look like another device.
-        if(outbound is app.qthrone.mobile.outbound.types.Qwdtt && !outbound.deviceIdProvided) {
-            outbound.deviceId = app.qthrone.mobile.bg.carrier.NativeHashPolicy.defaultDeviceId(app.qthrone.mobile.group.DeviceDetails.get().hwid)
+        if(outbound is app.qcoldthrone.mobile.outbound.types.Qwdtt && !outbound.deviceIdProvided) {
+            outbound.deviceId = app.qcoldthrone.mobile.bg.carrier.NativeHashPolicy.defaultDeviceId(app.qcoldthrone.mobile.group.DeviceDetails.get().hwid)
             outbound.deviceIdProvided = true
         }
     }

@@ -1,16 +1,16 @@
-package app.qthrone.mobile.outbound.types
+package app.qcoldthrone.mobile.outbound.types
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.BuildResult
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.SecurityInfo
-import app.qthrone.mobile.outbound.common.Tls
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.json.jsonObjectOf
-import app.qthrone.mobile.outbound.link.Base64Strict
-import app.qthrone.mobile.outbound.link.Hosts
-import app.qthrone.mobile.outbound.link.LinkBuilder
-import app.qthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.BuildResult
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.SecurityInfo
+import app.qcoldthrone.mobile.outbound.common.Tls
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.outbound.link.Hosts
+import app.qcoldthrone.mobile.outbound.link.LinkBuilder
+import app.qcoldthrone.mobile.outbound.link.LinkParser
 
 /** trusttunnel (include/configs/outbounds/trusttunnel.h, src/configs/outbounds/trusttunnel.cpp). */
 class TrustTunnel : Outbound("trusttunnel") {

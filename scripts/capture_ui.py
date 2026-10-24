@@ -61,9 +61,9 @@ def choose_accent(label):
     tap_text(label);time.sleep(3)
 
 packages = [line.removeprefix('package:').strip() for line in shell('pm', 'list', 'packages').splitlines()
-            if line.startswith('package:app.qthrone.mobile')]
+            if line.startswith('package:app.qcoldthrone.mobile')]
 assert len(packages) == 1, 'Expected one isolated qThrone installation'
-activity = packages[0] + '/app.qthrone.mobile.ui.MainActivity'
+activity = packages[0] + '/app.qcoldthrone.mobile.ui.MainActivity'
 shell('pm', 'grant', packages[0], 'android.permission.POST_NOTIFICATIONS')
 shell('dumpsys', 'deviceidle', 'whitelist', '+' + packages[0])
 shell('am', 'force-stop', packages[0])

@@ -1,4 +1,4 @@
-package app.qthrone.mobile.appwidget
+package app.qcoldthrone.mobile.appwidget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -11,18 +11,18 @@ import android.text.format.Formatter
 import android.view.View
 import android.widget.RemoteViews
 import androidx.preference.PreferenceDataStore
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.utils.ShortcutAuthorization
-import app.qthrone.mobile.QuickToggleShortcut
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.BaseService
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.GroupRepo
-import app.qthrone.mobile.database.ProfileOrder
-import app.qthrone.mobile.database.SagerDatabase
-import app.qthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.utils.ShortcutAuthorization
+import app.qcoldthrone.mobile.QuickToggleShortcut
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.BaseService
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.GroupRepo
+import app.qcoldthrone.mobile.database.ProfileOrder
+import app.qcoldthrone.mobile.database.SagerDatabase
+import app.qcoldthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -32,8 +32,8 @@ import kotlinx.coroutines.sync.withLock
  */
 object Widgets {
 
-    const val ACTION_NEXT = "app.qthrone.mobile.appwidget.NEXT"
-    const val ACTION_PREVIOUS = "app.qthrone.mobile.appwidget.PREVIOUS"
+    const val ACTION_NEXT = "app.qcoldthrone.mobile.appwidget.NEXT"
+    const val ACTION_PREVIOUS = "app.qcoldthrone.mobile.appwidget.PREVIOUS"
 
     private const val SPEED_INTERVAL_MS = 3000L
     private const val SMALL_WIDTH_DP = 100

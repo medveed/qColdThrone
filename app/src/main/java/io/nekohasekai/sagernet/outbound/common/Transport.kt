@@ -1,13 +1,13 @@
-package app.qthrone.mobile.outbound.common
+package app.qcoldthrone.mobile.outbound.common
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.import.ClashProxy
-import app.qthrone.mobile.outbound.QtStrings
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.json.JsonValues
-import app.qthrone.mobile.outbound.link.Hosts
-import app.qthrone.mobile.outbound.link.LinkParser
-import app.qthrone.mobile.outbound.link.ParsedLink
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.import.ClashProxy
+import app.qcoldthrone.mobile.outbound.QtStrings
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.JsonValues
+import app.qcoldthrone.mobile.outbound.link.Hosts
+import app.qcoldthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.outbound.link.ParsedLink
 
 /** Transport (include/configs/common/transport.h, src/configs/common/transport.cpp): the sing-box V2Ray transport. */
 class Transport {

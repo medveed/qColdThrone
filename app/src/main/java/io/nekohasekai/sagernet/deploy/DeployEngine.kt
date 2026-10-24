@@ -1,11 +1,11 @@
-package app.qthrone.mobile.deploy
+package app.qcoldthrone.mobile.deploy
 
-import app.qthrone.mobile.bg.carrier.NativeHashPolicy
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.group.DeviceDetails
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.bg.carrier.VkRelayAccount
-import app.qthrone.mobile.outbound.types.WdttPlus
+import app.qcoldthrone.mobile.bg.carrier.NativeHashPolicy
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.group.DeviceDetails
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.bg.carrier.VkRelayAccount
+import app.qcoldthrone.mobile.outbound.types.WdttPlus
 import com.jcraft.jsch.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow

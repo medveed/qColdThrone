@@ -1,15 +1,15 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.annotation.XmlRes
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.ui.json.ProfileJson
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.ui.json.ProfileJson
 import moe.matsuri.nb4a.proxy.PreferenceBindingManager
 import moe.matsuri.nb4a.ui.EditConfigPreference
 

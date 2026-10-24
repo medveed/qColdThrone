@@ -1,6 +1,6 @@
-package app.qthrone.mobile.route
+package app.qcoldthrone.mobile.route
 
-import app.qthrone.mobile.outbound.json.*
+import app.qcoldthrone.mobile.outbound.json.*
 
 /** Keep each provider's original so a later update can split formerly identical choices safely. */
 object ProviderRouteProfiles {

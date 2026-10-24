@@ -1,6 +1,6 @@
-package app.qthrone.mobile.bg.proto
+package app.qcoldthrone.mobile.bg.proto
 
-import app.qthrone.mobile.outbound.config.GeneratorSettings
+import app.qcoldthrone.mobile.outbound.config.GeneratorSettings
 import java.net.URI
 
 /** Only fixed labels enter logs: never a resolver's URL, credentials, query token or private hostname. */

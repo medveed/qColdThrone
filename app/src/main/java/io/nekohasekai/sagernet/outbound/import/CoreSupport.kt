@@ -1,12 +1,12 @@
-package app.qthrone.mobile.outbound.import
+package app.qcoldthrone.mobile.outbound.import
 
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.common.Transport
-import app.qthrone.mobile.outbound.common.XrayStreamSetting
-import app.qthrone.mobile.outbound.common.xrayNetworks
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.types.Custom
-import app.qthrone.mobile.outbound.types.Shadowsocks
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.common.Transport
+import app.qcoldthrone.mobile.outbound.common.XrayStreamSetting
+import app.qcoldthrone.mobile.outbound.common.xrayNetworks
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.mobile.outbound.types.Shadowsocks
 
 /**
  * Issue #63 (Android only): a node the core it would run in rejects, or that the parse silently turned into plain

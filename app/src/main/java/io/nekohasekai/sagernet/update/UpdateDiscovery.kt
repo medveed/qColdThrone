@@ -1,12 +1,12 @@
-package app.qthrone.mobile.update
+package app.qcoldthrone.mobile.update
 
 import android.content.Context
 import androidx.preference.PreferenceDataStore
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
-import app.qthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
+import app.qcoldthrone.mobile.ktx.app
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

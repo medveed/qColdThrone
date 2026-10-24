@@ -1,10 +1,10 @@
-package app.qthrone.mobile.outbound.types
+package app.qcoldthrone.mobile.outbound.types
 
 import android.os.Build
-import app.qthrone.mobile.bg.carrier.CarrierBridgeCredentials
-import app.qthrone.mobile.bg.carrier.CarrierKind
-import app.qthrone.mobile.outbound.json.*
-import app.qthrone.mobile.outbound.link.*
+import app.qcoldthrone.mobile.bg.carrier.CarrierBridgeCredentials
+import app.qcoldthrone.mobile.bg.carrier.CarrierKind
+import app.qcoldthrone.mobile.outbound.json.*
+import app.qcoldthrone.mobile.outbound.link.*
 import java.util.Locale
 import java.util.TimeZone
 

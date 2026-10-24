@@ -1,17 +1,21 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.json.JsonArray
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.json.JsonValues
-import app.qthrone.mobile.outbound.json.jsonObjectOf
-import app.qthrone.mobile.outbound.types.AutoSelector
-import app.qthrone.mobile.route.OutboundIds
-import app.qthrone.mobile.route.RouteProfile
-import app.qthrone.mobile.route.RuleSets
-import app.qthrone.mobile.route.RuleType
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.json.JsonArray
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.JsonValues
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
+import app.qcoldthrone.mobile.outbound.offsite.OffsiteConfigValidator
+import app.qcoldthrone.mobile.outbound.offsite.OffsiteSeverity
+import app.qcoldthrone.mobile.outbound.offsite.OffsiteTranslator
+import app.qcoldthrone.mobile.outbound.types.AutoSelector
+import app.qcoldthrone.mobile.outbound.types.OffsiteConfig
+import app.qcoldthrone.mobile.route.OutboundIds
+import app.qcoldthrone.mobile.route.RouteProfile
+import app.qcoldthrone.mobile.route.RuleSets
+import app.qcoldthrone.mobile.route.RuleType
 
 /**
  * The desktop's config generator (src/configs/generate.cpp) for the Android app: [build] is BuildSingBoxConfig
@@ -79,6 +83,7 @@ class ConfigGenerator @JvmOverloads constructor(
                 involvedProfileIds = reads.ids,
             )
         }
+        TypeAccess.asOffsiteConfig(profile)?.let { return buildOffsiteConfig(profileId, it, reads) }
         val route = routing.profile?.let(::routeProfileForBuild)
             ?: return GeneratedConfig.failure("Routing profile does not exist, try resetting the route profile in Routing Settings")
 
@@ -130,6 +135,123 @@ class ConfigGenerator @JvmOverloads constructor(
             autoSelector = state.autoSelector,
             carrierPlans = state.carrierPlans.values.toList(),
         )
+    }
+
+    /**
+     * The translated sections of an offsite document shared by the main and the test build (docs/offsite-json-config.md
+     * §6): the log and dns objects, the outbounds/endpoints, the route, the primary egress tag and the carrier plans.
+     */
+    private class OffsiteBuild(
+        val log: JsonObject,
+        val outbounds: JsonArray,
+        val endpoints: JsonArray,
+        val route: JsonObject,
+        val dns: JsonObject,
+        val finalTag: String,
+        val carrierPlans: List<app.qcoldthrone.mobile.bg.carrier.CarrierPlan>,
+        val error: String?,
+    )
+
+    /** Parses, validates and translates an offsite document; [OffsiteBuild.error] is the first failure. */
+    private fun translateOffsite(profile: OffsiteConfig, context: BuildContext = buildContext): OffsiteBuild {
+        fun failure(message: String) = OffsiteBuild(
+            JsonObject(), JsonArray(), JsonArray(), JsonObject(), JsonObject(), "", emptyList(), message,
+        )
+        val parsed = profile.parse()
+        val document = parsed.document ?: return failure(
+            parsed.errors.firstOrNull()?.let { "${it.path}: ${it.message}" }
+                ?: "Offsite config is not a valid JSON object",
+        )
+        val errors = OffsiteConfigValidator.validate(document, profile.config.length)
+            .filter { it.severity == OffsiteSeverity.Error }
+        if (errors.isNotEmpty()) return failure(errors.joinToString("\n") { "${it.path}: ${it.message}" })
+        val translation = OffsiteTranslator.translate(document, settings, context, routing)
+        translation.error?.let { return failure(it) }
+
+        val route = translation.route
+        // A `dns` section without a usable server must not suppress the app's DNS configuration.
+        val dns = translation.dns?.takeIf { it.array("servers").isNotEmpty() } ?: jsonObjectOf(
+            "servers" to JsonArray.of(jsonObjectOf("type" to "udp", "tag" to Tags.DNS_DIRECT, "server" to "1.1.1.1")),
+        )
+        if (!route.contains("default_domain_resolver")) {
+            val server = dns.array("servers").firstOrNull { it is JsonObject } as? JsonObject
+            val serverTag = server?.string("tag").orEmpty()
+            if (serverTag.isNotEmpty()) route["default_domain_resolver"] = jsonObjectOf("server" to serverTag)
+        }
+        return OffsiteBuild(
+            log = OffsiteTranslator.translateLog(document.log, settings.logLevel),
+            outbounds = translation.outbounds,
+            endpoints = translation.endpoints,
+            route = route,
+            dns = dns,
+            finalTag = route.string("final"),
+            carrierPlans = translation.carrierPlans,
+            error = null,
+        )
+    }
+
+    /**
+     * The "Offsite JSON Config" branch (docs/offsite-json-config.md §6): validate the stored document, translate
+     * outbounds/routing/dns, then inject the app's inbounds like the `fullconfig` branch. The carrier plans are
+     * handed to the service layer, which starts them before the core (§6.5).
+     */
+    private fun buildOffsiteConfig(profileId: Long, profile: OffsiteConfig, reads: RecordingProfiles): GeneratedConfig {
+        val built = translateOffsite(profile)
+        built.error?.let { return GeneratedConfig.failure(it) }
+
+        val state = BuildState(forTest = false)
+        val core = state.coreConfig
+        core["log"] = built.log
+        core["outbounds"] = built.outbounds
+        if (built.endpoints.isNotEmpty()) core["endpoints"] = built.endpoints
+
+        val route = built.route
+        if (settings.vpnMode) route["auto_detect_interface"] = true
+        // Xray domain/geosite rules only match after sniffing/resolving: reuse the normal generator's head rules.
+        prependOffsiteHeadRules(route)
+        core["route"] = route
+        core["dns"] = built.dns
+
+        buildInboundSection(state)
+        if (settings.vpnMode && settings.perAppEnabled) VpnAppGuard.apply(core, settings.perAppAllowedUids)
+
+        return GeneratedConfig(
+            coreConfig = core.toCompact(),
+            xrayConfig = null,
+            needXray = false,
+            xrayDnsStrategy = "",
+            xrayFullConfigs = emptyList(),
+            outboundTags = emptyList(),
+            tagToProfileId = emptyMap(),
+            fullConfigs = emptyMap(),
+            skipped = emptyMap(),
+            tunIPv4Cidr = state.tunIPv4Cidr ?: tunIPv4CidrOf(core),
+            error = null,
+            involvedProfileIds = reads.ids,
+            carrierPlans = built.carrierPlans,
+        )
+    }
+
+    /**
+     * The `sniff` / `resolve` / `hijack-dns` head rules of [buildRouteSection], reused for an offsite document so its
+     * `domain`/`geosite`/`ip_cidr` rules can match (the core sniffs only through a rule action).
+     */
+    private fun prependOffsiteHeadRules(route: JsonObject) {
+        val head = JsonArray()
+        head.add(jsonObjectOf("action" to "sniff"))
+        if (settings.resolveDomainStrategy.isNotEmpty()) {
+            head.add(
+                jsonObjectOf(
+                    "inbound" to JsonValues.stringArray(listOf(Tags.MIXED_IN, "http-in", Tags.TUN_IN)),
+                    "action" to "resolve",
+                    "strategy" to settings.resolveDomainStrategy,
+                ),
+            )
+        }
+        head.add(jsonObjectOf("protocol" to "dns", "action" to "hijack-dns"))
+        if (!settings.vpnMode) head.add(jsonObjectOf("inbound" to Tags.DNS_IN, "action" to "reject"))
+        for (item in route.array("rules")) head.add(item)
+        route["rules"] = head
     }
 
     /**
@@ -309,6 +431,7 @@ class ConfigGenerator @JvmOverloads constructor(
         val outboundTags = ArrayList<String>()
         val tagToProfileId = LinkedHashMap<String, Long>()
         val fullConfigs = LinkedHashMap<Long, String>()
+        val fullConfigCarrierPlans = LinkedHashMap<Long, List<app.qcoldthrone.mobile.bg.carrier.CarrierPlan>>()
         val xrayFullConfigs = ArrayList<String>()
         val skipped = LinkedHashMap<Long, String>()
 
@@ -358,6 +481,33 @@ class ConfigGenerator @JvmOverloads constructor(
                 state.isXrayNeeded = false
                 outboundTags.add(tag)
                 tagToProfileId[tag] = id
+                continue
+            }
+            val offsiteCandidate = TypeAccess.asOffsiteConfig(outbound)
+            if (offsiteCandidate != null) {
+                val built = translateOffsite(offsiteCandidate, ctx)
+                if (built.error != null) {
+                    skipped[id] = built.error
+                    continue
+                }
+                // The probe measures the profile's default egress through the real core. Routing rules do not affect
+                // that dial and would only make the probe download rule-sets, so the test box keeps the egress graph
+                // (outbounds/endpoints and groups) with the probe's own direct DNS, an explicit route.final and empty
+                // inbounds, like a custom full config. The direct resolver is what lets the core resolve the egress
+                // server's own address without routing that query through the tunnel it is starting.
+                val offsiteState = BuildState(forTest = true)
+                offsiteState.coreConfig["log"] = built.log
+                offsiteState.coreConfig["outbounds"] = built.outbounds
+                if (built.endpoints.isNotEmpty()) offsiteState.coreConfig["endpoints"] = built.endpoints
+                offsiteState.coreConfig["route"] = jsonObjectOf(
+                    "auto_detect_interface" to true,
+                    "default_domain_resolver" to directDomainResolver(ctx),
+                    "final" to built.finalTag,
+                )
+                buildDnsSection(offsiteState, useDnsObj = false)
+                offsiteState.coreConfig["inbounds"] = JsonArray()
+                fullConfigs[id] = offsiteState.coreConfig.toCompact()
+                fullConfigCarrierPlans[id] = built.carrierPlans
                 continue
             }
             val customCandidate = TypeAccess.asCustom(outbound)
@@ -434,6 +584,7 @@ class ConfigGenerator @JvmOverloads constructor(
             tunIPv4Cidr = null,
             error = null,
             carrierPlans = state.carrierPlans.values.toList(),
+            fullConfigCarrierPlans = fullConfigCarrierPlans,
         )
     }
 

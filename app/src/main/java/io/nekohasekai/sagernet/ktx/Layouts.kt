@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ktx
+package app.qcoldthrone.mobile.ktx
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager

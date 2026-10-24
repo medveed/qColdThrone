@@ -1,4 +1,4 @@
-package app.qthrone.mobile.group
+package app.qcoldthrone.mobile.group
 
 import java.net.URLDecoder
 

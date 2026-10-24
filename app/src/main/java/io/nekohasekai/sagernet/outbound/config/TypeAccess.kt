@@ -1,10 +1,11 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.types.Chain
-import app.qthrone.mobile.outbound.types.Custom
-import app.qthrone.mobile.outbound.types.Hysteria
-import app.qthrone.mobile.outbound.types.Socks
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.types.Chain
+import app.qcoldthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.mobile.outbound.types.Hysteria
+import app.qcoldthrone.mobile.outbound.types.OffsiteConfig
+import app.qcoldthrone.mobile.outbound.types.Socks
 
 /** The desktop's Profile::Chain() / Custom() / Hysteria() / Socks() casts, which yield nothing for any other type. */
 internal object TypeAccess {
@@ -12,6 +13,9 @@ internal object TypeAccess {
     fun chainHops(outbound: Outbound): List<Long> = (outbound as? Chain)?.list ?: emptyList()
 
     fun asCustom(outbound: Outbound): Custom? = outbound as? Custom
+
+    /** The "Offsite JSON Config" profile (docs/offsite-json-config.md §6, §7). */
+    fun asOffsiteConfig(outbound: Outbound): OffsiteConfig? = outbound as? OffsiteConfig
 
     fun asSocks(outbound: Outbound): Socks? = outbound as? Socks
 

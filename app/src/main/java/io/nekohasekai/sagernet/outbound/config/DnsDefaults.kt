@@ -1,4 +1,4 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
 /** An IP endpoint avoids depending on another resolver to bootstrap encrypted remote DNS. */
 object DnsDefaults {

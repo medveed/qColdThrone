@@ -1,11 +1,11 @@
-package app.qthrone.mobile.database.backup
+package app.qcoldthrone.mobile.database.backup
 
 import android.content.Intent
 import android.net.Uri
 import androidx.fragment.app.FragmentActivity
-import app.qthrone.mobile.R
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ui.MainActivity
 
 // Entry for a .thrbackup opened from outside (VIEW/SEND intents).
 object BackupEntry {

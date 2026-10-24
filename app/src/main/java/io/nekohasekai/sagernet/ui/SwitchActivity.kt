@@ -1,12 +1,12 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Intent
 import android.os.Bundle
-import app.qthrone.mobile.Action
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.ktx.runOnMainDispatcher
+import app.qcoldthrone.mobile.Action
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.ktx.runOnMainDispatcher
 
 class SwitchActivity : ThemedActivity(R.layout.layout_empty),
     ConfigurationFragment.SelectCallback {

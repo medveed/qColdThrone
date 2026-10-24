@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -16,11 +16,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import app.qthrone.mobile.R
-import app.qthrone.mobile.deploy.DeployEngine
-import app.qthrone.mobile.deploy.DeployServer
-import app.qthrone.mobile.deploy.DeployStore
-import app.qthrone.mobile.widget.applyListInsets
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.deploy.DeployEngine
+import app.qcoldthrone.mobile.deploy.DeployServer
+import app.qcoldthrone.mobile.deploy.DeployStore
+import app.qcoldthrone.mobile.widget.applyListInsets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

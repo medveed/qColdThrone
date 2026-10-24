@@ -1,7 +1,7 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.Outbound
 
 /** qWDTT/CSQTT netstacks have IPv4 routes only. Never change saved global settings. */
 object TransportIpPolicy {

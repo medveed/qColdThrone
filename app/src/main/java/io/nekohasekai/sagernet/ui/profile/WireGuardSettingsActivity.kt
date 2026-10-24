@@ -1,14 +1,14 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.outbound.types.WireGuard
-import app.qthrone.mobile.ui.warp.WarpClient
-import app.qthrone.mobile.ui.warp.WarpGenerate
-import app.qthrone.mobile.ui.warp.setFieldText
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.outbound.types.WireGuard
+import app.qcoldthrone.mobile.ui.warp.WarpClient
+import app.qcoldthrone.mobile.ui.warp.WarpGenerate
+import app.qcoldthrone.mobile.ui.warp.setFieldText
 
 /** WireGuard / AmneziaWG: the endpoint lives in `peer.*`, the interface in the top-level fields. */
 class WireGuardSettingsActivity : BindingSettingsActivity<WireGuard>() {

@@ -1,11 +1,11 @@
 @file:Suppress("SpellCheckingInspection")
 
-package app.qthrone.mobile.ktx
+package app.qcoldthrone.mobile.ktx
 
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
 import moe.matsuri.nb4a.utils.NGUtil
 import okhttp3.ConnectionSpec
 import okhttp3.Credentials

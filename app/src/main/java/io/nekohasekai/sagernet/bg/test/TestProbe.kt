@@ -1,18 +1,18 @@
-package app.qthrone.mobile.bg.test
+package app.qcoldthrone.mobile.bg.test
 
-import app.qthrone.mobile.bg.ProfileValidator
-import app.qthrone.mobile.bg.XrayGeoAssets
-import app.qthrone.mobile.bg.proto.CoreConfig
-import app.qthrone.mobile.bg.proto.CoreConfigs
-import app.qthrone.mobile.bg.proto.applyTo
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.completeWith
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.outbound.config.GeneratedConfig
-import app.qthrone.mobile.outbound.types.Custom
-import app.qthrone.core.mobile.Mobile
-import app.qthrone.core.mobile.TestRequest
+import app.qcoldthrone.mobile.bg.ProfileValidator
+import app.qcoldthrone.mobile.bg.XrayGeoAssets
+import app.qcoldthrone.mobile.bg.proto.CoreConfig
+import app.qcoldthrone.mobile.bg.proto.CoreConfigs
+import app.qcoldthrone.mobile.bg.proto.applyTo
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.completeWith
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.outbound.config.GeneratedConfig
+import app.qcoldthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.core.mobile.Mobile
+import app.qcoldthrone.core.mobile.TestRequest
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -61,7 +61,7 @@ internal class TestProbe private constructor(
     private val core: CoreConfig,
     private val tagToProfileId: Map<String, Long>,
     private val fullConfigProfileId: Long,
-    val carrierPlans:List<app.qthrone.mobile.bg.carrier.CarrierPlan> = emptyList(),
+    val carrierPlans:List<app.qcoldthrone.mobile.bg.carrier.CarrierPlan> = emptyList(),
 ) {
     val profileIds: List<Long> =
         if (fullConfigProfileId > 0) listOf(fullConfigProfileId) else tagToProfileId.values.toList()
@@ -88,7 +88,9 @@ internal class TestProbe private constructor(
             if (generated.outboundTags.isNotEmpty()) {
                 add(TestProbe(CoreConfig.from(generated), generated.tagToProfileId, -1L, generated.carrierPlans))
             }
-            for ((id, config) in generated.fullConfigs) add(TestProbe(CoreConfig(coreConfig = config), emptyMap(), id))
+            for ((id, config) in generated.fullConfigs) {
+                add(TestProbe(CoreConfig(coreConfig = config), emptyMap(), id, generated.fullConfigCarrierPlans[id].orEmpty()))
+            }
         }
     }
 }
@@ -292,14 +294,14 @@ internal abstract class LatencySweep(protected val session: TestSession) {
         }
         try {
             val status=if(session.kind==TestSpec.KIND_URL && probe.carrierPlans.isNotEmpty())
-                app.qthrone.mobile.bg.carrier.NativeConnectionStatus.Writer(probe.profileIds.first(),testing=true) else null
+                app.qcoldthrone.mobile.bg.carrier.NativeConnectionStatus.Writer(probe.profileIds.first(),testing=true) else null
             try {
-            status?.update(app.qthrone.mobile.bg.carrier.NativeConnectionStage.PREPARING)
+            status?.update(app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.PREPARING)
             // CSQTT must obtain its tunnel config before the short HTTP latency deadline starts.
             // CarrierProcess owns the startup deadline; coroutine cancellation still stops preparation.
-            withPreparedTransports(probe.carrierPlans,{ plan -> app.qthrone.mobile.bg.carrier.CarrierPool.acquire(plan,
+            withPreparedTransports(probe.carrierPlans,{ plan -> app.qcoldthrone.mobile.bg.carrier.CarrierPool.acquire(plan,
                 session.interactive && session.kind!=TestSpec.KIND_URL,onStatus={ status?.update(it) }) }) {
-                status?.update(app.qthrone.mobile.bg.carrier.NativeConnectionStage.CONNECTED)
+                status?.update(app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.CONNECTED)
                 measure(probe, batch, emit)
             }
             } finally { status?.close() }

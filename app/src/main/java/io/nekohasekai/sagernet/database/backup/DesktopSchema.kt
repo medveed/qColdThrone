@@ -1,4 +1,4 @@
-package app.qthrone.mobile.database.backup
+package app.qcoldthrone.mobile.database.backup
 
 /**
  * The tables of a fresh desktop `throne.db` (Throne @ 31a6562b, plus ccf3b459's `groups.sub_metadata_json`; the later

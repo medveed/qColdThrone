@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.test
+package app.qcoldthrone.mobile.ui.test
 
 import android.content.Context
 import android.graphics.Canvas

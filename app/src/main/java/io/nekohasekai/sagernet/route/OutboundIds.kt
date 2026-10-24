@@ -1,4 +1,4 @@
-package app.qthrone.mobile.route
+package app.qcoldthrone.mobile.route
 
 /** The desktop's predefined outbound ids (RouteRule.h:10-27); positive ids are server profiles. */
 object OutboundIds {

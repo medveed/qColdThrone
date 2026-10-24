@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.route
+package app.qcoldthrone.mobile.ui.route
 
 import android.content.Context
 import android.net.Uri
@@ -6,12 +6,12 @@ import android.text.SpannableStringBuilder
 import android.text.format.DateUtils
 import android.text.style.ForegroundColorSpan
 import androidx.core.content.ContextCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.SagerDatabase
-import app.qthrone.mobile.route.OutboundIds
-import app.qthrone.mobile.route.RouteRule
-import app.qthrone.mobile.route.RuleSets
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.SagerDatabase
+import app.qcoldthrone.mobile.route.OutboundIds
+import app.qcoldthrone.mobile.route.RouteRule
+import app.qcoldthrone.mobile.route.RuleSets
 
 /** Display texts shared by the routing screens. Action and field tokens are the sing-box / desktop names. */
 internal object RouteTexts {

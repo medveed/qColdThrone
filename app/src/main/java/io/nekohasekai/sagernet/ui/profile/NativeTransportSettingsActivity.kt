@@ -1,26 +1,26 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
-import app.qthrone.mobile.outbound.types.VkCallHash
+import app.qcoldthrone.mobile.outbound.types.VkCallHash
 import android.os.Bundle
 import android.text.InputType
 import android.widget.Toast
 import androidx.preference.*
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.OutboundFactory
-import app.qthrone.mobile.outbound.json.*
-import app.qthrone.mobile.bg.carrier.NativeCarrier
-import app.qthrone.mobile.bg.carrier.CarrierBridgeCredentials
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.OutboundFactory
+import app.qcoldthrone.mobile.outbound.json.*
+import app.qcoldthrone.mobile.bg.carrier.NativeCarrier
+import app.qcoldthrone.mobile.bg.carrier.CarrierBridgeCredentials
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import moe.matsuri.nb4a.ui.SimpleMenuPreference
-import app.qthrone.mobile.ui.AnchoredTextPreference
-import app.qthrone.mobile.ui.HashTextPreference
-import app.qthrone.mobile.bg.carrier.CarrierHashCheck
+import app.qcoldthrone.mobile.ui.AnchoredTextPreference
+import app.qcoldthrone.mobile.ui.HashTextPreference
+import app.qcoldthrone.mobile.bg.carrier.CarrierHashCheck
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
-import app.qthrone.mobile.R
+import app.qcoldthrone.mobile.R
 
 /** Typed controls edit the exported document, preserving unrecognized members. */
 class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
@@ -30,7 +30,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
     private val fields = linkedMapOf<String, Any>()
     private var hashCheck: CarrierHashCheck? = null
     private var hashCheckJob: Job? = null
-    private var captchaController: app.qthrone.mobile.ui.MobileCaptchaController? = null
+    private var captchaController: app.qcoldthrone.mobile.ui.MobileCaptchaController? = null
     private var resetHashResults: (() -> Unit)? = null
 
     private fun stopHashCheck() {
@@ -48,7 +48,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        captchaController=app.qthrone.mobile.ui.MobileCaptchaController(this)
+        captchaController=app.qcoldthrone.mobile.ui.MobileCaptchaController(this)
     }
 
     override fun onDestroy() {
@@ -59,9 +59,9 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
     }
 
     override fun Outbound.init() {
-        if(this is app.qthrone.mobile.outbound.types.Qwdtt && DataStore.editingId == 0L) {
-            app.qthrone.mobile.bg.carrier.NativeHashPolicy.applyDefaultSource(this,
-                DataStore.configurationStore.getString(app.qthrone.mobile.bg.carrier.VkRelayAccount.DEFAULT_SOURCE,"manual"))
+        if(this is app.qcoldthrone.mobile.outbound.types.Qwdtt && DataStore.editingId == 0L) {
+            app.qcoldthrone.mobile.bg.carrier.NativeHashPolicy.applyDefaultSource(this,
+                DataStore.configurationStore.getString(app.qcoldthrone.mobile.bg.carrier.VkRelayAccount.DEFAULT_SOURCE,"manual"))
         }
         document = exportToJson().copy()
         fields.clear()
@@ -275,10 +275,10 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
             "transport" to listOf("datachannel","vp8channel","seichannel","videochannel"),
             "turn_tcp" to listOf("false","true"), "video-codec" to listOf("qrcode","tile"),
             "video-qr-recovery" to listOf("low","medium","high","highest"),
-            "backend_type" to listOf("socks","ssh","shadowsocks"), "record_type" to app.qthrone.mobile.outbound.types.DnsTunnel.RECORD_TYPES,
+            "backend_type" to listOf("socks","ssh","shadowsocks"), "record_type" to app.qcoldthrone.mobile.outbound.types.DnsTunnel.RECORD_TYPES,
             "congestion_control" to listOf("bbr","dcubic"), "encryption" to listOf("0","1","2","3","4","5"),
             "method" to listOf("chacha20-ietf-poly1305","aes-256-gcm","aes-128-gcm"))
-        val captions=mutableMapOf("backend_type" to listOf("SOCKS5","SSH","Shadowsocks"),"record_type" to app.qthrone.mobile.outbound.types.DnsTunnel.RECORD_TYPES.map { it.uppercase() },
+        val captions=mutableMapOf("backend_type" to listOf("SOCKS5","SSH","Shadowsocks"),"record_type" to app.qcoldthrone.mobile.outbound.types.DnsTunnel.RECORD_TYPES.map { it.uppercase() },
             "congestion_control" to listOf("BBR","DCUBIC"),"encryption" to listOf("Нет","XOR","ChaCha20","AES-128-GCM","AES-192-GCM","AES-256-GCM"),"hash_source" to listOf("Вручную","Авто"),"mode" to listOf("RAW","WG"),"turn_tcp" to listOf("UDP","TCP"),
             "vk_anon_path" to listOf("Звонок VK","Капча"),"captcha_mode" to listOf("Автоматически, с переходом в браузер","Окно браузера","Автоматически"),
             "provider" to listOf("Jitsi","Телемост","WBStream"),"obfs" to listOf("Аудио","Видео"))
@@ -318,12 +318,12 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
             if(editingOutbound.type in listOf("qwdtt","csqtt","wdttplus")) {
                 val count=editors.keys.filter { it.startsWith("hash_") && it != "hash_source" }.map { DataStore.profileCacheStore.getString(cache(it))?.trim().orEmpty() }.filter { it.isNotEmpty() }.distinct().size.coerceAtLeast(1)
                 val csqtt=editingOutbound.type=="csqtt"
-                val max=if(csqtt) 100 else if(editingOutbound is app.qthrone.mobile.outbound.types.WdttPlus) app.qthrone.mobile.bg.carrier.NativeHashPolicy.workerLimit(editingOutbound as app.qthrone.mobile.outbound.types.WdttPlus)
+                val max=if(csqtt) 100 else if(editingOutbound is app.qcoldthrone.mobile.outbound.types.WdttPlus) app.qcoldthrone.mobile.bg.carrier.NativeHashPolicy.workerLimit(editingOutbound as app.qcoldthrone.mobile.outbound.types.WdttPlus)
                     else if(automatic) 108 else (count*27).coerceAtMost(108)
                 (editors["workers"] as? ListPreference)?.apply {
                     entries=(if(csqtt) listOf(5)+(10..100 step 10) else (9..max step 9).toList()).map(Int::toString).toTypedArray();entryValues=entries
                     val raw=DataStore.profileCacheStore.getString(cache("workers"))?.toIntOrNull() ?: 9
-                    val selected=if(csqtt) app.qthrone.mobile.outbound.types.Csqtt.normalizeWorkers(raw) else raw.coerceIn(9,max)/9*9
+                    val selected=if(csqtt) app.qcoldthrone.mobile.outbound.types.Csqtt.normalizeWorkers(raw) else raw.coerceIn(9,max)/9*9
                     value=selected.toString()
                 }
             }
@@ -346,7 +346,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
                     setOnPreferenceChangeListener { _, next -> DataStore.profileCacheStore.putString(cache(path), next.toString()); true }
                 }
                 choices.containsKey(key) || key=="workers" -> SimpleMenuPreference(requireContext()).apply {
-                    if(key == "hash_source") optionEnabled = { index -> index != 1 || (editingOutbound.type in listOf("qwdtt","csqtt","wdttplus") && app.qthrone.mobile.bg.carrier.VkRelayAccount.linked() && !app.qthrone.mobile.bg.carrier.VkRelayAccount.needsRelink()) }
+                    if(key == "hash_source") optionEnabled = { index -> index != 1 || (editingOutbound.type in listOf("qwdtt","csqtt","wdttplus") && app.qcoldthrone.mobile.bg.carrier.VkRelayAccount.linked() && !app.qcoldthrone.mobile.bg.carrier.VkRelayAccount.needsRelink()) }
                     entryValues = (choices[key] ?: listOf("9")).toTypedArray()
                     entries = (captions[key] ?: choices[key] ?: listOf("9")).toTypedArray()
                     this.value=DataStore.profileCacheStore.getString(cache(path))
@@ -405,7 +405,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
             preference.setOnPreferenceChangeListener { _, next ->
                 // A full VK call link pasted into a hash field keeps only its hash, as in the original apps.
                 val text=if(path.startsWith("hash_") && path!="hash_source") VkCallHash.strip(next.toString()) else next.toString()
-                if(key == "hash_source" && text == "auto" && (editingOutbound.type !in listOf("qwdtt","csqtt","wdttplus") || !app.qthrone.mobile.bg.carrier.VkRelayAccount.linked() || app.qthrone.mobile.bg.carrier.VkRelayAccount.needsRelink())) return@setOnPreferenceChangeListener false
+                if(key == "hash_source" && text == "auto" && (editingOutbound.type !in listOf("qwdtt","csqtt","wdttplus") || !app.qcoldthrone.mobile.bg.carrier.VkRelayAccount.linked() || app.qcoldthrone.mobile.bg.carrier.VkRelayAccount.needsRelink())) return@setOnPreferenceChangeListener false
                 val range=optionLimits[path.removePrefix("options.")]
                 if(value is Number && text.toLongOrNull()==null) return@setOnPreferenceChangeListener false
                 if(range!=null && text.toIntOrNull()?.let { it in range }!=true) return@setOnPreferenceChangeListener false
@@ -437,7 +437,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
                 val current=DataStore.profileCacheStore.getString(cache(path)).orEmpty()
                 if(current.isNotEmpty() && current !in values) values.add(current)
                 values.add("Ввести вручную")
-                app.qthrone.mobile.ui.MobileSelector.showAt(anchor, values,
+                app.qcoldthrone.mobile.ui.MobileSelector.showAt(anchor, values,
                     values.indexOf(DataStore.profileCacheStore.getString(cache(path)))) { index ->
                     if(index==values.lastIndex) onDisplayPreferenceDialog(preference)
                     else if(preference.callChangeListener(values[index])) preference.text=values[index]
@@ -452,7 +452,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
         }
         accountButton.setOnPreferenceClickListener {
             lifecycleScope.launch {
-                val saved=withContext(Dispatchers.IO) { app.qthrone.mobile.bg.carrier.VkRelayAccount.cachedHashes() }
+                val saved=withContext(Dispatchers.IO) { app.qcoldthrone.mobile.bg.carrier.VkRelayAccount.cachedHashes() }
                 val slots=fields.keys.filter { it.startsWith("hash_") && it!="hash_source" }
                 if(saved.isEmpty()) {
                     Toast.makeText(this@NativeTransportSettingsActivity,"Сначала получите хеши в настройках VK-релея",Toast.LENGTH_LONG).show()
@@ -460,7 +460,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
                 }
                 val current=slots.mapNotNull { DataStore.profileCacheStore.getString(cache(it))?.trim()?.takeIf(String::isNotEmpty) }
                 val checked=BooleanArray(saved.size) { saved[it] in current || (current.isEmpty() && it<slots.size) }
-                app.qthrone.mobile.ui.MobileAlertDialogBuilder(this@NativeTransportSettingsActivity).setTitle("Хеши из аккаунта VK")
+                app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder(this@NativeTransportSettingsActivity).setTitle("Хеши из аккаунта VK")
                     .setMultiChoiceItems(saved.map { it.take(8)+"…"+it.takeLast(4) }.toTypedArray(),checked) { _,index,on -> checked[index]=on }
                     .setNegativeButton(android.R.string.cancel,null)
                     .setPositiveButton(android.R.string.ok) { _,_ ->
@@ -510,7 +510,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
                     val anonPath=DataStore.profileCacheStore.getString(cache("vk_anon_path")) ?: "vkcalls"
                     val dns=DataStore.profileCacheStore.getString(cache("go_dns"))?.takeIf { it.isNotBlank() } ?: "yandex"
                     val deviceId=DataStore.profileCacheStore.getString(cache("device_id"))
-                        ?.takeIf { it.isNotBlank() } ?: (editingOutbound as? app.qthrone.mobile.outbound.types.Qwdtt)?.deviceId.orEmpty()
+                        ?.takeIf { it.isNotBlank() } ?: (editingOutbound as? app.qcoldthrone.mobile.outbound.types.Qwdtt)?.deviceId.orEmpty()
                     hashCheckJob=lifecycleScope.launch {
                         try {
                             val update: (Int,String) -> Unit = { slot,status -> runOnUiThread { if(hashCheck===session) { results[slot]=status;showResults() } } }
@@ -546,7 +546,7 @@ class NativeTransportSettingsActivity : ProfileSettingsActivity<Outbound>() {
         })
     }
 
-    private val dnsTypes=app.qthrone.mobile.outbound.types.DnsTunnel.TYPES
+    private val dnsTypes=app.qcoldthrone.mobile.outbound.types.DnsTunnel.TYPES
     private val backendFields=listOf("backend_type","backend.user","backend.password","backend.pk","backend.method")
     /** OpenFlux carriers in the order the original apps list them. */
     private val openFluxKinds=listOf("yandex","vyandex","boards","mailru","cupsonline","avito","telemost","direct")

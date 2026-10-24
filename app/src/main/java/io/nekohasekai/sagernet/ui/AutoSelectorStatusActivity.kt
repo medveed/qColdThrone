@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,27 +17,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import app.qthrone.mobile.R
-import app.qthrone.mobile.aidl.ISagerNetService
-import app.qthrone.mobile.bg.BaseService
-import app.qthrone.mobile.bg.SagerConnection
-import app.qthrone.mobile.bg.autoselector.AutoSelectorClient
-import app.qthrone.mobile.bg.autoselector.AutoSelectorProfiles
-import app.qthrone.mobile.bg.autoselector.AutoSelectorStatus
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.databinding.LayoutAutoSelectorMemberBinding
-import app.qthrone.mobile.databinding.LayoutAutoSelectorStatusBinding
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.needReload
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
-import app.qthrone.mobile.ui.profile.ProfileSettingsActivity
-import app.qthrone.mobile.ui.profile.profileSettingsIntent
-import app.qthrone.mobile.ui.profiles.ProfilesDbWatcher
-import app.qthrone.mobile.widget.applyInsetPadding
-import app.qthrone.mobile.widget.applyListInsets
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.aidl.ISagerNetService
+import app.qcoldthrone.mobile.bg.BaseService
+import app.qcoldthrone.mobile.bg.SagerConnection
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorClient
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorProfiles
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorStatus
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.databinding.LayoutAutoSelectorMemberBinding
+import app.qcoldthrone.mobile.databinding.LayoutAutoSelectorStatusBinding
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.ui.profile.ProfileSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.profileSettingsIntent
+import app.qcoldthrone.mobile.ui.profiles.ProfilesDbWatcher
+import app.qcoldthrone.mobile.widget.applyInsetPadding
+import app.qcoldthrone.mobile.widget.applyListInsets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

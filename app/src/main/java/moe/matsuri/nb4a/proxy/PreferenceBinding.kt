@@ -2,9 +2,9 @@ package moe.matsuri.nb4a.proxy
 
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.readableMessage
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 

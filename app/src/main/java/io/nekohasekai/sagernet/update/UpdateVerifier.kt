@@ -1,4 +1,4 @@
-package app.qthrone.mobile.update
+package app.qcoldthrone.mobile.update
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,8 +6,8 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.pm.PackageInfoCompat
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.R
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.R
 import java.io.File
 import java.security.MessageDigest
 

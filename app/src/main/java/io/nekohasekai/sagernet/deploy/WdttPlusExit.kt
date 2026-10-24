@@ -1,4 +1,4 @@
-package app.qthrone.mobile.deploy
+package app.qcoldthrone.mobile.deploy
 
 import android.content.Context
 import com.jcraft.jsch.ChannelExec

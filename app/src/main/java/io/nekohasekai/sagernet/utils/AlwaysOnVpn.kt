@@ -1,4 +1,4 @@
-package app.qthrone.mobile.utils
+package app.qcoldthrone.mobile.utils
 
 import android.content.ActivityNotFoundException
 import android.content.Context

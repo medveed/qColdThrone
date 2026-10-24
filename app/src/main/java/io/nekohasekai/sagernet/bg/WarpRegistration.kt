@@ -1,10 +1,10 @@
-package app.qthrone.mobile.bg
+package app.qcoldthrone.mobile.bg
 
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.outbound.json.jsonObjectOf
-import app.qthrone.core.mobile.Mobile
-import app.qthrone.core.mobile.WarpRegisterRequest
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
+import app.qcoldthrone.core.mobile.Mobile
+import app.qcoldthrone.core.mobile.WarpRegisterRequest
 
 /**
  * :bg side of ICoreService.warpRegister (rpc/warp.go through core/mobile/warp.go). Blocks the binder thread for at

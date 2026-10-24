@@ -1,10 +1,10 @@
-package app.qthrone.mobile.ui.json
+package app.qcoldthrone.mobile.ui.json
 
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.ui.json.JsonRelaxations.ExtraKey
-import app.qthrone.mobile.ui.json.engine.JsonFormatter
-import app.qthrone.mobile.ui.json.engine.SchemaStore
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.ui.json.JsonRelaxations.ExtraKey
+import app.qcoldthrone.mobile.ui.json.engine.JsonFormatter
+import app.qcoldthrone.mobile.ui.json.engine.SchemaStore
 
 /**
  * "Edit as JSON" of a typed profile: its ExportToJson, Throne's stored form, checked against the sing-box schema with

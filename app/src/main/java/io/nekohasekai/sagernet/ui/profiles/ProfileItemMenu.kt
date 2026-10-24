@@ -1,28 +1,28 @@
-package app.qthrone.mobile.ui.profiles
+package app.qcoldthrone.mobile.ui.profiles
 
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import app.qthrone.mobile.ui.SaveDocument
+import app.qcoldthrone.mobile.ui.SaveDocument
 import androidx.appcompat.widget.PopupMenu
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.bg.test.TestSpec
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.confirmAction
-import app.qthrone.mobile.ktx.needReload
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.ktx.showAllowingStateLoss
-import app.qthrone.mobile.ktx.snackbar
-import app.qthrone.mobile.ktx.startFilesForResult
-import app.qthrone.mobile.ui.ConfigurationFragment
-import app.qthrone.mobile.ui.profile.ProfileConfigExport
-import app.qthrone.mobile.ui.profile.ProfileSettingsActivity
-import app.qthrone.mobile.ui.profile.profileSettingsIntent
-import app.qthrone.mobile.widget.QRCodeDialog
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.bg.test.TestSpec
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.confirmAction
+import app.qcoldthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.ktx.showAllowingStateLoss
+import app.qcoldthrone.mobile.ktx.snackbar
+import app.qcoldthrone.mobile.ktx.startFilesForResult
+import app.qcoldthrone.mobile.ui.ConfigurationFragment
+import app.qcoldthrone.mobile.ui.profile.ProfileConfigExport
+import app.qcoldthrone.mobile.ui.profile.ProfileSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.profileSettingsIntent
+import app.qcoldthrone.mobile.widget.QRCodeDialog
 
 /** The actions of one profile row: edit, share, the ⋮ menu (tests, move up/down, delete). */
 class ProfileItemMenu(private val host: ConfigurationFragment) {

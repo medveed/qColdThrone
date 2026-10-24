@@ -1,20 +1,20 @@
-package app.qthrone.mobile.bg.test
+package app.qcoldthrone.mobile.bg.test
 
 import android.os.SystemClock
-import app.qthrone.mobile.SpeedTestSettings
-import app.qthrone.mobile.bg.CoreRuntime
-import app.qthrone.mobile.bg.proto.CoreConfigs
-import app.qthrone.mobile.bg.proto.SpeedTestSnapshot
-import app.qthrone.mobile.database.GroupSort
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.core.mobile.Instance
-import app.qthrone.core.mobile.Mobile
-import app.qthrone.core.mobile.SpeedTestHandler
-import app.qthrone.core.mobile.SpeedTestResult
-import app.qthrone.core.mobile.TestRequest
+import app.qcoldthrone.mobile.SpeedTestSettings
+import app.qcoldthrone.mobile.bg.CoreRuntime
+import app.qcoldthrone.mobile.bg.proto.CoreConfigs
+import app.qcoldthrone.mobile.bg.proto.SpeedTestSnapshot
+import app.qcoldthrone.mobile.database.GroupSort
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.core.mobile.Instance
+import app.qcoldthrone.core.mobile.Mobile
+import app.qcoldthrone.core.mobile.SpeedTestHandler
+import app.qcoldthrone.core.mobile.SpeedTestResult
+import app.qcoldthrone.core.mobile.TestRequest
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
@@ -59,7 +59,7 @@ internal class SpeedTestRunner(private val session: TestSession) {
             for (probe in TestProbe.plan(generated)) {
                 try {
                     withPreparedTransports(probe.carrierPlans,{ plan ->
-                        app.qthrone.mobile.bg.carrier.CarrierPool.acquire(plan,session.interactive,latencyProbe=false)
+                        app.qcoldthrone.mobile.bg.carrier.CarrierPool.acquire(plan,session.interactive,latencyProbe=false)
                     }) { runProbe(probe.request(), probe.profileIds, probe::profileOf, names, null) }
                 } catch(error:CancellationException) { throw error }
                 catch(error:Exception) {

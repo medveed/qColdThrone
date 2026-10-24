@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,16 +7,16 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceDataStore
 import androidx.preference.SwitchPreference
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
-import app.qthrone.mobile.ktx.needReload
-import app.qthrone.mobile.ktx.runOnMainDispatcher
-import app.qthrone.mobile.ui.profile.ProfileSettingsActivity
-import app.qthrone.mobile.ui.warp.WarpClient
-import app.qthrone.mobile.ui.warp.WarpGenerate
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
+import app.qcoldthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.ktx.runOnMainDispatcher
+import app.qcoldthrone.mobile.ui.profile.ProfileSettingsActivity
+import app.qcoldthrone.mobile.ui.warp.WarpClient
+import app.qcoldthrone.mobile.ui.warp.WarpGenerate
 import moe.matsuri.nb4a.ui.SimpleMenuPreference
 
 /**

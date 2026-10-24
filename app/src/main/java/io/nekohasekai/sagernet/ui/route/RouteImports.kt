@@ -1,17 +1,17 @@
-package app.qthrone.mobile.ui.route
+package app.qcoldthrone.mobile.ui.route
 
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.RouteManager
-import app.qthrone.mobile.databinding.LayoutRouteRemotePromptBinding
-import app.qthrone.mobile.group.RemoteRouteUpdater
-import app.qthrone.mobile.route.RouteProfile
-import app.qthrone.mobile.route.RouteShare
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.RouteManager
+import app.qcoldthrone.mobile.databinding.LayoutRouteRemotePromptBinding
+import app.qcoldthrone.mobile.group.RemoteRouteUpdater
+import app.qcoldthrone.mobile.route.RouteProfile
+import app.qcoldthrone.mobile.route.RouteShare
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,7 +21,7 @@ object RouteImports {
 
     fun isRouteLink(text: String): Boolean {
         val t = text.trim()
-        return t.startsWith(RouteShare.ROUTE_LINK_PREFIX, true) || t.startsWith(RouteShare.REMOTE_ROUTE_LINK_PREFIX, true) || app.qthrone.mobile.route.ProviderRouting.isLink(t)
+        return t.startsWith(RouteShare.ROUTE_LINK_PREFIX, true) || t.startsWith(RouteShare.REMOTE_ROUTE_LINK_PREFIX, true) || app.qcoldthrone.mobile.route.ProviderRouting.isLink(t)
     }
 
     fun isRemoteRouteLink(text: String) = text.trim().startsWith(RouteShare.REMOTE_ROUTE_LINK_PREFIX, true)

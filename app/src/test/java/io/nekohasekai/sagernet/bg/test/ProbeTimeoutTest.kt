@@ -1,6 +1,6 @@
-package app.qthrone.mobile.bg.test
+package app.qcoldthrone.mobile.bg.test
 
-import app.qthrone.mobile.bg.proto.ProbeTimeout
+import app.qcoldthrone.mobile.bg.proto.ProbeTimeout
 import org.junit.Assert.*
 import org.junit.Test
 

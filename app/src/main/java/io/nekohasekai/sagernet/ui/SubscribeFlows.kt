@@ -1,8 +1,8 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
-import app.qthrone.mobile.group.ProviderLinks
-import app.qthrone.mobile.group.SubscriptionCrypto
-import app.qthrone.mobile.route.ProviderRouting
+import app.qcoldthrone.mobile.group.ProviderLinks
+import app.qcoldthrone.mobile.group.SubscriptionCrypto
+import app.qcoldthrone.mobile.route.ProviderRouting
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -10,21 +10,21 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.databinding.LayoutRouteRemotePromptBinding
-import app.qthrone.mobile.group.SubscriptionClient
-import app.qthrone.mobile.database.GroupRepo
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.ui.profile.ProfileTextImport
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.ktx.onMainDispatcher
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
-import app.qthrone.mobile.outbound.link.Base64Strict
-import app.qthrone.mobile.ui.route.RouteImports
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.databinding.LayoutRouteRemotePromptBinding
+import app.qcoldthrone.mobile.group.SubscriptionClient
+import app.qcoldthrone.mobile.database.GroupRepo
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.ui.profile.ProfileTextImport
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ktx.onMainDispatcher
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.ui.route.RouteImports
 import java.io.ByteArrayOutputStream
 import java.nio.charset.Charset
 import java.util.zip.ZipInputStream

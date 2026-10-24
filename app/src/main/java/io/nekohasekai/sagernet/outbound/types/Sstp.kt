@@ -1,15 +1,15 @@
-package app.qthrone.mobile.outbound.types
+package app.qcoldthrone.mobile.outbound.types
 
-import app.qthrone.mobile.bg.carrier.CarrierBridgeCredentials
-import app.qthrone.mobile.bg.carrier.CarrierKind
-import app.qthrone.mobile.bg.carrier.NativeCarrier
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.BuildResult
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.link.Hosts
-import app.qthrone.mobile.outbound.link.LinkBuilder
-import app.qthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.bg.carrier.CarrierBridgeCredentials
+import app.qcoldthrone.mobile.bg.carrier.CarrierKind
+import app.qcoldthrone.mobile.bg.carrier.NativeCarrier
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.BuildResult
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.link.Hosts
+import app.qcoldthrone.mobile.outbound.link.LinkBuilder
+import app.qcoldthrone.mobile.outbound.link.LinkParser
 
 /**
  * An SSTP (Secure Socket Tunneling Protocol) profile: Microsoft's PPP-over-HTTPS

@@ -1,6 +1,6 @@
-package app.qthrone.mobile.outbound.types
+package app.qcoldthrone.mobile.outbound.types
 
-import app.qthrone.mobile.outbound.`import`.ProfileImport
+import app.qcoldthrone.mobile.outbound.`import`.ProfileImport
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -48,7 +48,7 @@ class WdttPlusLinkTest {
     @Test fun startsLikeTheOriginalApp() {
         val profile = WdttPlus()
         assertTrue(profile.parseFromLink("wdtt://connect?v=1&host=192.0.2.5&dtls=56000&wg=56001&local=9000&password=p&hashes=$hash"))
-        val config = profile.privateConfig(1080, 1081, app.qthrone.mobile.bg.carrier.CarrierBridgeCredentials("u", "pw"))
+        val config = profile.privateConfig(1080, 1081, app.qcoldthrone.mobile.bg.carrier.CarrierBridgeCredentials("u", "pw"))
         val args = config.array("args").strings()
         for (flag in listOf("-startup-config-stdin=true", "-socks-auth=true", "-vkcalls-preflight=true", "-config-first-start=true"))
             assertTrue(flag, flag in args)
@@ -63,13 +63,13 @@ class WdttPlusLinkTest {
             tcpOnly = true; turnSni = "turn.example.org"; rtMasque = true; rtMasqueServerBootstrap = true; workers = 36
         }
         val restored = WdttPlus().apply { assertTrue(parseFromJson(profile.exportToJson())) }
-        val args = restored.privateConfig(1080,1081,app.qthrone.mobile.bg.carrier.CarrierBridgeCredentials("u","pw")).array("args").strings()
+        val args = restored.privateConfig(1080,1081,app.qcoldthrone.mobile.bg.carrier.CarrierBridgeCredentials("u","pw")).array("args").strings()
         assertTrue("-turn-stream-first=true" in args)
         assertTrue("-rt-masque=true" in args)
         assertEquals("turn.example.org",args[args.indexOf("-turn-sni")+1])
         assertEquals("auto",args[args.indexOf("-transport-experiment")+1])
         assertFalse(args.any { it == "p" || it == hash || it == "pw" })
-        assertTrue(restored.privateConfig(1080,1081,app.qthrone.mobile.bg.carrier.CarrierBridgeCredentials("u","pw")).bool("masque_server_bootstrap"))
+        assertTrue(restored.privateConfig(1080,1081,app.qcoldthrone.mobile.bg.carrier.CarrierBridgeCredentials("u","pw")).bool("masque_server_bootstrap"))
         assertEquals(profile.exportToJson().toCompact(),restored.exportToJson().toCompact())
     }
 

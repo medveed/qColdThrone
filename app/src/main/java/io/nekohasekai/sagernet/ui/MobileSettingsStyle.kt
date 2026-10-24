@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.graphics.Color
 import android.graphics.Typeface
@@ -32,19 +32,19 @@ object MobileSettingsStyle {
                 }
                 if(fragment is SettingsPreferenceFragment && preference !is PreferenceCategory) {
                     val icon=when {
-                        preference.key=="qmobileLogs" -> app.qthrone.mobile.R.drawable.ic_mobile_logs
-                        preference.key=="qmobileVkRelay" -> app.qthrone.mobile.R.drawable.ic_mobile_vk
-                        preference.key=="qmobileTun" -> app.qthrone.mobile.R.drawable.ic_mobile_tun
-                        preference.key=="qmobileCore" -> app.qthrone.mobile.R.drawable.ic_mobile_core
-                        preference.key=="settingsBackup" -> app.qthrone.mobile.R.drawable.ic_mobile_backup
-                        preference.fragment?.contains("UpdateSettings")==true -> app.qthrone.mobile.R.drawable.ic_mobile_update
-                        preference.fragment?.contains("Appearance")==true -> app.qthrone.mobile.R.drawable.ic_mobile_pumpkin
-                        preference.fragment?.contains("Testing")==true -> app.qthrone.mobile.R.drawable.ic_mobile_test
-                        preference.key=="qmobileRouting" -> app.qthrone.mobile.R.drawable.ic_mobile_route
-                        preference.fragment?.contains("Dns")==true -> app.qthrone.mobile.R.drawable.ic_mobile_globe
-                        preference.fragment?.contains("Subscription")==true -> app.qthrone.mobile.R.drawable.ic_mobile_subscriptions
-                        preference.key=="qmobileUpdate" -> app.qthrone.mobile.R.drawable.ic_mobile_refresh
-                        else -> app.qthrone.mobile.R.drawable.ic_mobile_settings
+                        preference.key=="qmobileLogs" -> app.qcoldthrone.mobile.R.drawable.ic_mobile_logs
+                        preference.key=="qmobileVkRelay" -> app.qcoldthrone.mobile.R.drawable.ic_mobile_vk
+                        preference.key=="qmobileTun" -> app.qcoldthrone.mobile.R.drawable.ic_mobile_tun
+                        preference.key=="qmobileCore" -> app.qcoldthrone.mobile.R.drawable.ic_mobile_core
+                        preference.key=="settingsBackup" -> app.qcoldthrone.mobile.R.drawable.ic_mobile_backup
+                        preference.fragment?.contains("UpdateSettings")==true -> app.qcoldthrone.mobile.R.drawable.ic_mobile_update
+                        preference.fragment?.contains("Appearance")==true -> app.qcoldthrone.mobile.R.drawable.ic_mobile_pumpkin
+                        preference.fragment?.contains("Testing")==true -> app.qcoldthrone.mobile.R.drawable.ic_mobile_test
+                        preference.key=="qmobileRouting" -> app.qcoldthrone.mobile.R.drawable.ic_mobile_route
+                        preference.fragment?.contains("Dns")==true -> app.qcoldthrone.mobile.R.drawable.ic_mobile_globe
+                        preference.fragment?.contains("Subscription")==true -> app.qcoldthrone.mobile.R.drawable.ic_mobile_subscriptions
+                        preference.key=="qmobileUpdate" -> app.qcoldthrone.mobile.R.drawable.ic_mobile_refresh
+                        else -> app.qcoldthrone.mobile.R.drawable.ic_mobile_settings
                     }
                     preference.setIcon(icon)
                 }
@@ -101,13 +101,13 @@ object MobileSettingsStyle {
                     val widget=container.findViewById<android.view.ViewGroup>(android.R.id.widget_frame)
                     widget?.visibility=View.VISIBLE
                     widget?.addView(android.widget.ImageButton(list.context).apply {
-                        tag="socks-copy";contentDescription=list.context.getString(app.qthrone.mobile.R.string.action_copy)
-                        setImageResource(app.qthrone.mobile.R.drawable.ic_mobile_clipboard)
+                        tag="socks-copy";contentDescription=list.context.getString(app.qcoldthrone.mobile.R.string.action_copy)
+                        setImageResource(app.qcoldthrone.mobile.R.drawable.ic_mobile_clipboard)
                         imageTintList=if(preference?.key == "vkRelayAccount" && preference.icon is androidx.core.graphics.drawable.RoundedBitmapDrawable) null else android.content.res.ColorStateList.valueOf(accent)
                         setBackgroundColor(Color.TRANSPARENT)
                         setOnClickListener {
-                            val value=if(preference?.key=="inbound_user") app.qthrone.mobile.database.DataStore.inboundUser else app.qthrone.mobile.database.DataStore.inboundPass
-                            app.qthrone.mobile.SagerNet.trySetPrimaryClip(value)
+                            val value=if(preference?.key=="inbound_user") app.qcoldthrone.mobile.database.DataStore.inboundUser else app.qcoldthrone.mobile.database.DataStore.inboundPass
+                            app.qcoldthrone.mobile.SagerNet.trySetPrimaryClip(value)
                         }
                     },android.view.ViewGroup.LayoutParams((40*density).toInt(),(40*density).toInt()))
                 }

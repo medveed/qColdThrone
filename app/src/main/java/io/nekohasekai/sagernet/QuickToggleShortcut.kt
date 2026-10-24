@@ -18,9 +18,9 @@
  *                                                                             *
  *******************************************************************************/
 
-package app.qthrone.mobile
+package app.qcoldthrone.mobile
 
-import app.qthrone.mobile.utils.ShortcutAuthorization
+import app.qcoldthrone.mobile.utils.ShortcutAuthorization
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.ShortcutManager
@@ -30,10 +30,10 @@ import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import app.qthrone.mobile.aidl.ISagerNetService
-import app.qthrone.mobile.bg.BaseService
-import app.qthrone.mobile.bg.SagerConnection
-import app.qthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.aidl.ISagerNetService
+import app.qcoldthrone.mobile.bg.BaseService
+import app.qcoldthrone.mobile.bg.SagerConnection
+import app.qcoldthrone.mobile.database.DataStore
 
 @Suppress("DEPRECATION")
 class QuickToggleShortcut : Activity(), SagerConnection.Callback {

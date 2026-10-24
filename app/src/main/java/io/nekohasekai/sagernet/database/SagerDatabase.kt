@@ -1,4 +1,4 @@
-package app.qthrone.mobile.database
+package app.qcoldthrone.mobile.database
 
 import android.content.Context
 import android.util.Log
@@ -11,10 +11,10 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.database.preference.SettingEntry
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.database.preference.SettingEntry
 import java.util.concurrent.Executors
 
 @Database(
@@ -160,7 +160,7 @@ abstract class SagerDatabase : RoomDatabase() {
             try {
                 db.query("SELECT `id`, `outbound_json` FROM `profiles` WHERE `type` = 'wdttplus'").use { c ->
                     while (c.moveToNext()) {
-                        val profile = app.qthrone.mobile.outbound.types.WdttPlus.legacyToQwdtt(c.getString(1).orEmpty())
+                        val profile = app.qcoldthrone.mobile.outbound.types.WdttPlus.legacyToQwdtt(c.getString(1).orEmpty())
                         if (profile != null) db.execSQL("UPDATE `profiles` SET `type` = 'qwdtt', `outbound_json` = ? WHERE `id` = ?",
                             arrayOf<Any?>(profile.exportToJson().toCompact(), c.getLong(0)))
                     }

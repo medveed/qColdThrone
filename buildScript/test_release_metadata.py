@@ -16,7 +16,7 @@ class ReleaseMetadataTest(unittest.TestCase):
             apk = directory / ("qThroneMobile-2.4.2-" + abi + ".apk")
             apk.write_bytes(("signed APK " + abi).encode())
             assets[abi] = dict(name=apk.name, size=apk.stat().st_size, sha256=sha256(apk))
-        return dict(schema=1, packageName="app.qthrone.mobile", channel="stable",
+        return dict(schema=1, packageName="app.qcoldthrone.mobile", channel="stable",
                     versionName="2.4.2", versionCode=69999, signerSha256="original-key", assets=assets)
 
     def test_hidden_metadata_roundtrip_and_rejections(self):
@@ -30,7 +30,7 @@ class ReleaseMetadataTest(unittest.TestCase):
                 embedded_manifest(broken)
 
     def test_bridge_cannot_change_signature_or_downgrade(self):
-        current = dict(packageName="app.qthrone.mobile", signerSha256="key", versionCode=69999)
+        current = dict(packageName="app.qcoldthrone.mobile", signerSha256="key", versionCode=69999)
         validate_bridge(dict(current, versionCode=68999), current)
         validate_bridge(current, current)
         for previous in (dict(current, signerSha256="other"), dict(current, packageName="other"), dict(current, versionCode=70999)):

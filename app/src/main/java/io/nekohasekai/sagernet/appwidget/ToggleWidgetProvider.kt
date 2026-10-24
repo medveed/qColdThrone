@@ -1,4 +1,4 @@
-package app.qthrone.mobile.appwidget
+package app.qcoldthrone.mobile.appwidget
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider

@@ -1,4 +1,4 @@
-package app.qthrone.mobile
+package app.qcoldthrone.mobile
 
 object Key {
 
@@ -73,20 +73,20 @@ object Key {
 }
 
 object Action {
-    const val SERVICE = "app.qthrone.mobile.SERVICE"
-    const val CLOSE = "app.qthrone.mobile.CLOSE"
-    const val RELOAD = "app.qthrone.mobile.RELOAD"
+    const val SERVICE = "app.qcoldthrone.mobile.SERVICE"
+    const val CLOSE = "app.qcoldthrone.mobile.CLOSE"
+    const val RELOAD = "app.qcoldthrone.mobile.RELOAD"
 
-    // const val SWITCH_WAKE_LOCK = "app.qthrone.mobile.SWITCH_WAKELOCK"
-    const val RESET_UPSTREAM_CONNECTIONS = "app.qthrone.mobile.RESET_UPSTREAM_CONNECTIONS"
+    // const val SWITCH_WAKE_LOCK = "app.qcoldthrone.mobile.SWITCH_WAKELOCK"
+    const val RESET_UPSTREAM_CONNECTIONS = "app.qcoldthrone.mobile.RESET_UPSTREAM_CONNECTIONS"
 
     // Every action of the service receiver needs its own branch there: its fallback does nothing.
-    const val SWITCH_NEXT = "app.qthrone.mobile.SWITCH_NEXT"
-    const val SWITCH_PREVIOUS = "app.qthrone.mobile.SWITCH_PREVIOUS"
-    const val SWITCH_PROFILE = "app.qthrone.mobile.SWITCH_PROFILE"
-    const val REFRESH_WIFI_STATE = "app.qthrone.mobile.REFRESH_WIFI_STATE"
+    const val SWITCH_NEXT = "app.qcoldthrone.mobile.SWITCH_NEXT"
+    const val SWITCH_PREVIOUS = "app.qcoldthrone.mobile.SWITCH_PREVIOUS"
+    const val SWITCH_PROFILE = "app.qcoldthrone.mobile.SWITCH_PROFILE"
+    const val REFRESH_WIFI_STATE = "app.qcoldthrone.mobile.REFRESH_WIFI_STATE"
 
     /** The auto-selector [EXTRA_PROFILE_ID] goes back to automatic in the running core. */
-    const val AUTO_SELECTOR_AUTOMATIC = "app.qthrone.mobile.AUTO_SELECTOR_AUTOMATIC"
+    const val AUTO_SELECTOR_AUTOMATIC = "app.qcoldthrone.mobile.AUTO_SELECTOR_AUTOMATIC"
     const val EXTRA_PROFILE_ID = "profileId"
 }

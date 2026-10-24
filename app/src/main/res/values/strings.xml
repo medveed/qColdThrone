@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">qThrone</string>
-    <string name="app_name_long" translatable="false">qThroneMobile</string>
+    <string name="app_name" translatable="false">qColdThrone</string>
+    <string name="app_name_long" translatable="false">qColdThrone</string>
     <string name="app_desc">The universal proxy toolchain for Android, written in Kotlin.</string>
     <string name="project">Project</string>
     <string name="github">Source code</string>
@@ -168,6 +168,17 @@
     <string name="action_juicity" translatable="false">Juicity</string>
     <string name="proxy_chain">Proxy chain</string>
     <string name="custom_config">Custom config</string>
+    <string name="offsite_config">Offsite JSON config</string>
+    <string name="offsite_config_check">Check config</string>
+    <string name="offsite_config_no_issues">No issues found</string>
+    <string name="offsite_config_issues_title">Config issues</string>
+    <string name="offsite_config_summary_title">Config summary</string>
+    <string name="offsite_config_summary">Outbounds: %1$d, offsite: %2$d, rules: %3$d, balancers: %4$d</string>
+    <string name="offsite_config_summary_invalid">Config could not be parsed</string>
+    <string name="offsite_config_error">Error</string>
+    <string name="offsite_config_warning">Warning</string>
+    <string name="offsite_config_issue_path">%1$s: %2$s</string>
+    <string name="offsite_config_issue_line">%1$s: %2$s</string>
     <string name="chain_settings">Chain settings</string>
     <string name="circular_reference">Circular reference</string>
     <string name="circular_reference_sum">The route cannot contain itself.</string>

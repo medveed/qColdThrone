@@ -1,6 +1,6 @@
 @file:Suppress("EXPERIMENTAL_API_USAGE")
 
-package app.qthrone.mobile.ktx
+package app.qcoldthrone.mobile.ktx
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope

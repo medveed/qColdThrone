@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
 import android.content.Context
 import java.io.File

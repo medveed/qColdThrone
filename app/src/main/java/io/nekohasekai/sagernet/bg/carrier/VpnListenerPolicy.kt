@@ -1,7 +1,7 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
 
 /** Custom full configurations must not reopen the per-app VPN bypass through local listeners. */
 object VpnListenerPolicy {

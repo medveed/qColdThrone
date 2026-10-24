@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.os.Bundle
 import android.view.View
@@ -9,10 +9,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.ui.settings.SettingsScreenFragment
-import app.qthrone.mobile.utils.Theme
-import app.qthrone.mobile.widget.applyListInsets
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.ui.settings.SettingsScreenFragment
+import app.qcoldthrone.mobile.utils.Theme
+import app.qcoldthrone.mobile.widget.applyListInsets
 
 /** Hosts the settings root and its sub-screens; back and the toolbar arrow return to the previous screen. */
 class SettingsFragment : ToolbarFragment(R.layout.layout_config_settings),

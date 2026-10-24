@@ -1,6 +1,6 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
-import app.qthrone.mobile.outbound.link.Hosts
+import app.qcoldthrone.mobile.outbound.link.Hosts
 import java.io.IOException
 import java.net.InetAddress
 import java.net.InetSocketAddress

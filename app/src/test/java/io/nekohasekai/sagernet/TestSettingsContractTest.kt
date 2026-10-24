@@ -1,7 +1,7 @@
-package app.qthrone.mobile
+package app.qcoldthrone.mobile
 
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.ktx.PreferenceProxy
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.ktx.PreferenceProxy
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

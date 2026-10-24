@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg.proto
+package app.qcoldthrone.mobile.bg.proto
 
 /** A native SOCKS bridge is already listening before its first tunnel DNS/TCP round trip completes. */
 internal object ProbeTimeout {

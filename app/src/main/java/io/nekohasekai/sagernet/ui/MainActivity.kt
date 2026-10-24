@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
@@ -21,42 +21,42 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.updatePaddingRelative
 import androidx.core.view.WindowCompat
 import androidx.preference.PreferenceDataStore
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.aidl.ISagerNetService
-import app.qthrone.mobile.aidl.SpeedDisplayData
-import app.qthrone.mobile.aidl.TrafficDataBatch
-import app.qthrone.mobile.bg.BaseService
-import app.qthrone.mobile.bg.SagerConnection
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
-import app.qthrone.mobile.database.backup.BackupEntry
-import app.qthrone.mobile.databinding.LayoutMainBinding
-import app.qthrone.mobile.ktx.alert
-import app.qthrone.mobile.ktx.isPreview
-import app.qthrone.mobile.ktx.launchCustomTab
-import app.qthrone.mobile.ktx.onMainDispatcher
-import app.qthrone.mobile.ui.profile.ProfileTextImport
-import app.qthrone.mobile.ui.route.RouteImports
-import app.qthrone.mobile.ui.settings.DnsSettingsFragment
-import app.qthrone.mobile.ui.settings.XrayGeoSettingsFragment
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
-import app.qthrone.mobile.ui.MessageStore
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.database.RouteManager
-import app.qthrone.mobile.utils.AppShortcuts
-import app.qthrone.mobile.utils.PlatformNotifications
-import app.qthrone.mobile.utils.Theme
-import app.qthrone.mobile.utils.WifiStateAccess
-import app.qthrone.mobile.widget.bars
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.aidl.ISagerNetService
+import app.qcoldthrone.mobile.aidl.SpeedDisplayData
+import app.qcoldthrone.mobile.aidl.TrafficDataBatch
+import app.qcoldthrone.mobile.bg.BaseService
+import app.qcoldthrone.mobile.bg.SagerConnection
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
+import app.qcoldthrone.mobile.database.backup.BackupEntry
+import app.qcoldthrone.mobile.databinding.LayoutMainBinding
+import app.qcoldthrone.mobile.ktx.alert
+import app.qcoldthrone.mobile.ktx.isPreview
+import app.qcoldthrone.mobile.ktx.launchCustomTab
+import app.qcoldthrone.mobile.ktx.onMainDispatcher
+import app.qcoldthrone.mobile.ui.profile.ProfileTextImport
+import app.qcoldthrone.mobile.ui.route.RouteImports
+import app.qcoldthrone.mobile.ui.settings.DnsSettingsFragment
+import app.qcoldthrone.mobile.ui.settings.XrayGeoSettingsFragment
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.ui.MessageStore
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.database.RouteManager
+import app.qcoldthrone.mobile.utils.AppShortcuts
+import app.qcoldthrone.mobile.utils.PlatformNotifications
+import app.qcoldthrone.mobile.utils.Theme
+import app.qcoldthrone.mobile.utils.WifiStateAccess
+import app.qcoldthrone.mobile.widget.bars
 import androidx.lifecycle.lifecycleScope
 import androidx.drawerlayout.widget.DrawerLayout
 import kotlinx.coroutines.Dispatchers
@@ -539,7 +539,7 @@ class MainActivity : ThemedActivity(),
 
     fun toggleService() {
         if (DataStore.serviceState.canStop) SagerNet.stopService() else {
-            app.qthrone.mobile.ui.test.TestSessionClient.stop()
+            app.qcoldthrone.mobile.ui.test.TestSessionClient.stop()
             startFromUi()
         }
     }

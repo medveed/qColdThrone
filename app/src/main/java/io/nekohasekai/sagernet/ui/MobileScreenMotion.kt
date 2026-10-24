@@ -1,10 +1,10 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.view.View
 import androidx.fragment.app.Fragment
-import app.qthrone.mobile.R
+import app.qcoldthrone.mobile.R
 
 /** Match the fast activity fade without sliding the settings content. */
 object MobileScreenMotion {

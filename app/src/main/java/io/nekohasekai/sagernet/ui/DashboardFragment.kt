@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -21,16 +21,16 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.BaseService
-import app.qthrone.mobile.bg.SingBoxDashboard
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.databinding.LayoutDashboardBinding
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.launchCustomTab
-import app.qthrone.mobile.ui.settings.CoreSettingsFragment
-import app.qthrone.mobile.widget.applyInsetMargin
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.BaseService
+import app.qcoldthrone.mobile.bg.SingBoxDashboard
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.databinding.LayoutDashboardBinding
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.launchCustomTab
+import app.qcoldthrone.mobile.ui.settings.CoreSettingsFragment
+import app.qcoldthrone.mobile.widget.applyInsetMargin
 import org.json.JSONObject
 
 /**

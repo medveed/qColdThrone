@@ -1,9 +1,9 @@
-package app.qthrone.mobile.outbound.link
+package app.qcoldthrone.mobile.outbound.link
 
-import app.qthrone.mobile.outbound.link.encryptCsqttPayload
-import app.qthrone.mobile.outbound.link.formatCsqttLink
-import app.qthrone.mobile.outbound.link.parseCsqttLink
-import app.qthrone.mobile.outbound.link.peerAddress
+import app.qcoldthrone.mobile.outbound.link.encryptCsqttPayload
+import app.qcoldthrone.mobile.outbound.link.formatCsqttLink
+import app.qcoldthrone.mobile.outbound.link.parseCsqttLink
+import app.qcoldthrone.mobile.outbound.link.peerAddress
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue

@@ -1,15 +1,15 @@
-package app.qthrone.mobile.bg.proto
+package app.qcoldthrone.mobile.bg.proto
 
-import app.qthrone.mobile.bg.CoreRuntime
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.ktx.runOnIoDispatcher
-import app.qthrone.mobile.outbound.config.ConfigGenerator
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.core.mobile.Instance
+import app.qcoldthrone.mobile.bg.CoreRuntime
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.ktx.runOnIoDispatcher
+import app.qcoldthrone.mobile.outbound.config.ConfigGenerator
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.core.mobile.Instance
 import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
 import java.io.File

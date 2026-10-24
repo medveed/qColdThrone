@@ -1,4 +1,4 @@
-package app.qthrone.mobile.route
+package app.qcoldthrone.mobile.route
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows

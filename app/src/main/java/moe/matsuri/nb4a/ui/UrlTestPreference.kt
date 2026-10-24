@@ -7,8 +7,8 @@ import android.widget.LinearLayout
 import androidx.core.content.res.TypedArrayUtils
 import androidx.core.view.isVisible
 import androidx.preference.EditTextPreference
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
 
 class UrlTestPreference
 @JvmOverloads

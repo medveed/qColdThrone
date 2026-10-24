@@ -1,4 +1,4 @@
-package app.qthrone.mobile
+package app.qcoldthrone.mobile
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -17,21 +17,21 @@ import android.os.UserManager
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
-import app.qthrone.mobile.appwidget.Widgets
-import app.qthrone.mobile.bg.CoreRuntime
-import app.qthrone.mobile.bg.SagerConnection
-import app.qthrone.mobile.bg.autoselector.AutoSelectorRuntime
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ui.SeasonalPolicy
-import app.qthrone.mobile.database.SettingsMapper
-import app.qthrone.mobile.group.RemoteRouteUpdater
-import app.qthrone.mobile.group.SubscriptionScheduler
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.isOss
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
-import app.qthrone.mobile.ui.MainActivity
-import app.qthrone.mobile.update.UpdateManager
-import app.qthrone.mobile.utils.*
+import app.qcoldthrone.mobile.appwidget.Widgets
+import app.qcoldthrone.mobile.bg.CoreRuntime
+import app.qcoldthrone.mobile.bg.SagerConnection
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorRuntime
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ui.SeasonalPolicy
+import app.qcoldthrone.mobile.database.SettingsMapper
+import app.qcoldthrone.mobile.group.RemoteRouteUpdater
+import app.qcoldthrone.mobile.group.SubscriptionScheduler
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.isOss
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.update.UpdateManager
+import app.qcoldthrone.mobile.utils.*
 import kotlinx.coroutines.DEBUG_PROPERTY_NAME
 import kotlinx.coroutines.DEBUG_PROPERTY_VALUE_ON
 import java.io.File
@@ -111,7 +111,7 @@ class SagerNet : Application(),
             RemoteRouteUpdater.schedule(keepExisting = true)
             SubscriptionScheduler.schedule(keepExisting = true)
             Widgets.watchSelection(this)
-            app.qthrone.mobile.route.ProviderGeoAssets.listen()
+            app.qcoldthrone.mobile.route.ProviderGeoAssets.listen()
         }
 
         if (BuildConfig.DEBUG) {

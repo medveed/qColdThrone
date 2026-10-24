@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Context
 import android.os.Build
@@ -14,15 +14,15 @@ import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList
 import com.google.android.material.card.MaterialCardView
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.databinding.LayoutAboutBinding
-import app.qthrone.mobile.ktx.*
-import app.qthrone.mobile.update.UpdateActivity
-import app.qthrone.mobile.update.UpdateChecker
-import app.qthrone.mobile.widget.applyListInsets
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.databinding.LayoutAboutBinding
+import app.qcoldthrone.mobile.ktx.*
+import app.qcoldthrone.mobile.update.UpdateActivity
+import app.qcoldthrone.mobile.update.UpdateChecker
+import app.qcoldthrone.mobile.widget.applyListInsets
 
 class AboutFragment : ToolbarFragment(R.layout.layout_about) {
 

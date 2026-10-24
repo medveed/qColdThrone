@@ -1,21 +1,21 @@
-package app.qthrone.mobile.ui.profiles
+package app.qcoldthrone.mobile.ui.profiles
 
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.core.view.MenuCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.test.TestSpec
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.GroupSortMethod
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.database.TestBy
-import app.qthrone.mobile.database.TestShowItems
-import app.qthrone.mobile.database.TrafficBy
-import app.qthrone.mobile.database.TypeBy
-import app.qthrone.mobile.ui.ConfigurationFragment
-import app.qthrone.mobile.ui.route.RouteQuickSwitch
-import app.qthrone.mobile.ui.test.TestSessionClient
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.test.TestSpec
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.GroupSortMethod
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.database.TestBy
+import app.qcoldthrone.mobile.database.TestShowItems
+import app.qcoldthrone.mobile.database.TrafficBy
+import app.qcoldthrone.mobile.database.TypeBy
+import app.qcoldthrone.mobile.ui.ConfigurationFragment
+import app.qcoldthrone.mobile.ui.route.RouteQuickSwitch
+import app.qcoldthrone.mobile.ui.test.TestSessionClient
 
 /** The ⋮ menu of the profiles screen: actions on the current tab's group (the desktop's Groups menu). */
 class GroupMenu(private val host: ConfigurationFragment) {

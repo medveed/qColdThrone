@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -10,22 +10,22 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreference
-import app.qthrone.mobile.BootReceiver
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.ktx.needReload
-import app.qthrone.mobile.ktx.remove
-import app.qthrone.mobile.ui.MainActivity
-import app.qthrone.mobile.update.UpdateScheduler
-import app.qthrone.mobile.utils.AlwaysOnVpn
-import app.qthrone.mobile.utils.AppLocale
-import app.qthrone.mobile.utils.BatteryOptimizations
-import app.qthrone.mobile.utils.OemBackground
-import app.qthrone.mobile.utils.Theme
+import app.qcoldthrone.mobile.BootReceiver
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.ktx.remove
+import app.qcoldthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.update.UpdateScheduler
+import app.qcoldthrone.mobile.utils.AlwaysOnVpn
+import app.qcoldthrone.mobile.utils.AppLocale
+import app.qcoldthrone.mobile.utils.BatteryOptimizations
+import app.qcoldthrone.mobile.utils.OemBackground
+import app.qcoldthrone.mobile.utils.Theme
 import moe.matsuri.nb4a.ui.ColorPickerPreference
 import moe.matsuri.nb4a.ui.SimpleMenuPreference
 

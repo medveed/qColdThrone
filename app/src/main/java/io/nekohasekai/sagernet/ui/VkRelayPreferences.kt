@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -8,10 +8,10 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.carrier.VkRelayAccount
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.carrier.VkRelayAccount
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ktx.needReload
 import kotlinx.coroutines.*
 import moe.matsuri.nb4a.ui.SimpleMenuPreference
 import okhttp3.OkHttpClient

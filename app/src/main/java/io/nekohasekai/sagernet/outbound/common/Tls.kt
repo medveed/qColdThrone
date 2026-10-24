@@ -1,15 +1,15 @@
-package app.qthrone.mobile.outbound.common
+package app.qcoldthrone.mobile.outbound.common
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.import.ClashProxy
-import app.qthrone.mobile.outbound.QtStrings
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.json.JsonValues
-import app.qthrone.mobile.outbound.json.jsonObjectOf
-import app.qthrone.mobile.outbound.link.Base64Strict
-import app.qthrone.mobile.outbound.link.Hosts
-import app.qthrone.mobile.outbound.link.LinkParser
-import app.qthrone.mobile.outbound.link.ParsedLink
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.import.ClashProxy
+import app.qcoldthrone.mobile.outbound.QtStrings
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.JsonValues
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.outbound.link.Hosts
+import app.qcoldthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.outbound.link.ParsedLink
 
 private val SHA256_HEX = Regex("[0-9a-fA-F]{64}")
 private const val LOWER_HEX = "0123456789abcdef"

@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,23 +10,23 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceDataStore
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.Action
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.autoselector.AutoSelectorProfiles
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.GroupRepo
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.SettingsMapper
-import app.qthrone.mobile.database.preference.EditTextPreferenceModifiers
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.onMainDispatcher
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
-import app.qthrone.mobile.ktx.runOnMainDispatcher
-import app.qthrone.mobile.outbound.config.AutoSelectorPlan
-import app.qthrone.mobile.outbound.config.AutoSelectorPlanner
-import app.qthrone.mobile.outbound.config.AutoSelectorSkip
-import app.qthrone.mobile.outbound.types.AutoSelector
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.Action
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorProfiles
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.GroupRepo
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.SettingsMapper
+import app.qcoldthrone.mobile.database.preference.EditTextPreferenceModifiers
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.onMainDispatcher
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.ktx.runOnMainDispatcher
+import app.qcoldthrone.mobile.outbound.config.AutoSelectorPlan
+import app.qcoldthrone.mobile.outbound.config.AutoSelectorPlanner
+import app.qcoldthrone.mobile.outbound.config.AutoSelectorSkip
+import app.qcoldthrone.mobile.outbound.types.AutoSelector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

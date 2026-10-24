@@ -1,15 +1,15 @@
-package app.qthrone.mobile.bg
+package app.qcoldthrone.mobile.bg
 
 import android.app.Application
 import go.Seq
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.bg.test.TestEngine
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.core.mobile.Instance
-import app.qthrone.core.mobile.LogSink
-import app.qthrone.core.mobile.Mobile
-import app.qthrone.core.mobile.SetupOptions
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.bg.test.TestEngine
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.core.mobile.Instance
+import app.qcoldthrone.core.mobile.LogSink
+import app.qcoldthrone.core.mobile.Mobile
+import app.qcoldthrone.core.mobile.SetupOptions
 import moe.matsuri.nb4a.NativeInterface
 import moe.matsuri.nb4a.utils.CoreLog
 import java.io.File

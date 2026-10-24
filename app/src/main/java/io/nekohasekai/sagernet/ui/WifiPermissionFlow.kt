@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.Manifest
 import android.content.ActivityNotFoundException
@@ -8,11 +8,11 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.Action
-import app.qthrone.mobile.R
-import app.qthrone.mobile.utils.WifiStateAccess
-import app.qthrone.mobile.utils.WifiStateAccess.Status
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.Action
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.utils.WifiStateAccess
+import app.qcoldthrone.mobile.utils.WifiStateAccess.Status
 
 /**
  * Walks the user through what Wi-Fi rules need (WifiStateAccess): precise location, then "all the time", then location

@@ -1,10 +1,10 @@
-package app.qthrone.mobile.ui.profiles
+package app.qcoldthrone.mobile.ui.profiles
 
 import androidx.room.InvalidationTracker
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.database.SagerDatabase
-import app.qthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.database.SagerDatabase
+import app.qcoldthrone.mobile.ktx.Logs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable

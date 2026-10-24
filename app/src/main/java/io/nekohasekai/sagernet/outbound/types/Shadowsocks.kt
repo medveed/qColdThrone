@@ -1,19 +1,19 @@
-package app.qthrone.mobile.outbound.types
+package app.qcoldthrone.mobile.outbound.types
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.import.ClashProxy
-import app.qthrone.mobile.outbound.BuildResult
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.QtStrings
-import app.qthrone.mobile.outbound.SecurityInfo
-import app.qthrone.mobile.outbound.SecurityLevel
-import app.qthrone.mobile.outbound.common.Multiplex
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.link.Base64Strict
-import app.qthrone.mobile.outbound.link.LinkBuilder
-import app.qthrone.mobile.outbound.link.LinkCodec
-import app.qthrone.mobile.outbound.link.LinkParser
-import app.qthrone.mobile.outbound.link.ParsedLink
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.import.ClashProxy
+import app.qcoldthrone.mobile.outbound.BuildResult
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.QtStrings
+import app.qcoldthrone.mobile.outbound.SecurityInfo
+import app.qcoldthrone.mobile.outbound.SecurityLevel
+import app.qcoldthrone.mobile.outbound.common.Multiplex
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.outbound.link.LinkBuilder
+import app.qcoldthrone.mobile.outbound.link.LinkCodec
+import app.qcoldthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.outbound.link.ParsedLink
 
 /** shadowsocks (include/configs/outbounds/shadowsocks.h, src/configs/outbounds/shadowsocks.cpp). */
 class Shadowsocks : Outbound("shadowsocks") {

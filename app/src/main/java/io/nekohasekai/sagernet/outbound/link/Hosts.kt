@@ -1,4 +1,4 @@
-package app.qthrone.mobile.outbound.link
+package app.qcoldthrone.mobile.outbound.link
 
 import java.text.Normalizer
 import java.util.Locale

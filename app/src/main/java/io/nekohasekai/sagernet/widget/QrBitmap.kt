@@ -1,4 +1,4 @@
-package app.qthrone.mobile.widget
+package app.qcoldthrone.mobile.widget
 
 import android.graphics.Bitmap
 import android.graphics.Color

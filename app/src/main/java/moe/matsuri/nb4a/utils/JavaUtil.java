@@ -19,8 +19,8 @@ import java.nio.channels.FileLock;
 import java.util.HashSet;
 import java.util.Set;
 
-import app.qthrone.mobile.BuildConfig;
-import app.qthrone.mobile.ktx.Logs;
+import app.qcoldthrone.mobile.BuildConfig;
+import app.qcoldthrone.mobile.ktx.Logs;
 
 public class JavaUtil {
 

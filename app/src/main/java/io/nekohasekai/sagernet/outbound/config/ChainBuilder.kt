@@ -1,11 +1,11 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.json.JsonArray
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.json.jsonObjectOf
-import app.qthrone.mobile.outbound.types.Socks
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.json.JsonArray
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
+import app.qcoldthrone.mobile.outbound.types.Socks
 
 /** ChainBuildRequest (generate.cpp:1413-1428). */
 internal class ChainRequest(
@@ -171,9 +171,9 @@ internal class ChainBuilder(
                 continue
             }
             val stored = profiles.get(id) ?: return "Null proxy in chain, you may want to check your configs"
-            val outbound = if(stored is app.qthrone.mobile.bg.carrier.NativeCarrier) {
+            val outbound = if(stored is app.qcoldthrone.mobile.bg.carrier.NativeCarrier) {
                 try {
-                    state.carrierPlans.getOrPut(id) { app.qthrone.mobile.bg.carrier.CarrierPlan.qwdtt(id,stored) }.outbound()
+                    state.carrierPlans.getOrPut(id) { app.qcoldthrone.mobile.bg.carrier.CarrierPlan.qwdtt(id,stored) }.outbound()
                 } catch(_:IllegalArgumentException) { return "Native transport: invalid configuration" }
             } else stored
             if (outbound.invalid) return "Profile $id has a type this build cannot use: ${outbound.type}"

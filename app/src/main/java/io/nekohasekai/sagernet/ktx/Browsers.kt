@@ -1,10 +1,10 @@
-  package app.qthrone.mobile.ktx
+  package app.qcoldthrone.mobile.ktx
 
 import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import app.qthrone.mobile.R
+import app.qcoldthrone.mobile.R
 
 fun Context.launchCustomTab(link: String) {
     CustomTabsIntent.Builder().apply {

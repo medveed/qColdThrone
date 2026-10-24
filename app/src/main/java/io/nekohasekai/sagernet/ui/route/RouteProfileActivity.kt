@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.route
+package app.qcoldthrone.mobile.ui.route
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -18,25 +18,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.RouteManager
-import app.qthrone.mobile.databinding.LayoutRouteAddRuleBinding
-import app.qthrone.mobile.databinding.LayoutRouteProfileHeaderBinding
-import app.qthrone.mobile.databinding.LayoutRouteRawBinding
-import app.qthrone.mobile.databinding.LayoutRouteRuleItemBinding
-import app.qthrone.mobile.databinding.LayoutRouteRulesTitleBinding
-import app.qthrone.mobile.group.RemoteRouteUpdater
-import app.qthrone.mobile.ktx.FixedLinearLayoutManager
-import app.qthrone.mobile.ktx.confirmAction
-import app.qthrone.mobile.route.OutboundIds
-import app.qthrone.mobile.route.RouteProfile
-import app.qthrone.mobile.route.RouteRule
-import app.qthrone.mobile.ui.ThemedActivity
-import app.qthrone.mobile.utils.PackageCache
-import app.qthrone.mobile.widget.UndoSnackbarManager
-import app.qthrone.mobile.widget.applyListInsets
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.RouteManager
+import app.qcoldthrone.mobile.databinding.LayoutRouteAddRuleBinding
+import app.qcoldthrone.mobile.databinding.LayoutRouteProfileHeaderBinding
+import app.qcoldthrone.mobile.databinding.LayoutRouteRawBinding
+import app.qcoldthrone.mobile.databinding.LayoutRouteRuleItemBinding
+import app.qcoldthrone.mobile.databinding.LayoutRouteRulesTitleBinding
+import app.qcoldthrone.mobile.group.RemoteRouteUpdater
+import app.qcoldthrone.mobile.ktx.FixedLinearLayoutManager
+import app.qcoldthrone.mobile.ktx.confirmAction
+import app.qcoldthrone.mobile.route.OutboundIds
+import app.qcoldthrone.mobile.route.RouteProfile
+import app.qcoldthrone.mobile.route.RouteRule
+import app.qcoldthrone.mobile.ui.ThemedActivity
+import app.qcoldthrone.mobile.utils.PackageCache
+import app.qcoldthrone.mobile.widget.UndoSnackbarManager
+import app.qcoldthrone.mobile.widget.applyListInsets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -103,8 +103,8 @@ class RouteProfileActivity : ThemedActivity(R.layout.layout_route_profile) {
         list = findViewById(R.id.rule_list)
         list.layoutManager = FixedLinearLayoutManager(list)
         list.adapter = ConcatAdapter(headerAdapter, rawAdapter, titleAdapter, rulesAdapter, footerAdapter)
-        findViewById<android.view.View>(R.id.coordinator).setBackgroundColor(app.qthrone.mobile.ui.MobilePalette.background)
-        app.qthrone.mobile.ui.MobileViewStyle.apply(findViewById(R.id.coordinator))
+        findViewById<android.view.View>(R.id.coordinator).setBackgroundColor(app.qcoldthrone.mobile.ui.MobilePalette.background)
+        app.qcoldthrone.mobile.ui.MobileViewStyle.apply(findViewById(R.id.coordinator))
         list.applyListInsets(ime = true)
         undoManager = UndoSnackbarManager(this, rulesAdapter)
         touchHelper = ItemTouchHelper(TouchCallback()).also { it.attachToRecyclerView(list) }

@@ -1,4 +1,4 @@
-package app.qthrone.mobile.utils
+package app.qcoldthrone.mobile.utils
 
 import android.Manifest
 import android.content.Context
@@ -13,8 +13,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.location.LocationManagerCompat
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.ktx.Logs
 
 /**
  * What reading the SSID/BSSID of the connected Wi-Fi takes (WifiServiceImpl.getConnectionInfo redaction): location

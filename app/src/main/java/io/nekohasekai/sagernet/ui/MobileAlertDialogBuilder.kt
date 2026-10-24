@@ -1,10 +1,10 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.InsetDrawable
 import android.view.ContextThemeWrapper
-import app.qthrone.mobile.utils.Theme
+import app.qcoldthrone.mobile.utils.Theme
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /** Use the same surface and shape for editors, confirmations and preference dialogs. */

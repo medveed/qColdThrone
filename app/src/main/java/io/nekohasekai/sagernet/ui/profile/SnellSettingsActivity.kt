@@ -1,8 +1,8 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.outbound.types.Snell
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.outbound.types.Snell
 
 /** Snell v4 (obfs) and v6 (mode); the core speaks no other client version. */
 class SnellSettingsActivity : BindingSettingsActivity<Snell>() {

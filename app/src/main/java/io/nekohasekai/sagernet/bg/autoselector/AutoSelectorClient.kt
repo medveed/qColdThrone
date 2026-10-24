@@ -1,11 +1,11 @@
-package app.qthrone.mobile.bg.autoselector
+package app.qcoldthrone.mobile.bg.autoselector
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
  * The UI's copy of the service's auto-selector status without its member table, fed by every
- * [app.qthrone.mobile.bg.SagerConnection].
+ * [app.qcoldthrone.mobile.bg.SagerConnection].
  */
 object AutoSelectorClient {
 

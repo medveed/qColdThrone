@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Context
 import android.widget.TextView
@@ -7,12 +7,12 @@ import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.database.GroupRepo
-import app.qthrone.mobile.group.SubscriptionClient
-import app.qthrone.mobile.ktx.dp2px
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.database.GroupRepo
+import app.qcoldthrone.mobile.group.SubscriptionClient
+import app.qcoldthrone.mobile.ktx.dp2px
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -59,8 +59,8 @@ object SubscriptionReportDialog {
     private suspend fun handle(activity: MainActivity, report: SubscriptionClient.Report) {
         val group = withContext(Dispatchers.IO) { GroupRepo.get(report.gid) }
         if (!report.error && group != null && report.title == activity.getString(R.string.subs_change_of, group.name)) {
-            val ids = withContext(Dispatchers.IO) { app.qthrone.mobile.database.SagerDatabase.proxyDao.getByGroup(group.id).map { it.id } }
-            app.qthrone.mobile.ui.test.TestSessionClient.clearResults(ids)
+            val ids = withContext(Dispatchers.IO) { app.qcoldthrone.mobile.database.SagerDatabase.proxyDao.getByGroup(group.id).map { it.id } }
+            app.qcoldthrone.mobile.ui.test.TestSessionClient.clearResults(ids)
             refreshEpoch++
             MobileTopNotice.show(activity, activity.getString(R.string.qmobile_subscription_updated, group.displayName()))
         }

@@ -1,12 +1,12 @@
-package app.qthrone.mobile.bg
+package app.qcoldthrone.mobile.bg
 
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import androidx.annotation.RequiresApi
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.aidl.ISagerNetService
-import app.qthrone.mobile.database.SagerDatabase
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.aidl.ISagerNetService
+import app.qcoldthrone.mobile.database.SagerDatabase
 import android.service.quicksettings.TileService as BaseTileService
 
 @RequiresApi(24)

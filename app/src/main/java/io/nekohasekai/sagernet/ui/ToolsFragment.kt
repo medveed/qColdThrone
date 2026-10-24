@@ -1,9 +1,9 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.os.Bundle
 import android.view.View
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.backup.BackupEntry
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.backup.BackupEntry
 
 class ToolsFragment : ToolbarFragment(R.layout.layout_tools) {
 

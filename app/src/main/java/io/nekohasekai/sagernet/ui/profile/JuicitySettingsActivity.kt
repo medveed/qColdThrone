@@ -1,8 +1,8 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.outbound.types.Juicity
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.outbound.types.Juicity
 
 class JuicitySettingsActivity : BindingSettingsActivity<Juicity>() {
 

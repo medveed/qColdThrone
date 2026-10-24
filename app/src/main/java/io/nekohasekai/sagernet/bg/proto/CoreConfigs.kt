@@ -1,16 +1,18 @@
-package app.qthrone.mobile.bg.proto
+package app.qcoldthrone.mobile.bg.proto
 
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.database.SagerDatabase
-import app.qthrone.mobile.database.SettingsMapper
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.config.ConfigGenerator
-import app.qthrone.mobile.outbound.config.GeneratedConfig
-import app.qthrone.mobile.outbound.config.GeneratorSettings
-import app.qthrone.mobile.outbound.config.ProfileProvider
-import app.qthrone.mobile.outbound.config.RoutingInput
-import app.qthrone.mobile.outbound.config.TestCandidate
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.database.RouteManager
+import app.qcoldthrone.mobile.database.SagerDatabase
+import app.qcoldthrone.mobile.database.SettingsMapper
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.config.ConfigGenerator
+import app.qcoldthrone.mobile.outbound.config.GeneratedConfig
+import app.qcoldthrone.mobile.outbound.config.GeneratorSettings
+import app.qcoldthrone.mobile.outbound.config.ProfileProvider
+import app.qcoldthrone.mobile.outbound.config.RoutingInput
+import app.qcoldthrone.mobile.outbound.config.TestCandidate
+import app.qcoldthrone.mobile.route.RouteProfile
 
 /**
  * The config generator wired to the app: profiles come from the profile table, the settings and the build-time
@@ -40,32 +42,32 @@ object CoreConfigs {
         val options = SagerDatabase.groupDao.getById(profile.groupId)?.subOptions
         val bound = options?.takeIf { it.routingProvider.isNotBlank() && it.providerRoutingEnabled }
         val route = when {
-            bound?.providerRouting == "off" -> app.qthrone.mobile.route.RouteProfile.defaultProfile()
-            bound != null -> app.qthrone.mobile.route.ProviderRouting.profile(
-                app.qthrone.mobile.outbound.json.JsonInput.parseObjectOrNull(bound.providerRouting) ?: app.qthrone.mobile.outbound.json.JsonObject(), bound.routingProvider)
-            else -> app.qthrone.mobile.database.RouteManager.current().copy()
+            bound?.providerRouting == "off" -> app.qcoldthrone.mobile.route.RouteProfile.defaultProfile()
+            bound != null -> app.qcoldthrone.mobile.route.ProviderRouting.profile(
+                app.qcoldthrone.mobile.outbound.json.JsonInput.parseObjectOrNull(bound.providerRouting) ?: app.qcoldthrone.mobile.outbound.json.JsonObject(), bound.routingProvider)
+            else -> app.qcoldthrone.mobile.database.RouteManager.current().copy()
         }
         var routing = SettingsMapper.routingInput(route)
         val fullJson = profile.outbound.isXrayFullConfig()
-        val providerRouting=app.qthrone.mobile.route.ProviderRouting.stored(route)
+        val providerRouting=app.qcoldthrone.mobile.route.ProviderRouting.stored(route)
         providerRouting?.let { (_, document) ->
             if (fullJson) {
-                val custom = profile.outbound as? app.qthrone.mobile.outbound.types.Custom
-                if (custom != null) app.qthrone.mobile.route.ProviderGeoAssets.installXray(document,app.qthrone.mobile.bg.XrayGeoAssets.needed(listOf(custom.config)))
-                val tunnel = app.qthrone.mobile.route.ProviderRouting.settings(document,settings)
+                val custom = profile.outbound as? app.qcoldthrone.mobile.outbound.types.Custom
+                if (custom != null) app.qcoldthrone.mobile.route.ProviderGeoAssets.installXray(document,app.qcoldthrone.mobile.bg.XrayGeoAssets.needed(listOf(custom.config)))
+                val tunnel = app.qcoldthrone.mobile.route.ProviderRouting.settings(document,settings)
                 settings = settings.copy(remoteDns = tunnel.remoteDns, dnsPredefinedRules = tunnel.dnsPredefinedRules, fakeDns = false)
-                routing = SettingsMapper.routingInput(app.qthrone.mobile.route.RouteProfile.defaultProfile())
+                routing = SettingsMapper.routingInput(app.qcoldthrone.mobile.route.RouteProfile.defaultProfile())
             } else {
-                settings = app.qthrone.mobile.route.ProviderRouting.settings(document, settings)
-                val catalog = app.qthrone.mobile.route.ProviderGeoAssets.resolve(route, document, routing.catalog)
+                settings = app.qcoldthrone.mobile.route.ProviderRouting.settings(document, settings)
+                val catalog = app.qcoldthrone.mobile.route.ProviderGeoAssets.resolve(route, document, routing.catalog)
                 routing = RoutingInput(route, catalog, routing.selectors, routing.memberCheck)
             }
         }
         val profiles = DatabaseProfiles()
         var context = SettingsMapper.buildContext()
-        if (app.qthrone.mobile.outbound.config.TransportIpPolicy.ipv4Only(profile.outbound, profiles)) {
-            settings = app.qthrone.mobile.outbound.config.TransportIpPolicy.settings(settings)
-            context = app.qthrone.mobile.outbound.config.TransportIpPolicy.context(context)
+        if (app.qcoldthrone.mobile.outbound.config.TransportIpPolicy.ipv4Only(profile.outbound, profiles)) {
+            settings = app.qcoldthrone.mobile.outbound.config.TransportIpPolicy.settings(settings)
+            context = app.qcoldthrone.mobile.outbound.config.TransportIpPolicy.context(context)
             moe.matsuri.nb4a.utils.CoreLog.write("[Info] ${profile.outbound.displayType()} uses IPv4-only tunnel and DNS; saved IPv6 preference is unchanged")
         }
         moe.matsuri.nb4a.utils.CoreLog.write("[Info] "+DnsDiagnostics.summary(settings,providerRouting!=null))
@@ -82,7 +84,7 @@ object CoreConfigs {
             val (landing, front) = groups.getOrPut(groupId) { groupProxies(groupId) }
             TestCandidate(id, landing, front)
         }
-        return generator().buildTest(candidates)
+        return generator(RoutingInput(RouteProfile.defaultProfile(), RouteManager.catalog())).buildTest(candidates)
     }
 
     /** (landing_proxy_id, front_proxy_id) of a group, -1 when unset (any id <= 0 is "none"). */

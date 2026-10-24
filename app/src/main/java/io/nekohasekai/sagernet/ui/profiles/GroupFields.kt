@@ -1,7 +1,7 @@
-package app.qthrone.mobile.ui.profiles
+package app.qcoldthrone.mobile.ui.profiles
 
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.database.SagerDatabase
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.database.SagerDatabase
 import java.util.concurrent.Callable
 
 /** Single-field writes of the profiles screen (scroll position, sort sub-criteria, shown test items). */

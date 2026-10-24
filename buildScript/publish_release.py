@@ -13,7 +13,7 @@ def gh(*args, check=True):
 
 
 def validate_assets(dist, manifest):
-    if manifest["packageName"] != "app.qthrone.mobile" or manifest["channel"] != "stable":
+    if manifest["packageName"] != "app.qcoldthrone.mobile" or manifest["channel"] != "stable":
         raise ValueError("Unexpected release package or channel")
     if set(manifest["assets"]) != set(ABIS + ["universal"]):
         raise ValueError("Missing APK architecture")

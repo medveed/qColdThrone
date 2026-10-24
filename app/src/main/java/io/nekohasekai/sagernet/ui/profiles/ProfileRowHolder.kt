@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.profiles
+package app.qcoldthrone.mobile.ui.profiles
 
 import android.content.Context
 import android.graphics.Color
@@ -15,13 +15,13 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.database.TestShowItems
-import app.qthrone.mobile.ktx.alert
-import app.qthrone.mobile.ktx.getColorAttr
-import app.qthrone.mobile.ktx.tryToShow
-import app.qthrone.mobile.ui.test.RowPhase
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.database.TestShowItems
+import app.qcoldthrone.mobile.ktx.alert
+import app.qcoldthrone.mobile.ktx.getColorAttr
+import app.qcoldthrone.mobile.ktx.tryToShow
+import app.qcoldthrone.mobile.ui.test.RowPhase
 import moe.matsuri.nb4a.Protocols
 import moe.matsuri.nb4a.Protocols.getProtocolColor
 import java.math.BigDecimal

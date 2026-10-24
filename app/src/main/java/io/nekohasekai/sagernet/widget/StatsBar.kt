@@ -1,4 +1,4 @@
-package app.qthrone.mobile.widget
+package app.qcoldthrone.mobile.widget
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -13,14 +13,14 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import com.google.android.material.bottomappbar.BottomAppBar
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.BaseService
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.ktx.*
-import app.qthrone.mobile.ui.MainActivity
-import app.qthrone.mobile.ui.test.TestFormat
-import app.qthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.BaseService
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.ktx.*
+import app.qcoldthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.ui.test.TestFormat
+import app.qcoldthrone.mobile.SagerNet
 import kotlin.math.abs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

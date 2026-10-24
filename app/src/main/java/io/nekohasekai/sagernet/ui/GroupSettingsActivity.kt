@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -21,28 +21,28 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceDataStore
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.GroupRepo
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.database.SendHwid
-import app.qthrone.mobile.database.SubscriptionOptions
-import app.qthrone.mobile.database.ServerSortRule
-import app.qthrone.mobile.database.GroupSort
-import app.qthrone.mobile.database.GroupSortAction
-import app.qthrone.mobile.database.GroupSortMethod
-import app.qthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
-import app.qthrone.mobile.group.DeviceDetails
-import app.qthrone.mobile.group.RequestIdentity
-import app.qthrone.mobile.group.SubscriptionScheduler
-import app.qthrone.mobile.group.SubscriptionNameFilter
-import app.qthrone.mobile.group.ProviderLinks
-import app.qthrone.mobile.ktx.FixedLinearLayoutManager
-import app.qthrone.mobile.ui.settings.DefaultSummaryProvider
-import app.qthrone.mobile.widget.ListListener
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.GroupRepo
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.database.SendHwid
+import app.qcoldthrone.mobile.database.SubscriptionOptions
+import app.qcoldthrone.mobile.database.ServerSortRule
+import app.qcoldthrone.mobile.database.GroupSort
+import app.qcoldthrone.mobile.database.GroupSortAction
+import app.qcoldthrone.mobile.database.GroupSortMethod
+import app.qcoldthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
+import app.qcoldthrone.mobile.group.DeviceDetails
+import app.qcoldthrone.mobile.group.RequestIdentity
+import app.qcoldthrone.mobile.group.SubscriptionScheduler
+import app.qcoldthrone.mobile.group.SubscriptionNameFilter
+import app.qcoldthrone.mobile.group.ProviderLinks
+import app.qcoldthrone.mobile.ktx.FixedLinearLayoutManager
+import app.qcoldthrone.mobile.ui.settings.DefaultSummaryProvider
+import app.qcoldthrone.mobile.widget.ListListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -439,7 +439,7 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
         )
     }
 
-    private fun editSignature(): String = app.qthrone.mobile.outbound.json.jsonObjectOf(
+    private fun editSignature(): String = app.qcoldthrone.mobile.outbound.json.jsonObjectOf(
         "name" to DataStore.groupName.trim(), "type" to DataStore.groupType,
         "url" to DataStore.subscriptionLink.trim(), "front" to proxyId(KEY_FRONT), "landing" to proxyId(KEY_LANDING),
         "clear" to DataStore.profileCacheStore.getBoolean(KEY_AUTO_CLEAR, false),
@@ -670,7 +670,7 @@ open class GroupSettingsActivity : ServerScreenActivity(R.layout.layout_config_s
                 val items = arrayListOf<CharSequence>(getString(R.string.grp_none))
                 if (current > 0) items.add(proxyText(current))
                 items.add(getString(R.string.route_profile))
-                app.qthrone.mobile.ui.MobileSelector.show(preference,items,if(current > 0) 1 else 0) { which ->
+                app.qcoldthrone.mobile.ui.MobileSelector.show(preference,items,if(current > 0) 1 else 0) { which ->
                     when(which) { 0 -> setProxy(key,-1L); items.lastIndex -> host.pickProfile(key) }
                 }
                 true

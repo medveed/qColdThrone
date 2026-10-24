@@ -1,11 +1,11 @@
-package app.qthrone.mobile.ui.test
+package app.qcoldthrone.mobile.ui.test
 
 import android.os.SystemClock
-import app.qthrone.mobile.aidl.ICoreService
-import app.qthrone.mobile.bg.proto.SpeedTestSnapshot
-import app.qthrone.mobile.bg.test.TestSpec
-import app.qthrone.mobile.database.GroupSort
-import app.qthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.aidl.ICoreService
+import app.qcoldthrone.mobile.bg.proto.SpeedTestSnapshot
+import app.qcoldthrone.mobile.bg.test.TestSpec
+import app.qcoldthrone.mobile.database.GroupSort
+import app.qcoldthrone.mobile.database.ProxyEntity
 import kotlin.math.min
 
 /** Mutable state of one session; every call happens under [TestSessionClient]'s lock. */

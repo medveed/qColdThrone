@@ -1,4 +1,4 @@
-package app.qthrone.mobile.outbound.json
+package app.qcoldthrone.mobile.outbound.json
 
 import org.json.JSONArray
 import org.json.JSONObject

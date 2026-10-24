@@ -1,4 +1,4 @@
-package app.qthrone.mobile.database.preference
+package app.qcoldthrone.mobile.database.preference
 
 import androidx.preference.PreferenceDataStore
 

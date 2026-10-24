@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import android.text.InputType
 import android.text.format.Formatter
@@ -6,13 +6,13 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.XrayGeoAssets
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.databinding.DialogGeoDownloadBinding
-import app.qthrone.mobile.ktx.needReload
-import app.qthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.XrayGeoAssets
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.databinding.DialogGeoDownloadBinding
+import app.qcoldthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.ktx.readableMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

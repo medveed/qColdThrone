@@ -1,9 +1,9 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import android.content.Context
 import android.content.Intent
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.outbound.OutboundFactory
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.outbound.OutboundFactory
 
 /** The editor activity of a desktop profile type string ("custom" and unknown types open the raw JSON editor). */
 fun settingsActivityFor(type: String): Class<out ProfileSettingsActivity<*>> =
@@ -33,6 +33,7 @@ fun settingsActivityFor(type: String): Class<out ProfileSettingsActivity<*>> =
         "openconnect" -> OpenConnectSettingsActivity::class.java
         "chain" -> ChainSettingsActivity::class.java
         "autoselector" -> AutoSelectorSettingsActivity::class.java
+        "offsiteconfig" -> OffsiteConfigSettingsActivity::class.java
         else -> CustomSettingsActivity::class.java
     }
 

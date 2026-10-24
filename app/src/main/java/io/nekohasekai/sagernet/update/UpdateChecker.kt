@@ -1,15 +1,15 @@
-package app.qthrone.mobile.update
+package app.qcoldthrone.mobile.update
 
 import android.content.Context
 import android.os.Build
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.USER_AGENT
-import app.qthrone.mobile.ktx.appRequestsViaProxy
-import app.qthrone.mobile.ktx.newHttpClient
-import app.qthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.USER_AGENT
+import app.qcoldthrone.mobile.ktx.appRequestsViaProxy
+import app.qcoldthrone.mobile.ktx.newHttpClient
+import app.qcoldthrone.mobile.ktx.readableMessage
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray

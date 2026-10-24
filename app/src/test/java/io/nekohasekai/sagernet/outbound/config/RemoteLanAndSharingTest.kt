@@ -1,12 +1,12 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.types.OpenConnect
-import app.qthrone.mobile.outbound.types.Socks
-import app.qthrone.mobile.outbound.types.Qwdtt
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.bg.carrier.VpnListenerPolicy
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.types.OpenConnect
+import app.qcoldthrone.mobile.outbound.types.Socks
+import app.qcoldthrone.mobile.outbound.types.Qwdtt
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.bg.carrier.VpnListenerPolicy
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -36,7 +36,7 @@ class RemoteLanAndSharingTest {
     }
     @Test fun remoteLanUsesAdvertisedRoutesForOpenConnectAndOpenVpn() {
         for(profile in listOf(OpenConnect().apply { server="vpn.example.org" },
-            app.qthrone.mobile.outbound.types.OpenVpn().apply { server="vpn.example.org" })) {
+            app.qcoldthrone.mobile.outbound.types.OpenVpn().apply { server="vpn.example.org" })) {
             val result=ConfigGenerator(ProfileProvider { profile },GeneratorSettings(vpnMode=true)).build(1)
             assertNull(result.error)
             val rules=JsonInput.parseObject(result.coreConfig).obj("route").array("rules").filterIsInstance<JsonObject>()
@@ -47,7 +47,7 @@ class RemoteLanAndSharingTest {
         }
     }
     @Test fun sstpReachesTheServersLanButKeepsThePhonesOwnNetwork() {
-        val profile=app.qthrone.mobile.outbound.types.Sstp().apply { server="vpn.example.org";username="user";password="secret" }
+        val profile=app.qcoldthrone.mobile.outbound.types.Sstp().apply { server="vpn.example.org";username="user";password="secret" }
         val result=ConfigGenerator(ProfileProvider { profile },GeneratorSettings(vpnMode=true,localLanCidrs=listOf("192.168.31.0/24"))).build(1)
         assertNull(result.error)
         val config=JsonInput.parseObject(result.coreConfig)
@@ -61,14 +61,14 @@ class RemoteLanAndSharingTest {
     }
     @Test fun explicitUserLanRoutePrecedesServerPreference() {
         val profile=OpenConnect().apply { server="vpn.example.org" }
-        val route=app.qthrone.mobile.route.RouteProfile.defaultProfile().apply {
-            rules.add(app.qthrone.mobile.route.RouteRule().apply {
+        val route=app.qcoldthrone.mobile.route.RouteProfile.defaultProfile().apply {
+            rules.add(app.qcoldthrone.mobile.route.RouteRule().apply {
                 name="Local printer";ip_cidr.add("192.168.1.25/32")
-                action="route";outbound_id=app.qthrone.mobile.route.OutboundIds.DIRECT
+                action="route";outbound_id=app.qcoldthrone.mobile.route.OutboundIds.DIRECT
             })
         }
         val result=ConfigGenerator(ProfileProvider { profile },GeneratorSettings(vpnMode=true),
-            routing=RoutingInput(route,app.qthrone.mobile.route.RuleSetCatalog(emptyList()))).build(1)
+            routing=RoutingInput(route,app.qcoldthrone.mobile.route.RuleSetCatalog(emptyList()))).build(1)
         assertNull(result.error)
         val rules=JsonInput.parseObject(result.coreConfig).obj("route").array("rules").filterIsInstance<JsonObject>()
         val userRule=rules.indexOfFirst { it.array("ip_cidr").contains("192.168.1.25/32") && it.string("outbound")=="direct" }
@@ -90,7 +90,7 @@ class RemoteLanAndSharingTest {
     @Test fun qwdttUsesRuntimeIpv4WithoutChangingGlobalPreferences() {
         val original=GeneratorSettings(vpnMode=true,ipv6Enabled=true,remoteDnsDisableIpv6=false)
         assertTrue(TransportIpPolicy.ipv4Only(Qwdtt(),ProfileProvider { null }))
-        assertTrue(TransportIpPolicy.ipv4Only(app.qthrone.mobile.outbound.types.Csqtt(),ProfileProvider { null }))
+        assertTrue(TransportIpPolicy.ipv4Only(app.qcoldthrone.mobile.outbound.types.Csqtt(),ProfileProvider { null }))
         assertFalse(TransportIpPolicy.ipv4Only(Socks(),ProfileProvider { null }))
         val effective=TransportIpPolicy.settings(original)
         assertFalse(effective.ipv6Enabled)

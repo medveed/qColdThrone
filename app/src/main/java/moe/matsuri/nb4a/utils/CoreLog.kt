@@ -1,7 +1,7 @@
 package moe.matsuri.nb4a.utils
 
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ktx.app
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.Manifest
 import android.content.Intent
@@ -19,10 +19,10 @@ import com.king.zxing.analyze.QRCodeAnalyzer
 import com.king.zxing.util.CodeUtils
 import com.king.zxing.util.LogUtils
 import com.king.zxing.util.PermissionUtils
-import app.qthrone.mobile.R
-import app.qthrone.mobile.databinding.LayoutScannerBinding
-import app.qthrone.mobile.ktx.*
-import app.qthrone.mobile.widget.applyInsetMargin
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.databinding.LayoutScannerBinding
+import app.qcoldthrone.mobile.ktx.*
+import app.qcoldthrone.mobile.widget.applyInsetMargin
 import java.util.concurrent.atomic.AtomicBoolean
 
 

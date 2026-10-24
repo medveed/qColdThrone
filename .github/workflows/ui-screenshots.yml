@@ -65,7 +65,7 @@ jobs:
           "$ANDROID_HOME/platform-tools/adb" install -r "$UNIVERSAL"
           mkdir -p ui-screenshots
           printf '%s\n' "PASS: ABI APK installed, universal APK installed over it with the same signature" > ui-screenshots/universal-install-result.txt
-          PACKAGE=$("$ANDROID_HOME/platform-tools/adb" shell pm list packages | sed -n 's/^package:\(app.qthrone.mobile[^[:space:]]*\).*/\1/p' | tr -d '\r')
+          PACKAGE=$("$ANDROID_HOME/platform-tools/adb" shell pm list packages | sed -n 's/^package:\(app.qcoldthrone.mobile[^[:space:]]*\).*/\1/p' | tr -d '\r')
           test -n "$PACKAGE"
           "$ANDROID_HOME/platform-tools/adb" shell dumpsys package "$PACKAGE" | grep -F 'primaryCpuAbi=x86_64'
       - name: Capture real application screens
@@ -89,9 +89,9 @@ jobs:
           APK=$(find ui-regression-apk -name '*.apk' -print -quit)
           test -n "$APK"
           "$ADB" install "$APK"
-          TEST_PACKAGE=$("$ADB" shell pm list packages | sed -n 's/^package:\(app.qthrone.mobile[^[:space:]]*\.test\).*/\1/p' | tr -d '\r')
+          TEST_PACKAGE=$("$ADB" shell pm list packages | sed -n 's/^package:\(app.qcoldthrone.mobile[^[:space:]]*\.test\).*/\1/p' | tr -d '\r')
           PACKAGE=${TEST_PACKAGE%.test}
-          "$ADB" shell am instrument -w -e class app.qthrone.mobile.LogsAndAuthRegressionTest,app.qthrone.mobile.LargeSubscriptionUiRegressionTest,app.qthrone.mobile.LocalProxySecurityTest "$TEST_PACKAGE/androidx.test.runner.AndroidJUnitRunner" | tee ui-screenshots/logs-auth-regression.txt
+          "$ADB" shell am instrument -w -e class app.qcoldthrone.mobile.LogsAndAuthRegressionTest,app.qcoldthrone.mobile.LargeSubscriptionUiRegressionTest,app.qcoldthrone.mobile.LocalProxySecurityTest "$TEST_PACKAGE/androidx.test.runner.AndroidJUnitRunner" | tee ui-screenshots/logs-auth-regression.txt
           grep -F 'OK (4 tests)' ui-screenshots/logs-auth-regression.txt
           for IMAGE in openconnect-auth-form.png openconnect-auth-groups.png logs-follow-bottom.png large-subscription-collapsed.png large-subscription-expanded.png; do
             "$ADB" exec-out run-as "$PACKAGE" cat "files/$IMAGE" > "ui-screenshots/$IMAGE"

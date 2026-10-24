@@ -198,7 +198,7 @@ fun Project.setupApp() {
             val variant = this
             outputs.all {
                 this as BaseVariantOutputImpl
-                outputFileName = "qThroneMobile-${variant.versionName}" + outputFileName.removePrefix(project.name)
+                outputFileName = "qColdThrone-${variant.versionName}" + outputFileName.removePrefix(project.name)
                     .replace("-release", "")
                     .replace("-oss", "")
             }

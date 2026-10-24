@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.route
+package app.qcoldthrone.mobile.ui.route
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,27 +14,27 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceDataStore
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.RouteManager
-import app.qthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
-import app.qthrone.mobile.ktx.FixedLinearLayoutManager
-import app.qthrone.mobile.route.OutboundIds
-import app.qthrone.mobile.route.RouteRule
-import app.qthrone.mobile.route.RuleType
-import app.qthrone.mobile.ui.AppListActivity
-import app.qthrone.mobile.ui.ThemedActivity
-import app.qthrone.mobile.ui.WifiPermissionFlow
-import app.qthrone.mobile.ui.profile.multilineInput
-import app.qthrone.mobile.ui.profile.portInput
-import app.qthrone.mobile.ui.profile.setVisible
-import app.qthrone.mobile.ui.settings.LinesSummaryProvider
-import app.qthrone.mobile.utils.PackageCache
-import app.qthrone.mobile.utils.WifiStateAccess
-import app.qthrone.mobile.widget.ListListener
-import app.qthrone.mobile.widget.StringLinesPreference
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.RouteManager
+import app.qcoldthrone.mobile.database.preference.OnPreferenceDataStoreChangeListener
+import app.qcoldthrone.mobile.ktx.FixedLinearLayoutManager
+import app.qcoldthrone.mobile.route.OutboundIds
+import app.qcoldthrone.mobile.route.RouteRule
+import app.qcoldthrone.mobile.route.RuleType
+import app.qcoldthrone.mobile.ui.AppListActivity
+import app.qcoldthrone.mobile.ui.ThemedActivity
+import app.qcoldthrone.mobile.ui.WifiPermissionFlow
+import app.qcoldthrone.mobile.ui.profile.multilineInput
+import app.qcoldthrone.mobile.ui.profile.portInput
+import app.qcoldthrone.mobile.ui.profile.setVisible
+import app.qcoldthrone.mobile.ui.settings.LinesSummaryProvider
+import app.qcoldthrone.mobile.utils.PackageCache
+import app.qcoldthrone.mobile.utils.WifiStateAccess
+import app.qcoldthrone.mobile.widget.ListListener
+import app.qcoldthrone.mobile.widget.StringLinesPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -335,7 +335,7 @@ class RouteRuleActivity : ThemedActivity(R.layout.layout_config_settings), OnPre
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
             listView.layoutManager = FixedLinearLayoutManager(listView)
-            app.qthrone.mobile.ui.MobileSettingsStyle.apply(this,view)
+            app.qcoldthrone.mobile.ui.MobileSettingsStyle.apply(this,view)
             ViewCompat.setOnApplyWindowInsetsListener(listView, ListListener)
         }
 

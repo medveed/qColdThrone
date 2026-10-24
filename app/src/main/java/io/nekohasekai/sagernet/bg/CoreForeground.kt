@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg
+package app.qcoldthrone.mobile.bg
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -8,10 +8,10 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
 
 /**
  * Reference-counted foreground promotion of [CoreService] (type dataSync) while test sessions

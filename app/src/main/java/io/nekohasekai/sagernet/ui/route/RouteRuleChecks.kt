@@ -1,12 +1,12 @@
-package app.qthrone.mobile.ui.route
+package app.qcoldthrone.mobile.ui.route
 
 import android.content.Context
 import androidx.annotation.StringRes
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.SettingValidators
-import app.qthrone.mobile.route.RouteRule
-import app.qthrone.mobile.route.RuleSetCatalog
-import app.qthrone.mobile.route.RuleSets
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.SettingValidators
+import app.qcoldthrone.mobile.route.RouteRule
+import app.qcoldthrone.mobile.route.RuleSetCatalog
+import app.qcoldthrone.mobile.route.RuleSets
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 

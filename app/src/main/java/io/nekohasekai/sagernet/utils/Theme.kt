@@ -1,13 +1,13 @@
-package app.qthrone.mobile.utils
+package app.qcoldthrone.mobile.utils
 
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.ui.MobilePalette
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ui.MobilePalette
 
 object Theme {
 
@@ -49,7 +49,7 @@ object Theme {
         context.setTheme(getDialogTheme())
         applyAmoledOverlay(context)
         context.theme.applyStyle(R.style.MobileControls, true)
-        if(context is app.qthrone.mobile.ui.SubscriptionEditorActivity)
+        if(context is app.qcoldthrone.mobile.ui.SubscriptionEditorActivity)
             context.theme.applyStyle(R.style.MobileSubscriptionEditorWindow, true)
     }
 

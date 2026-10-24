@@ -1,8 +1,8 @@
-package app.qthrone.mobile.bg.test
+package app.qcoldthrone.mobile.bg.test
 
-import app.qthrone.mobile.bg.proto.CoreConfig
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.bg.proto.CoreConfig
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -55,7 +55,10 @@ internal object TestTags {
     private fun defaultOutbound(config: JsonObject): String {
         val routeFinal = config.obj("route").string("final")
         if (routeFinal.isNotEmpty()) return routeFinal
-        val first = config.array("outbounds").firstOrNull() as? JsonObject ?: return "direct"
+        // The core's manager resolves endpoints as outbounds too, so a config whose only egress is one falls to it.
+        val first = config.array("outbounds").firstOrNull() as? JsonObject
+            ?: config.array("endpoints").firstOrNull() as? JsonObject
+            ?: return "direct"
         return first.string("tag").ifEmpty { "0" }
     }
 }

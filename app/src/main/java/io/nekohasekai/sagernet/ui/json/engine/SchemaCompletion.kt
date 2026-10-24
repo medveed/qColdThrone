@@ -1,8 +1,8 @@
-package app.qthrone.mobile.ui.json.engine
+package app.qcoldthrone.mobile.ui.json.engine
 
-import app.qthrone.mobile.ui.json.engine.SchemaDocument.Companion.list
-import app.qthrone.mobile.ui.json.engine.SchemaDocument.Companion.obj
-import app.qthrone.mobile.ui.json.engine.SchemaDocument.Companion.scalarText
+import app.qcoldthrone.mobile.ui.json.engine.SchemaDocument.Companion.list
+import app.qcoldthrone.mobile.ui.json.engine.SchemaDocument.Companion.obj
+import app.qcoldthrone.mobile.ui.json.engine.SchemaDocument.Companion.scalarText
 import java.util.IdentityHashMap
 
 /**

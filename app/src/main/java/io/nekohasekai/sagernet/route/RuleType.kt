@@ -1,4 +1,4 @@
-package app.qthrone.mobile.route
+package app.qcoldthrone.mobile.route
 
 /** RouteRule::type (RouteRule.h:29-88): persisted as the raw int and shared as the token; append-only. */
 enum class RuleType(val id: Int, val token: String) {

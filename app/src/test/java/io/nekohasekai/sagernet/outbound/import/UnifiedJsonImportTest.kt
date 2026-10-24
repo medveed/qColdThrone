@@ -1,21 +1,21 @@
-package app.qthrone.mobile.outbound.import
+package app.qcoldthrone.mobile.outbound.import
 
-import app.qthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
 import org.junit.Assert.*
 import org.junit.Test
 
 class UnifiedJsonImportTest {
-    private fun snapshot(profile: app.qthrone.mobile.outbound.Outbound): String =
-        if(profile is app.qthrone.mobile.outbound.types.Custom) "${profile.subtype}:${profile.configObject().toCompact()}"
+    private fun snapshot(profile: app.qcoldthrone.mobile.outbound.Outbound): String =
+        if(profile is app.qcoldthrone.mobile.outbound.types.Custom) "${profile.subtype}:${profile.configObject().toCompact()}"
         else profile.exportToJson().toCompact()
     private fun wrapped(body:String)=listOf(body,"[$body]",
         "json://#"+Base64Strict.encode(body,urlSafe=true,padding=false),
         "throne://add/"+Base64Strict.encode(body,urlSafe=true,padding=false))
 
     @Test fun exportedProfilesStayEditableModels() {
-        val profiles=listOf(app.qthrone.mobile.outbound.types.Socks().apply {
+        val profiles=listOf(app.qcoldthrone.mobile.outbound.types.Socks().apply {
             server="192.0.2.1";serverPort=1080;username="test";password="secret"
-        },app.qthrone.mobile.outbound.types.Vmess().apply {
+        },app.qcoldthrone.mobile.outbound.types.Vmess().apply {
             server="192.0.2.2";serverPort=443;uuid="00000000-0000-0000-0000-000000000001"
         })
         for(profile in profiles) for(input in wrapped(profile.exportToJson().toCompact())) {
@@ -67,9 +67,9 @@ class UnifiedJsonImportTest {
             val result=ProfileImport.parse(input)
             assertEquals(result.messages.toString(),1,result.outbounds.size)
             assertEquals("Hysteria",result.outbounds.single().displayType())
-            val custom=result.outbounds.single() as app.qthrone.mobile.outbound.types.Custom
+            val custom=result.outbounds.single() as app.qcoldthrone.mobile.outbound.types.Custom
             assertTrue(custom.configObject().obj("routing").contains("balancers"))
-            assertEquals(2,(custom.configObject().array("outbounds")[0] as app.qthrone.mobile.outbound.json.JsonObject).obj("settings").int("version"))
+            assertEquals(2,(custom.configObject().array("outbounds")[0] as app.qcoldthrone.mobile.outbound.json.JsonObject).obj("settings").int("version"))
         }
     }
 }

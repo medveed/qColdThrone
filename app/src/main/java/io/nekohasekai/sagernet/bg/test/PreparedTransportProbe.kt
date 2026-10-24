@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg.test
+package app.qcoldthrone.mobile.bg.test
 
 import kotlinx.coroutines.launch
 

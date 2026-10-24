@@ -1,4 +1,4 @@
-package app.qthrone.mobile.utils
+package app.qcoldthrone.mobile.utils
 
 import android.content.Context
 import android.content.Intent
@@ -9,12 +9,12 @@ import android.content.pm.PackageManager
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import app.qthrone.mobile.QuickToggleShortcut
-import app.qthrone.mobile.R
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ui.QuickDisableShortcut
-import app.qthrone.mobile.ui.QuickEnableShortcut
-import app.qthrone.mobile.ui.ScannerActivity
+import app.qcoldthrone.mobile.QuickToggleShortcut
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ui.QuickDisableShortcut
+import app.qcoldthrone.mobile.ui.QuickEnableShortcut
+import app.qcoldthrone.mobile.ui.ScannerActivity
 
 /**
  * The launcher shortcuts, published at runtime: a static shortcuts.xml can only name one hard-coded package, which

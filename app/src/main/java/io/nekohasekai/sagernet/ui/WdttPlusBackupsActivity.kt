@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.os.Bundle
 import android.view.Gravity
@@ -13,10 +13,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import app.qthrone.mobile.R
-import app.qthrone.mobile.deploy.DeployServer
-import app.qthrone.mobile.deploy.DeployStore
-import app.qthrone.mobile.deploy.WdttPlusAdmin
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.deploy.DeployServer
+import app.qcoldthrone.mobile.deploy.DeployStore
+import app.qcoldthrone.mobile.deploy.WdttPlusAdmin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

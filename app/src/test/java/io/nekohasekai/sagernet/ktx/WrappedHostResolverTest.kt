@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ktx
+package app.qcoldthrone.mobile.ktx
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

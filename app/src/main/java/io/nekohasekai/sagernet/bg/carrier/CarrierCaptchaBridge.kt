@@ -1,12 +1,12 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
 import java.util.UUID
 
 /** Private, same-app messages; captcha addresses and tokens never enter logs. */

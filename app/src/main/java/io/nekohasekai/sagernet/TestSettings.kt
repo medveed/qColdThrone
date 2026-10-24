@@ -1,4 +1,4 @@
-package app.qthrone.mobile
+package app.qcoldthrone.mobile
 
 import java.net.URI
 

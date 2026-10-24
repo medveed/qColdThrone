@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

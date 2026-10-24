@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Context
 import android.content.Intent
@@ -21,15 +21,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.databinding.LayoutAppListBinding
-import app.qthrone.mobile.databinding.LayoutAppsItemBinding
-import app.qthrone.mobile.ktx.crossFadeFrom
-import app.qthrone.mobile.route.RouteRule
-import app.qthrone.mobile.utils.PackageCache
-import app.qthrone.mobile.widget.applyListInsets
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.databinding.LayoutAppListBinding
+import app.qcoldthrone.mobile.databinding.LayoutAppsItemBinding
+import app.qcoldthrone.mobile.ktx.crossFadeFrom
+import app.qcoldthrone.mobile.route.RouteRule
+import app.qcoldthrone.mobile.utils.PackageCache
+import app.qcoldthrone.mobile.widget.applyListInsets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive

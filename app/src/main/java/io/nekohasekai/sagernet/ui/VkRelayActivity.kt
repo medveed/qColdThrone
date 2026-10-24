@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,10 +10,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.preference.*
-import app.qthrone.mobile.R
-import app.qthrone.mobile.bg.carrier.VkRelayAccount
-import app.qthrone.mobile.bg.carrier.VkRelayLogin
-import app.qthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.bg.carrier.VkRelayAccount
+import app.qcoldthrone.mobile.bg.carrier.VkRelayLogin
+import app.qcoldthrone.mobile.database.DataStore
 import moe.matsuri.nb4a.ui.SimpleMenuPreference
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
@@ -77,7 +77,7 @@ class VkRelayActivity : ThemedActivity() {
                     @JavascriptInterface fun onLoginError() {
                         runOnUiThread {
                             val current=web?.url
-                            if(current != null && runCatching { app.qthrone.mobile.bg.carrier.VkRelayOAuth.trustedHttps(java.net.URI(current)) }.getOrDefault(false))
+                            if(current != null && runCatching { app.qcoldthrone.mobile.bg.carrier.VkRelayOAuth.trustedHttps(java.net.URI(current)) }.getOrDefault(false))
                                 retryLogin()
                         }
                     }
@@ -94,7 +94,7 @@ class VkRelayActivity : ThemedActivity() {
                         popup.webViewClient=object : WebViewClient() {
                             override fun shouldOverrideUrlLoading(child: WebView,request: WebResourceRequest): Boolean {
                                 val target=request.url.toString()
-                                if(runCatching { app.qthrone.mobile.bg.carrier.VkRelayOAuth.trustedHttps(java.net.URI(target)) }.getOrDefault(false))
+                                if(runCatching { app.qcoldthrone.mobile.bg.carrier.VkRelayOAuth.trustedHttps(java.net.URI(target)) }.getOrDefault(false))
                                     view.loadUrl(target,VkRelayLogin.headers)
                                 child.destroy();return true
                             }
@@ -106,7 +106,7 @@ class VkRelayActivity : ThemedActivity() {
                 webViewClient = object : WebViewClient() {
                     override fun onPageFinished(view: WebView,url: String?) {
                         retryingLogin=false
-                        if(url != null && runCatching { app.qthrone.mobile.bg.carrier.VkRelayOAuth.trustedHttps(java.net.URI(url)) }.getOrDefault(false))
+                        if(url != null && runCatching { app.qcoldthrone.mobile.bg.carrier.VkRelayOAuth.trustedHttps(java.net.URI(url)) }.getOrDefault(false))
                             view.evaluateJavascript(VkRelayLogin.errorWatcher,null)
                         if(!completedLogin && !VkRelayLogin.awaitingLogin(url.orEmpty()) && cookies().values.any { value -> value.split(';').any { it.trim().startsWith("remixsid=") && it.substringAfter('=').trim().length >= 8 } }) {
                             completedLogin=true

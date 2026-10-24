@@ -1,8 +1,8 @@
-package app.qthrone.mobile.route
+package app.qcoldthrone.mobile.route
 
-import app.qthrone.mobile.outbound.json.*
-import app.qthrone.mobile.outbound.link.Base64Strict
-import app.qthrone.mobile.outbound.config.GeneratorSettings
+import app.qcoldthrone.mobile.outbound.json.*
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.outbound.config.GeneratorSettings
 import org.junit.Assert.*
 import org.junit.Test
 

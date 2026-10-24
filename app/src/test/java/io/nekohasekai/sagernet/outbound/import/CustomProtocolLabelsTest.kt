@@ -1,7 +1,7 @@
-package app.qthrone.mobile.outbound.import
+package app.qcoldthrone.mobile.outbound.import
 
-import app.qthrone.mobile.outbound.OutboundFactory
-import app.qthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.mobile.outbound.OutboundFactory
+import app.qcoldthrone.mobile.outbound.types.Custom
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

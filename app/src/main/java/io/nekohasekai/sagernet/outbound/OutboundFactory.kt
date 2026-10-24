@@ -1,16 +1,16 @@
-package app.qthrone.mobile.outbound
+package app.qcoldthrone.mobile.outbound
 
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.link.Base64Strict
-import app.qthrone.mobile.outbound.link.LinkParser
-import app.qthrone.mobile.outbound.types.DnsTunnel
-import app.qthrone.mobile.outbound.types.Http
-import app.qthrone.mobile.outbound.types.S3Bypass
-import app.qthrone.mobile.outbound.types.Sstp
-import app.qthrone.mobile.outbound.types.WdttPlus
-import app.qthrone.mobile.outbound.types.Shadowsocks
-import app.qthrone.mobile.outbound.types.Socks
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.outbound.types.DnsTunnel
+import app.qcoldthrone.mobile.outbound.types.Http
+import app.qcoldthrone.mobile.outbound.types.S3Bypass
+import app.qcoldthrone.mobile.outbound.types.Sstp
+import app.qcoldthrone.mobile.outbound.types.WdttPlus
+import app.qcoldthrone.mobile.outbound.types.Shadowsocks
+import app.qcoldthrone.mobile.outbound.types.Socks
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap
  * src/configs/sub/SubscriptionParser.cpp:48-67 / 510-559, and useXrayVless (src/configs/common/utils.cpp:50-72).
  *
  * Extension point for the per-type work packages: a new type lives in one file,
- * `app.qthrone.mobile.outbound.types.<ClassName>` with a public no-argument constructor, where ClassName is
+ * `app.qcoldthrone.mobile.outbound.types.<ClassName>` with a public no-argument constructor, where ClassName is
  * the entry of [CONVENTION_CLASSES] for its factory string. [newByType] finds it by name, so the factory itself
  * never changes; [register] can override any entry explicitly (an app initialiser may do that to avoid reflection
  * once every type exists). Release builds shrink with R8, so a keep rule for that package is required.
@@ -36,7 +36,7 @@ object OutboundFactory {
     val ALL_TYPES: List<String> = listOf(
         "qwdtt", "csqtt", "wdttplus", "openflux", "olcrtc", "dnstt", "vaydns", "slipstream", "masterdns", "s3bypass", "sstp", "socks", "http", "shadowsocks", "chain", "autoselector", "vmess", "trojan", "vless", "xrayvless", "hysteria",
         "tuic", "juicity", "trusttunnel", "anytls", "mieru", "snell", "shadowtls", "wireguard", "masque", "openvpn",
-        "openconnect", "tailscale", "ssh", "custom", "extracore", "naive", "direct",
+        "openconnect", "tailscale", "ssh", "custom", "offsiteconfig", "extracore", "naive", "direct",
     )
 
     /** OutboundFactory.cpp:44 and the JSON alias of openvpn.cpp:157-158. */
@@ -46,18 +46,18 @@ object OutboundFactory {
     @JvmField
     val UNSUPPORTED_TYPES: Set<String> = setOf("tailscale", "extracore")
 
-    /** Factory string to the class expected in app.qthrone.mobile.outbound.types for the types other packages add. */
+    /** Factory string to the class expected in app.qcoldthrone.mobile.outbound.types for the types other packages add. */
     @JvmField
     val CONVENTION_CLASSES: Map<String, String> = mapOf(
         "vmess" to "Vmess", "trojan" to "Trojan", "vless" to "Vless", "xrayvless" to "XrayVless",
         "hysteria" to "Hysteria", "tuic" to "Tuic", "juicity" to "Juicity", "trusttunnel" to "TrustTunnel",
         "anytls" to "AnyTls", "mieru" to "Mieru", "snell" to "Snell", "shadowtls" to "ShadowTls",
         "wireguard" to "WireGuard", "masque" to "Masque", "openvpn" to "OpenVpn", "openconnect" to "OpenConnect",
-        "ssh" to "Ssh", "custom" to "Custom", "naive" to "Naive", "direct" to "Direct", "chain" to "Chain",
+        "ssh" to "Ssh", "custom" to "Custom", "offsiteconfig" to "OffsiteConfig", "naive" to "Naive", "direct" to "Direct", "chain" to "Chain",
         "autoselector" to "AutoSelector", "qwdtt" to "Qwdtt", "csqtt" to "Csqtt", "openflux" to "OpenFlux", "olcrtc" to "OlcRtc", "sstp" to "Sstp",
     )
 
-    private const val TYPES_PACKAGE = "app.qthrone.mobile.outbound.types."
+    private const val TYPES_PACKAGE = "app.qcoldthrone.mobile.outbound.types."
 
     private val builtin: Map<String, () -> Outbound> = mapOf<String, () -> Outbound>(
         "socks" to { Socks() },
@@ -223,7 +223,7 @@ object OutboundFactory {
 
     @JvmStatic
     fun parseJsonLink(link: String, throneAdd: Boolean): Outbound? =
-        decodeJsonLink(link,throneAdd)?.let { app.qthrone.mobile.outbound.`import`.ProfileImport.parse(it).outbounds.singleOrNull() }
+        decodeJsonLink(link,throneAdd)?.let { app.qcoldthrone.mobile.outbound.`import`.ProfileImport.parse(it).outbounds.singleOrNull() }
 
     /**
      * Parser::link (SubscriptionParser.cpp:510-537) for one subscription line: comments and short lines are skipped,

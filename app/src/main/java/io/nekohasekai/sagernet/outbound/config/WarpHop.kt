@@ -1,10 +1,10 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.QtStrings
-import app.qthrone.mobile.outbound.types.Masque
-import app.qthrone.mobile.outbound.types.WireGuard
-import app.qthrone.mobile.outbound.types.WireGuardPeer
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.QtStrings
+import app.qcoldthrone.mobile.outbound.types.Masque
+import app.qcoldthrone.mobile.outbound.types.WireGuard
+import app.qcoldthrone.mobile.outbound.types.WireGuardPeer
 
 /**
  * The built-in WARP hop of generate.cpp: the synthetic profile id (generate.h:98), the WireGuard or MASQUE endpoint

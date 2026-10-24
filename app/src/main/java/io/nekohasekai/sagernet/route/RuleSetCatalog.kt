@@ -1,4 +1,4 @@
-package app.qthrone.mobile.route
+package app.qcoldthrone.mobile.route
 
 /** The name → .srs URL map of the routeprofiles `srslist.h` (the desktop's compiled-in ruleSetList). */
 class RuleSetCatalog(entries: List<Pair<String, String>>) {

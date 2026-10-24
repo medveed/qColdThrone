@@ -1,0 +1,29 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        app:icon="@drawable/ic_social_emoji_symbols"
+        app:key="name"
+        app:title="@string/profile_name"
+        app:useSimpleSummaryProvider="true" />
+
+    <Preference
+        app:icon="@drawable/ic_baseline_view_list_24"
+        app:key="offsiteSummary"
+        app:persistent="false"
+        app:selectable="false"
+        app:title="@string/offsite_config_summary_title" />
+
+    <!-- No schema roots: the sing-box schema does not describe this document, so the editor checks syntax only. -->
+    <moe.matsuri.nb4a.ui.EditConfigPreference
+        app:icon="@drawable/ic_baseline_layers_24"
+        app:jsonRequireObject="true"
+        app:key="serverConfig"
+        app:title="@string/offsite_config" />
+
+    <Preference
+        app:icon="@drawable/ic_baseline_check_circle_24"
+        app:key="offsiteCheck"
+        app:persistent="false"
+        app:title="@string/offsite_config_check" />
+
+</PreferenceScreen>

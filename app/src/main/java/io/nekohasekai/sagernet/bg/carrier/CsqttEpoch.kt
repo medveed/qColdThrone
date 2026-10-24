@@ -1,7 +1,7 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.outbound.json.JsonInput
 import java.security.SecureRandom
 
 /**

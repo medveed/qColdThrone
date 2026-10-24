@@ -1,12 +1,12 @@
-package app.qthrone.mobile.outbound.types
+package app.qcoldthrone.mobile.outbound.types
 
-import app.qthrone.mobile.outbound.json.*
-import app.qthrone.mobile.outbound.link.*
-import app.qthrone.mobile.bg.carrier.CarrierBridgeCredentials
+import app.qcoldthrone.mobile.outbound.json.*
+import app.qcoldthrone.mobile.outbound.link.*
+import app.qcoldthrone.mobile.bg.carrier.CarrierBridgeCredentials
 
 /** Shares the authenticated qWDTT bridge; the external backend is the CSQTT Rust client. */
 class Csqtt:Qwdtt() {
-    override val carrierKind get() = app.qthrone.mobile.bg.carrier.CarrierKind.CSQTT
+    override val carrierKind get() = app.qcoldthrone.mobile.bg.carrier.CarrierKind.CSQTT
     var vkAccessToken = ""
     var turnTransport = "udp"
     var srtpMode = "auto"

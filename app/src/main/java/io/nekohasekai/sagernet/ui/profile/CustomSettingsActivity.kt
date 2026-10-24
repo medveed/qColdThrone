@@ -1,11 +1,11 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.outbound.types.Custom
-import app.qthrone.mobile.ui.json.engine.SchemaStore
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.mobile.ui.json.engine.SchemaStore
 import moe.matsuri.nb4a.ui.EditConfigPreference
 
 /** A raw JSON profile in one of the four custom subtypes (sing-box / Xray, outbound / full config). */

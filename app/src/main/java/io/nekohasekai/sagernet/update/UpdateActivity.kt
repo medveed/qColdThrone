@@ -1,4 +1,4 @@
-package app.qthrone.mobile.update
+package app.qcoldthrone.mobile.update
 
 import android.content.Context
 import android.content.Intent
@@ -14,13 +14,13 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.databinding.LayoutUpdateBinding
-import app.qthrone.mobile.ktx.launchCustomTab
-import app.qthrone.mobile.ui.ThemedActivity
-import app.qthrone.mobile.update.UpdateManager.State
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.databinding.LayoutUpdateBinding
+import app.qcoldthrone.mobile.ktx.launchCustomTab
+import app.qcoldthrone.mobile.ui.ThemedActivity
+import app.qcoldthrone.mobile.update.UpdateManager.State
 import kotlinx.coroutines.launch
 
 /** The updater UI (a dialog): check result, download progress, verification and install, driven by [UpdateManager]. */

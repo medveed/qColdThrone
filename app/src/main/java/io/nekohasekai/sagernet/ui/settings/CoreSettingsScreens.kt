@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import android.text.InputType
 import android.view.inputmethod.EditorInfo
@@ -6,18 +6,18 @@ import android.widget.EditText
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreference
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SpeedTestSettings
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.SettingValidators
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.database.preference.EditTextPreferenceModifiers
-import app.qthrone.mobile.ktx.needReload
-import app.qthrone.mobile.ktx.needRestart
-import app.qthrone.mobile.ui.GroupSettingsActivity
-import app.qthrone.mobile.ui.MainActivity
-import app.qthrone.mobile.ui.profile.keepUnlistedValue
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SpeedTestSettings
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.SettingValidators
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.database.preference.EditTextPreferenceModifiers
+import app.qcoldthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.ktx.needRestart
+import app.qcoldthrone.mobile.ui.GroupSettingsActivity
+import app.qcoldthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.ui.profile.keepUnlistedValue
 import moe.matsuri.nb4a.ui.LongClickListPreference
 import moe.matsuri.nb4a.ui.SimpleMenuPreference
 import kotlin.math.abs

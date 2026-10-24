@@ -1,7 +1,7 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
-import app.qthrone.mobile.outbound.types.Qwdtt
-import app.qthrone.mobile.outbound.types.Socks
+import app.qcoldthrone.mobile.outbound.types.Qwdtt
+import app.qcoldthrone.mobile.outbound.types.Socks
 import java.net.ServerSocket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -16,9 +16,21 @@ class CarrierPlan private constructor(
         it.username=credentials.username;it.password=credentials.password
     }
     companion object {
+        /**
+         * A plan for any carrier-backed outbound (docs/offsite-json-config.md §6, §7): a free loopback port,
+         * fresh SOCKS credentials and the client's private JSON. [qwdtt] stays as the compatibility alias.
+         */
+        fun native(profileId:Long, profile:NativeCarrier):CarrierPlan = qwdtt(profileId, profile)
+
+        /** Stable identity of a carrier profile: `exportToJson` minus name/tag, SHA-256 (used for pool dedup). */
+        @JvmStatic
+        fun identityKey(profile:NativeCarrier):String {
+            val identity=(profile as app.qcoldthrone.mobile.outbound.Outbound).exportToJson().also { it.remove("name");it.remove("tag") }.toCompact()
+            return java.security.MessageDigest.getInstance("SHA-256").digest(identity.toByteArray()).joinToString("") { "%02x".format(it.toInt() and 255) }
+        }
+
         fun qwdtt(profileId:Long, profile:NativeCarrier):CarrierPlan {
-            val identity=(profile as app.qthrone.mobile.outbound.Outbound).exportToJson().also { it.remove("name");it.remove("tag") }.toCompact()
-            val key=java.security.MessageDigest.getInstance("SHA-256").digest(identity.toByteArray()).joinToString("") { "%02x".format(it.toInt() and 255) }
+            val key=identityKey(profile)
             CarrierPool.activePlan(key)?.let { return it }
             val runtimeProfile = if(profile is Qwdtt) NativeHashPolicy.runtimeProfile(profile, VkRelayAccount::hashes) else profile
             val loopback=InetAddress.getByName("127.0.0.1")

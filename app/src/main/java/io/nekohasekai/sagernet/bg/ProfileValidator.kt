@@ -1,18 +1,21 @@
-package app.qthrone.mobile.bg
+package app.qcoldthrone.mobile.bg
 
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.database.SettingsMapper
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.OutboundFactory
-import app.qthrone.mobile.outbound.json.JsonArray
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.jsonObjectOf
-import app.qthrone.mobile.outbound.types.Chain
-import app.qthrone.mobile.outbound.types.Custom
-import app.qthrone.core.mobile.Mobile
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.database.SettingsMapper
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.OutboundFactory
+import app.qcoldthrone.mobile.outbound.json.JsonArray
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
+import app.qcoldthrone.mobile.outbound.types.Chain
+import app.qcoldthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.mobile.outbound.types.OffsiteConfig
+import app.qcoldthrone.mobile.outbound.offsite.OffsiteConfigValidator
+import app.qcoldthrone.mobile.outbound.offsite.OffsiteSeverity
+import app.qcoldthrone.core.mobile.Mobile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -69,6 +72,16 @@ object ProfileValidator {
         val outbound = profile.outbound
         // Auto selectors are planned by the generator; desktop-only types cannot be judged by this core: both are kept.
         if (profile.type == "autoselector") return Verdict.VALID
+        // An offsite JSON config builds an empty outbound (the generator expands it), so judge its document instead:
+        // without this branch every offsite profile is reported invalid and "Remove invalid" would delete it.
+        if (outbound is OffsiteConfig) {
+            val document = outbound.parse().document
+                ?: return invalid("Offsite config is not a valid JSON object")
+            val errors = OffsiteConfigValidator.validate(document, outbound.config.length)
+                .filter { it.severity == OffsiteSeverity.Error }
+            return if (errors.isEmpty()) Verdict.VALID
+            else invalid(errors.first().let { "${it.path}: ${it.message}" })
+        }
         if (outbound.invalid) {
             val canonical = OutboundFactory.canonicalType(profile.type)
             if (canonical !in OutboundFactory.ALL_TYPES || canonical in OutboundFactory.UNSUPPORTED_TYPES) return Verdict.VALID
@@ -87,9 +100,9 @@ object ProfileValidator {
             return Verdict.VALID
         }
 
-        if(outbound is app.qthrone.mobile.bg.carrier.NativeCarrier) {
+        if(outbound is app.qcoldthrone.mobile.bg.carrier.NativeCarrier) {
             return try {
-                app.qthrone.mobile.bg.carrier.CarrierPlan.qwdtt(profile.id,outbound)
+                app.qcoldthrone.mobile.bg.carrier.CarrierPlan.qwdtt(profile.id,outbound)
                 Verdict.VALID
             } catch(_:IllegalArgumentException) { invalid("Invalid native transport configuration") }
         }

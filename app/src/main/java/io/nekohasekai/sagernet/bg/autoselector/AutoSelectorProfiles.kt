@@ -1,13 +1,13 @@
-package app.qthrone.mobile.bg.autoselector
+package app.qcoldthrone.mobile.bg.autoselector
 
-import app.qthrone.mobile.bg.test.TestEngine
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.database.SagerDatabase
-import app.qthrone.mobile.database.SettingsMapper
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.outbound.config.AutoSelectorPlanner
-import app.qthrone.mobile.outbound.types.AutoSelector
+import app.qcoldthrone.mobile.bg.test.TestEngine
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.database.SagerDatabase
+import app.qcoldthrone.mobile.database.SettingsMapper
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.outbound.config.AutoSelectorPlanner
+import app.qcoldthrone.mobile.outbound.types.AutoSelector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
 enum class NativeConnectionStage { PREPARING, AUTHORIZING, CAPTCHA, WAITING_VK, CONNECTING, CONNECTED, RECONNECTING }
 

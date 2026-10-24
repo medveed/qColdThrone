@@ -1,12 +1,12 @@
-package app.qthrone.mobile.update
+package app.qcoldthrone.mobile.update
 
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.multiprocess.RemoteCoroutineWorker
 import androidx.work.multiprocess.RemoteWorkManager
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.ktx.runOnDefaultDispatcher
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ktx.runOnDefaultDispatcher
 
 /** Migration from the old daily notification check to foreground discovery and the home banner. */
 object UpdateScheduler {

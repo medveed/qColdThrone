@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
 import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.atomic.AtomicBoolean
@@ -84,7 +84,7 @@ object CarrierPool {
         }
         try {
             if(owner) {
-                val context=app.qthrone.mobile.ktx.app
+                val context=app.qcoldthrone.mobile.ktx.app
                 try {
                     val privateJson=NativeSessionPolicy.probeConfig(plan.kind,plan.privateJson,interactive,latencyProbe)
                     val started=CarrierProcess.start(plan.kind,java.io.File(context.applicationInfo.nativeLibraryDir),

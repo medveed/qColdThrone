@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.profiles
+package app.qcoldthrone.mobile.ui.profiles
 
 import android.content.Context
 import android.content.Intent
@@ -7,38 +7,39 @@ import android.net.Uri
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.ktx.snackbar
-import app.qthrone.mobile.ktx.startFilesForResult
-import app.qthrone.mobile.ui.ConfigurationFragment
-import app.qthrone.mobile.ui.ScannerActivity
-import app.qthrone.mobile.ui.SubscribeFlows
-import app.qthrone.mobile.ui.profile.AnyTLSSettingsActivity
-import app.qthrone.mobile.ui.profile.AutoSelectorSettingsActivity
-import app.qthrone.mobile.ui.profile.ChainSettingsActivity
-import app.qthrone.mobile.ui.profile.CustomSettingsActivity
-import app.qthrone.mobile.ui.profile.DirectSettingsActivity
-import app.qthrone.mobile.ui.profile.HttpSettingsActivity
-import app.qthrone.mobile.ui.profile.HysteriaSettingsActivity
-import app.qthrone.mobile.ui.profile.JuicitySettingsActivity
-import app.qthrone.mobile.ui.profile.MasqueSettingsActivity
-import app.qthrone.mobile.ui.profile.MieruSettingsActivity
-import app.qthrone.mobile.ui.profile.NaiveSettingsActivity
-import app.qthrone.mobile.ui.profile.OpenConnectSettingsActivity
-import app.qthrone.mobile.ui.profile.OpenVpnSettingsActivity
-import app.qthrone.mobile.ui.profile.SSHSettingsActivity
-import app.qthrone.mobile.ui.profile.ShadowTLSSettingsActivity
-import app.qthrone.mobile.ui.profile.ShadowsocksSettingsActivity
-import app.qthrone.mobile.ui.profile.SnellSettingsActivity
-import app.qthrone.mobile.ui.profile.SocksSettingsActivity
-import app.qthrone.mobile.ui.profile.TrojanSettingsActivity
-import app.qthrone.mobile.ui.profile.TrustTunnelSettingsActivity
-import app.qthrone.mobile.ui.profile.TuicSettingsActivity
-import app.qthrone.mobile.ui.profile.VMessSettingsActivity
-import app.qthrone.mobile.ui.profile.VlessSettingsActivity
-import app.qthrone.mobile.ui.profile.WireGuardSettingsActivity
-import app.qthrone.mobile.ui.profile.XrayVlessSettingsActivity
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.ktx.snackbar
+import app.qcoldthrone.mobile.ktx.startFilesForResult
+import app.qcoldthrone.mobile.ui.ConfigurationFragment
+import app.qcoldthrone.mobile.ui.ScannerActivity
+import app.qcoldthrone.mobile.ui.SubscribeFlows
+import app.qcoldthrone.mobile.ui.profile.AnyTLSSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.AutoSelectorSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.ChainSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.CustomSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.DirectSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.HttpSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.HysteriaSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.JuicitySettingsActivity
+import app.qcoldthrone.mobile.ui.profile.MasqueSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.MieruSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.NaiveSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.OffsiteConfigSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.OpenConnectSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.OpenVpnSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.SSHSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.ShadowTLSSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.ShadowsocksSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.SnellSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.SocksSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.TrojanSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.TrustTunnelSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.TuicSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.VMessSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.VlessSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.WireGuardSettingsActivity
+import app.qcoldthrone.mobile.ui.profile.XrayVlessSettingsActivity
 
 /** The "+" menu: scan, clipboard, file and the new-profile editors. Imports go to the current tab's group. */
 class ProfileImports(private val host: ConfigurationFragment) {
@@ -105,6 +106,7 @@ class ProfileImports(private val host: ConfigurationFragment) {
         R.id.action_new_openvpn -> OpenVpnSettingsActivity::class.java
         R.id.action_new_openconnect -> OpenConnectSettingsActivity::class.java
         R.id.action_new_config -> CustomSettingsActivity::class.java
+        R.id.action_new_offsite_config -> OffsiteConfigSettingsActivity::class.java
         R.id.action_new_chain -> ChainSettingsActivity::class.java
         else -> null
     }

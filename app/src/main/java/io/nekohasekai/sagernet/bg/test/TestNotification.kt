@@ -1,4 +1,4 @@
-package app.qthrone.mobile.bg.test
+package app.qcoldthrone.mobile.bg.test
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -10,13 +10,13 @@ import android.content.IntentFilter
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.bg.CoreForeground
-import app.qthrone.mobile.bg.proto.SpeedTestSnapshot
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.utils.PlatformNotifications
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.bg.CoreForeground
+import app.qcoldthrone.mobile.bg.proto.SpeedTestSnapshot
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.utils.PlatformNotifications
 import kotlinx.coroutines.delay
 
 /** The progress notification of a running session ("<kind> · <scope>", n / N, Stop), shown through [CoreForeground]. */
@@ -144,7 +144,7 @@ internal class TestNotification(private val session: TestSession) {
 
     companion object {
         const val REASON = "tests"
-        private const val ACTION_STOP = "app.qthrone.mobile.TEST_STOP"
+        private const val ACTION_STOP = "app.qcoldthrone.mobile.TEST_STOP"
         private const val REFRESH_MS = 1000L
         private const val WARNING_TAG = "tests"
         private const val WARNING_ID = 1

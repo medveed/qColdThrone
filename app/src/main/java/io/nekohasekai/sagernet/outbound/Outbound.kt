@@ -1,20 +1,20 @@
-package app.qthrone.mobile.outbound
+package app.qcoldthrone.mobile.outbound
 
-import app.qthrone.mobile.outbound.common.DialFields
-import app.qthrone.mobile.outbound.common.Multiplex
-import app.qthrone.mobile.outbound.common.QuicFields
-import app.qthrone.mobile.outbound.common.Tls
-import app.qthrone.mobile.outbound.common.Transport
-import app.qthrone.mobile.outbound.common.XrayMultiplex
-import app.qthrone.mobile.outbound.common.XrayStreamSetting
-import app.qthrone.mobile.outbound.import.ClashProxy
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.json.jsonObjectOf
-import app.qthrone.mobile.outbound.link.Base64Strict
-import app.qthrone.mobile.outbound.link.Hosts
-import app.qthrone.mobile.outbound.link.LinkBuilder
-import app.qthrone.mobile.outbound.link.LinkParser
-import app.qthrone.mobile.outbound.link.ParsedLink
+import app.qcoldthrone.mobile.outbound.common.DialFields
+import app.qcoldthrone.mobile.outbound.common.Multiplex
+import app.qcoldthrone.mobile.outbound.common.QuicFields
+import app.qcoldthrone.mobile.outbound.common.Tls
+import app.qcoldthrone.mobile.outbound.common.Transport
+import app.qcoldthrone.mobile.outbound.common.XrayMultiplex
+import app.qcoldthrone.mobile.outbound.common.XrayStreamSetting
+import app.qcoldthrone.mobile.outbound.import.ClashProxy
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
+import app.qcoldthrone.mobile.outbound.link.Base64Strict
+import app.qcoldthrone.mobile.outbound.link.Hosts
+import app.qcoldthrone.mobile.outbound.link.LinkBuilder
+import app.qcoldthrone.mobile.outbound.link.LinkParser
+import app.qcoldthrone.mobile.outbound.link.ParsedLink
 
 /** BuildResult (baseConfig.h:9-12). */
 class BuildResult(@JvmField val json: JsonObject, @JvmField val error: String = "") {

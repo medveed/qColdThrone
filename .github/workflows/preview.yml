@@ -43,7 +43,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
       - name: Use .debug package name
         if: steps.version.outputs.skip != 'true'
-        run: sed -i 's/^PACKAGE_NAME=.*/PACKAGE_NAME=app.qthrone.mobile.debug/' nb4a.properties
+        run: sed -i 's/^PACKAGE_NAME=.*/PACKAGE_NAME=app.qcoldthrone.mobile.debug/' nb4a.properties
       - name: Build
         if: steps.version.outputs.skip != 'true'
         uses: ./.github/actions/android-build

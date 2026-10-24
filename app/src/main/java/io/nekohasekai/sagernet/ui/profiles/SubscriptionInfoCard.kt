@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.profiles
+package app.qcoldthrone.mobile.ui.profiles
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -17,12 +17,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.database.SubUserInfo
-import app.qthrone.mobile.ktx.getColorAttr
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.database.SubUserInfo
+import app.qcoldthrone.mobile.ktx.getColorAttr
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale

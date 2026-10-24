@@ -1,14 +1,14 @@
-package app.qthrone.mobile.group
+package app.qcoldthrone.mobile.group
 
 import android.app.PendingIntent
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.ktx.app
-import app.qthrone.mobile.ui.MainActivity
-import app.qthrone.mobile.utils.PlatformNotifications
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.utils.PlatformNotifications
 
 internal object SubscriptionNotifications {
     fun updated(group: ProxyGroup) {

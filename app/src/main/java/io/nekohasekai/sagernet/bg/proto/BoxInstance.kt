@@ -1,21 +1,21 @@
-package app.qthrone.mobile.bg.proto
+package app.qcoldthrone.mobile.bg.proto
 
-import app.qthrone.mobile.bg.AbstractInstance
-import app.qthrone.mobile.bg.CoreRuntime
-import app.qthrone.mobile.bg.SingBoxDashboard
-import app.qthrone.mobile.bg.XrayGeoAssets
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.isLoopbackPortFree
-import app.qthrone.mobile.ktx.mkPort
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.outbound.config.AutoSelectorBuild
-import app.qthrone.mobile.outbound.config.GeneratedConfig
-import app.qthrone.mobile.outbound.types.Custom
-import app.qthrone.core.mobile.Instance
-import app.qthrone.core.mobile.Mobile
-import app.qthrone.core.mobile.StartOptions
+import app.qcoldthrone.mobile.bg.AbstractInstance
+import app.qcoldthrone.mobile.bg.CoreRuntime
+import app.qcoldthrone.mobile.bg.SingBoxDashboard
+import app.qcoldthrone.mobile.bg.XrayGeoAssets
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.isLoopbackPortFree
+import app.qcoldthrone.mobile.ktx.mkPort
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.outbound.config.AutoSelectorBuild
+import app.qcoldthrone.mobile.outbound.config.GeneratedConfig
+import app.qcoldthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.core.mobile.Instance
+import app.qcoldthrone.core.mobile.Mobile
+import app.qcoldthrone.core.mobile.StartOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -24,9 +24,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import app.qthrone.mobile.bg.carrier.NativeConnectionStatus
-import app.qthrone.mobile.bg.carrier.NativeConnectionStage
-import app.qthrone.mobile.bg.carrier.CarrierPool
+import app.qcoldthrone.mobile.bg.carrier.NativeConnectionStatus
+import app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage
+import app.qcoldthrone.mobile.bg.carrier.CarrierPool
 
 abstract class BoxInstance(
     val profile: ProxyEntity
@@ -36,7 +36,7 @@ abstract class BoxInstance(
     lateinit var core: CoreConfig
     lateinit var box: Instance
 
-    private val carrierProcesses = mutableListOf<app.qthrone.mobile.bg.carrier.CarrierPool.Lease>()
+    private val carrierProcesses = mutableListOf<app.qcoldthrone.mobile.bg.carrier.CarrierPool.Lease>()
     private var nativeStatus:NativeConnectionStatus.Writer?=null
     private var nativeWatchdog:Job?=null
 
@@ -66,8 +66,8 @@ abstract class BoxInstance(
         // A custom full config keeps its own rule-sets as written.
         if (isCustomFullConfig()) deferRuleSets = false
         config = CoreConfigs.buildMain(profile, deferRuleSets)
-        if(DataStore.serviceMode==app.qthrone.mobile.Key.MODE_VPN) {
-            app.qthrone.mobile.bg.carrier.VpnListenerPolicy.check(config.coreConfig, DataStore.lanSharingEnabled)
+        if(DataStore.serviceMode==app.qcoldthrone.mobile.Key.MODE_VPN) {
+            app.qcoldthrone.mobile.bg.carrier.VpnListenerPolicy.check(config.coreConfig, DataStore.lanSharingEnabled)
         }
     }
 
@@ -89,7 +89,7 @@ abstract class BoxInstance(
             }
         }
         try {
-            if(config.carrierPlans.any { it.kind in listOf(app.qthrone.mobile.bg.carrier.CarrierKind.QWDTT,app.qthrone.mobile.bg.carrier.CarrierKind.CSQTT,app.qthrone.mobile.bg.carrier.CarrierKind.WDTTPLUS) }) {
+            if(config.carrierPlans.any { it.kind in listOf(app.qcoldthrone.mobile.bg.carrier.CarrierKind.QWDTT,app.qcoldthrone.mobile.bg.carrier.CarrierKind.CSQTT,app.qcoldthrone.mobile.bg.carrier.CarrierKind.WDTTPLUS) }) {
                 nativeStatus=NativeConnectionStatus.Writer(profile.id).also { it.update(NativeConnectionStage.PREPARING) }
             }
             for(plan in config.carrierPlans) {
@@ -149,9 +149,9 @@ abstract class BoxInstance(
                 if(!failure.second) delay(2_000)
                 withContext(Dispatchers.Main) {
                     val service=DataStore.baseService
-                    if(service!=null && service.data.proxy===this@BoxInstance && service.data.state==app.qthrone.mobile.bg.BaseService.State.Connected) {
+                    if(service!=null && service.data.proxy===this@BoxInstance && service.data.state==app.qcoldthrone.mobile.bg.BaseService.State.Connected) {
                         if(failure.second) service.stopRunner(msg=failure.first)
-                        else { Logs.i("Native transport watchdog: reconnecting");app.qthrone.mobile.SagerNet.reloadService() }
+                        else { Logs.i("Native transport watchdog: reconnecting");app.qcoldthrone.mobile.SagerNet.reloadService() }
                     }
                 }
                 break
@@ -180,8 +180,8 @@ class LocalDnsFailedException(val servers: String, cause: Throwable) : Exception
 class RuleSetDownloadFailedException(cause: Throwable) : Exception(cause.message, cause)
 
 internal fun CoreConfig.toStartOptions(autoSelector: AutoSelectorBuild? = null): StartOptions = StartOptions().apply {
-    this@toStartOptions.xrayConfig?.let(app.qthrone.mobile.bg.carrier.VpnListenerPolicy::checkXray)
-    this@toStartOptions.xrayFullConfigs.forEach(app.qthrone.mobile.bg.carrier.VpnListenerPolicy::checkXray)
+    this@toStartOptions.xrayConfig?.let(app.qcoldthrone.mobile.bg.carrier.VpnListenerPolicy::checkXray)
+    this@toStartOptions.xrayFullConfigs.forEach(app.qcoldthrone.mobile.bg.carrier.VpnListenerPolicy::checkXray)
     coreConfig = this@toStartOptions.coreConfig
     needXray = this@toStartOptions.needXray
     xrayConfig = this@toStartOptions.xrayConfig ?: ""

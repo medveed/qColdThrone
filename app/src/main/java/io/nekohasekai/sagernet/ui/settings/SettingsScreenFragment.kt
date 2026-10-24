@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import android.os.Bundle
 import android.view.View
@@ -9,10 +9,10 @@ import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceGroup
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.preference.EditTextPreferenceModifiers
-import app.qthrone.mobile.ktx.FixedLinearLayoutManager
-import app.qthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.preference.EditTextPreferenceModifiers
+import app.qcoldthrone.mobile.ktx.FixedLinearLayoutManager
+import app.qcoldthrone.mobile.ktx.needReload
 import moe.matsuri.nb4a.ui.EditConfigPreference
 
 /**
@@ -22,12 +22,12 @@ import moe.matsuri.nb4a.ui.EditConfigPreference
 abstract class SettingsScreenFragment(@XmlRes private val preferences: Int) : PreferenceFragmentCompat() {
 
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): android.animation.Animator? =
-        app.qthrone.mobile.ui.MobileScreenMotion.create(this, nextAnim)
+        app.qcoldthrone.mobile.ui.MobileScreenMotion.create(this, nextAnim)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         listView.layoutManager = FixedLinearLayoutManager(listView)
-        app.qthrone.mobile.ui.MobileSettingsStyle.apply(this, view)
+        app.qcoldthrone.mobile.ui.MobileSettingsStyle.apply(this, view)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -38,9 +38,9 @@ abstract class SettingsScreenFragment(@XmlRes private val preferences: Int) : Pr
     }
 
     override fun onDisplayPreferenceDialog(preference: Preference) {
-        if(preference is androidx.preference.ListPreference && app.qthrone.mobile.ui.MobileSelector.show(requireContext(),preference)) return
+        if(preference is androidx.preference.ListPreference && app.qcoldthrone.mobile.ui.MobileSelector.show(requireContext(),preference)) return
         if (preference is EditTextPreference) {
-            app.qthrone.mobile.ui.MobilePreferenceDialog.show(this, preference)
+            app.qcoldthrone.mobile.ui.MobilePreferenceDialog.show(this, preference)
             return
         }
         super.onDisplayPreferenceDialog(preference)

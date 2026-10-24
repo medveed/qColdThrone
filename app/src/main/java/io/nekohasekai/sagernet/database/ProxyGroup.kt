@@ -1,4 +1,4 @@
-package app.qthrone.mobile.database
+package app.qcoldthrone.mobile.database
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
@@ -8,8 +8,8 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
-import app.qthrone.mobile.R
-import app.qthrone.mobile.ktx.app
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.ktx.app
 import kotlinx.parcelize.Parcelize
 
 /**

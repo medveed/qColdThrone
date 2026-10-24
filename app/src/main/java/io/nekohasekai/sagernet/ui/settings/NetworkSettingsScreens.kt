@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ui.settings
+package app.qcoldthrone.mobile.ui.settings
 
 import android.content.Intent
 import android.os.Build
@@ -6,20 +6,20 @@ import android.widget.Toast
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreference
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.R
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.R
 import androidx.lifecycle.lifecycleScope
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.RouteManager
-import app.qthrone.mobile.database.SettingValidators
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.database.preference.EditTextPreferenceModifiers
-import app.qthrone.mobile.group.RemoteRouteUpdater
-import app.qthrone.mobile.ktx.needReload
-import app.qthrone.mobile.ui.AppManagerActivity
-import app.qthrone.mobile.ui.GroupSettingsActivity
-import app.qthrone.mobile.ui.MainActivity
-import app.qthrone.mobile.ui.route.RouteQuickSwitch
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.RouteManager
+import app.qcoldthrone.mobile.database.SettingValidators
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.database.preference.EditTextPreferenceModifiers
+import app.qcoldthrone.mobile.group.RemoteRouteUpdater
+import app.qcoldthrone.mobile.ktx.needReload
+import app.qcoldthrone.mobile.ui.AppManagerActivity
+import app.qcoldthrone.mobile.ui.GroupSettingsActivity
+import app.qcoldthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.ui.route.RouteQuickSwitch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -247,7 +247,7 @@ class RoutingSettingsFragment : SettingsScreenFragment(R.xml.settings_routing) {
         }
 
         pref<Preference>(KEY_ROUTE_PROFILES).setOnPreferenceClickListener {
-            (activity as? MainActivity)?.displayFragment(app.qthrone.mobile.ui.RouteFragment())
+            (activity as? MainActivity)?.displayFragment(app.qcoldthrone.mobile.ui.RouteFragment())
             true
         }
         pref<Preference>(KEY_CURRENT_ROUTE).setOnPreferenceClickListener {

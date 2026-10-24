@@ -1,11 +1,11 @@
-package app.qthrone.mobile.outbound.config
+package app.qcoldthrone.mobile.outbound.config
 
-import app.qthrone.mobile.database.SettingsRegistry
-import app.qthrone.mobile.outbound.json.JsonInput
-import app.qthrone.mobile.outbound.json.JsonObject
-import app.qthrone.mobile.outbound.types.Socks
-import app.qthrone.mobile.outbound.types.XrayVless
-import app.qthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.mobile.database.SettingsRegistry
+import app.qcoldthrone.mobile.outbound.json.JsonInput
+import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.types.Socks
+import app.qcoldthrone.mobile.outbound.types.XrayVless
+import app.qcoldthrone.mobile.outbound.types.Custom
 import org.junit.Assert.*
 import org.junit.Test
 

@@ -1,9 +1,9 @@
-package app.qthrone.mobile.bg.carrier
+package app.qcoldthrone.mobile.bg.carrier
 
-import app.qthrone.mobile.outbound.types.Qwdtt
-import app.qthrone.mobile.outbound.types.WdttPlus
-import app.qthrone.mobile.outbound.types.Csqtt
-import app.qthrone.mobile.outbound.OutboundFactory
+import app.qcoldthrone.mobile.outbound.types.Qwdtt
+import app.qcoldthrone.mobile.outbound.types.WdttPlus
+import app.qcoldthrone.mobile.outbound.types.Csqtt
+import app.qcoldthrone.mobile.outbound.OutboundFactory
 
 object NativeHashPolicy {
     /** All three clients can share the qWDTT account binding. CSQTT also accepts a link's own token. */

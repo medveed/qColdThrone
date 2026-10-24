@@ -1,4 +1,4 @@
-package app.qthrone.mobile.update
+package app.qcoldthrone.mobile.update
 
 import org.json.JSONObject
 

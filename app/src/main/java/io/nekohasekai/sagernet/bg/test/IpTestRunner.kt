@@ -1,9 +1,9 @@
-package app.qthrone.mobile.bg.test
+package app.qcoldthrone.mobile.bg.test
 
-import app.qthrone.mobile.bg.CoreRuntime
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.core.mobile.IPTestHandler
-import app.qthrone.core.mobile.Mobile
+import app.qcoldthrone.mobile.bg.CoreRuntime
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.core.mobile.IPTestHandler
+import app.qcoldthrone.core.mobile.Mobile
 
 /** Egress IP and country tests (runIpProbe, TestRunner.cpp:234-293): results stream as the core reports them. */
 internal class IpTestRunner(session: TestSession) : LatencySweep(session) {

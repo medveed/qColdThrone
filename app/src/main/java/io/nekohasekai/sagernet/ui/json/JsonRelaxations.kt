@@ -1,8 +1,8 @@
-package app.qthrone.mobile.ui.json
+package app.qcoldthrone.mobile.ui.json
 
 import android.os.Parcelable
-import app.qthrone.mobile.ui.json.engine.JsonType
-import app.qthrone.mobile.ui.json.engine.SchemaValidator
+import app.qcoldthrone.mobile.ui.json.engine.JsonType
+import app.qcoldthrone.mobile.ui.json.engine.SchemaValidator
 import kotlinx.parcelize.Parcelize
 
 /** Per-editor schema relaxations (the desktop's AllowExtraType plus what Throne's own stored forms need). */

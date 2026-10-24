@@ -1,21 +1,21 @@
-package app.qthrone.mobile.database
+package app.qcoldthrone.mobile.database
 
-import app.qthrone.mobile.Key
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.outbound.BuildContext
-import app.qthrone.mobile.outbound.Outbound
-import app.qthrone.mobile.outbound.OutboundFactory
-import app.qthrone.mobile.outbound.config.GeneratorSettings
-import app.qthrone.mobile.outbound.config.MemberCheck
-import app.qthrone.mobile.outbound.config.RoutingInput
-import app.qthrone.mobile.outbound.config.SelectorGroup
-import app.qthrone.mobile.outbound.config.SelectorMember
-import app.qthrone.mobile.outbound.config.SelectorStore
-import app.qthrone.mobile.outbound.json.JsonArray
-import app.qthrone.mobile.outbound.json.jsonObjectOf
-import app.qthrone.mobile.outbound.types.AutoSelector
-import app.qthrone.mobile.outbound.types.Custom
-import app.qthrone.core.mobile.Mobile
+import app.qcoldthrone.mobile.Key
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.outbound.BuildContext
+import app.qcoldthrone.mobile.outbound.Outbound
+import app.qcoldthrone.mobile.outbound.OutboundFactory
+import app.qcoldthrone.mobile.outbound.config.GeneratorSettings
+import app.qcoldthrone.mobile.outbound.config.MemberCheck
+import app.qcoldthrone.mobile.outbound.config.RoutingInput
+import app.qcoldthrone.mobile.outbound.config.SelectorGroup
+import app.qcoldthrone.mobile.outbound.config.SelectorMember
+import app.qcoldthrone.mobile.outbound.config.SelectorStore
+import app.qcoldthrone.mobile.outbound.json.JsonArray
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
+import app.qcoldthrone.mobile.outbound.types.AutoSelector
+import app.qcoldthrone.mobile.outbound.types.Custom
+import app.qcoldthrone.core.mobile.Mobile
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
@@ -32,7 +32,7 @@ object SettingsMapper {
      * The route profile of current_route_id (the first profile when it is gone), the rule-set list, the tracked
      * groups of auto-selectors and, in :bg, the core's member check.
      */
-    fun routingInput(profile: app.qthrone.mobile.route.RouteProfile = RouteManager.current()): RoutingInput = RoutingInput(
+    fun routingInput(profile: app.qcoldthrone.mobile.route.RouteProfile = RouteManager.current()): RoutingInput = RoutingInput(
         profile,
         RouteManager.catalog(),
         selectorStore(),
@@ -81,8 +81,8 @@ object SettingsMapper {
             perAppEnabled = DataStore.proxyApps,
             perAppBypass = DataStore.bypass,
             perAppPackages = GeneratorSettings.splitLines(DataStore.individual),
-            perAppAllowedUids = if(DataStore.proxyApps) app.qthrone.mobile.outbound.config.VpnAppGuard.allowedUids(
-                app.qthrone.mobile.utils.PackageCache.snapshot().uidMap,
+            perAppAllowedUids = if(DataStore.proxyApps) app.qcoldthrone.mobile.outbound.config.VpnAppGuard.allowedUids(
+                app.qcoldthrone.mobile.utils.PackageCache.snapshot().uidMap,
                 GeneratorSettings.splitLines(DataStore.individual).toSet(),DataStore.bypass) else emptyList(),
             httpProxyEnabled = DataStore.appendHttpProxy,
             httpProxyBypassDomains = GeneratorSettings.splitLines(DataStore.httpProxyBypass),
@@ -244,8 +244,8 @@ object SettingsMapper {
 
     /** "192.168.1.0/24" for each IPv4 address of the underlying network. */
     private fun localLanCidrs(): List<String> = runCatching {
-        val network = app.qthrone.mobile.SagerNet.underlyingNetwork ?: return emptyList()
-        app.qthrone.mobile.SagerNet.connectivity.getLinkProperties(network)?.linkAddresses.orEmpty()
+        val network = app.qcoldthrone.mobile.SagerNet.underlyingNetwork ?: return emptyList()
+        app.qcoldthrone.mobile.SagerNet.connectivity.getLinkProperties(network)?.linkAddresses.orEmpty()
             .filter { it.address is java.net.Inet4Address && it.prefixLength in 8..32 }
             .map { link ->
                 val bits = java.nio.ByteBuffer.wrap(link.address.address).int and (-1 shl (32 - link.prefixLength))

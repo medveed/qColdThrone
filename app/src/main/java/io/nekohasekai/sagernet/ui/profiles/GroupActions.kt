@@ -1,25 +1,25 @@
-package app.qthrone.mobile.ui.profiles
+package app.qcoldthrone.mobile.ui.profiles
 
 import androidx.annotation.PluralsRes
-import app.qthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
-import app.qthrone.mobile.R
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.database.GroupRepo
-import app.qthrone.mobile.database.GroupSort
-import app.qthrone.mobile.database.GroupSortAction
-import app.qthrone.mobile.database.GroupSortMethod
-import app.qthrone.mobile.database.ProfileManager
-import app.qthrone.mobile.database.ProxyEntity
-import app.qthrone.mobile.database.ProxyGroup
-import app.qthrone.mobile.database.TestShowItems
-import app.qthrone.mobile.group.SubscriptionClient
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.confirmAction
-import app.qthrone.mobile.ktx.nameList
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.ktx.snackbar
-import app.qthrone.mobile.ui.ConfigurationFragment
-import app.qthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.ui.MobileAlertDialogBuilder as MaterialAlertDialogBuilder
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.database.GroupRepo
+import app.qcoldthrone.mobile.database.GroupSort
+import app.qcoldthrone.mobile.database.GroupSortAction
+import app.qcoldthrone.mobile.database.GroupSortMethod
+import app.qcoldthrone.mobile.database.ProfileManager
+import app.qcoldthrone.mobile.database.ProxyEntity
+import app.qcoldthrone.mobile.database.ProxyGroup
+import app.qcoldthrone.mobile.database.TestShowItems
+import app.qcoldthrone.mobile.group.SubscriptionClient
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.confirmAction
+import app.qcoldthrone.mobile.ktx.nameList
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.ktx.snackbar
+import app.qcoldthrone.mobile.ui.ConfigurationFragment
+import app.qcoldthrone.mobile.ui.MainActivity
 
 /** The desktop's group actions on the current tab (mainwindow_profiles.cpp, mainwindow_setup.cpp). */
 internal object GroupActions {

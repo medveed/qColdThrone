@@ -1,4 +1,4 @@
-package app.qthrone.mobile.widget
+package app.qcoldthrone.mobile.widget
 
 import android.app.Dialog
 import android.graphics.Bitmap
@@ -17,19 +17,19 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
-import app.qthrone.mobile.R
-import app.qthrone.mobile.ktx.Logs
-import app.qthrone.mobile.ktx.dp2px
-import app.qthrone.mobile.ktx.readableMessage
-import app.qthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.ktx.Logs
+import app.qcoldthrone.mobile.ktx.dp2px
+import app.qcoldthrone.mobile.ktx.readableMessage
+import app.qcoldthrone.mobile.ui.MainActivity
 import java.nio.charset.StandardCharsets
 import kotlin.math.roundToInt
 
 class QRCodeDialog() : DialogFragment() {
 
     companion object {
-        private const val KEY_URL = "app.qthrone.mobile.QRCodeDialog.KEY_URL"
-        private const val KEY_NAME = "app.qthrone.mobile.QRCodeDialog.KEY_NAME"
+        private const val KEY_URL = "app.qcoldthrone.mobile.QRCodeDialog.KEY_URL"
+        private const val KEY_NAME = "app.qcoldthrone.mobile.QRCodeDialog.KEY_NAME"
         private val iso88591 = StandardCharsets.ISO_8859_1.newEncoder()
     }
 

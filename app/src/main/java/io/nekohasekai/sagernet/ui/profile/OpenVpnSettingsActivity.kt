@@ -1,8 +1,8 @@
-package app.qthrone.mobile.ui.profile
+package app.qcoldthrone.mobile.ui.profile
 
 import androidx.preference.PreferenceFragmentCompat
-import app.qthrone.mobile.R
-import app.qthrone.mobile.outbound.types.OpenVpn
+import app.qcoldthrone.mobile.R
+import app.qcoldthrone.mobile.outbound.types.OpenVpn
 
 /** OpenVPN endpoint: the primary fields on the screen, the full option set through the Raw JSON preference. */
 class OpenVpnSettingsActivity : BindingSettingsActivity<OpenVpn>() {

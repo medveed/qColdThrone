@@ -21,7 +21,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceViewHolder
-import app.qthrone.mobile.ui.MobileSelector
+import app.qcoldthrone.mobile.ui.MobileSelector
 
 /** All profile and settings selectors share the same rounded, anchored menu. */
 open class SimpleMenuPreference @JvmOverloads constructor(
@@ -34,7 +34,7 @@ open class SimpleMenuPreference @JvmOverloads constructor(
     init { widgetLayoutResource = 0 }
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
-        holder.itemView.findViewById<View>(app.qthrone.mobile.R.id.spinner)?.visibility = View.GONE
+        holder.itemView.findViewById<View>(app.qcoldthrone.mobile.R.id.spinner)?.visibility = View.GONE
         anchor = holder.itemView
         MobileSelector.bind(this,holder.itemView)
     }

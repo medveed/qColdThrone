@@ -1,4 +1,4 @@
-package app.qthrone.mobile.ktx
+package app.qcoldthrone.mobile.ktx
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -22,17 +22,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.preference.Preference
 import com.jakewharton.processphoenix.ProcessPhoenix
-import app.qthrone.mobile.BuildConfig
-import app.qthrone.mobile.R
+import app.qcoldthrone.mobile.BuildConfig
+import app.qcoldthrone.mobile.R
 import com.google.android.material.snackbar.Snackbar
-import app.qthrone.mobile.SagerNet
-import app.qthrone.mobile.aidl.ISagerNetService
-import app.qthrone.mobile.bg.BaseService
-import app.qthrone.mobile.bg.SagerConnection
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.ui.MainActivity
-import app.qthrone.mobile.ui.MessageStore
-import app.qthrone.mobile.ui.ThemedActivity
+import app.qcoldthrone.mobile.SagerNet
+import app.qcoldthrone.mobile.aidl.ISagerNetService
+import app.qcoldthrone.mobile.bg.BaseService
+import app.qcoldthrone.mobile.bg.SagerConnection
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.ui.MainActivity
+import app.qcoldthrone.mobile.ui.MessageStore
+import app.qcoldthrone.mobile.ui.ThemedActivity
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.delay
 

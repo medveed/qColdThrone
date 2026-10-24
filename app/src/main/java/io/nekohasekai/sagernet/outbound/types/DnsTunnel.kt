@@ -1,8 +1,8 @@
-package app.qthrone.mobile.outbound.types
-import app.qthrone.mobile.outbound.*
-import app.qthrone.mobile.outbound.json.*
-import app.qthrone.mobile.outbound.link.*
-import app.qthrone.mobile.bg.carrier.*
+package app.qcoldthrone.mobile.outbound.types
+import app.qcoldthrone.mobile.outbound.*
+import app.qcoldthrone.mobile.outbound.json.*
+import app.qcoldthrone.mobile.outbound.link.*
+import app.qcoldthrone.mobile.bg.carrier.*
 
 /**
  * A DNS tunnel profile: DNSTT, VayDNS, Slipstream or MasterDNS. The fields are those of the dnst:// format
@@ -35,8 +35,8 @@ class DnsTunnel(type:String="dnstt"):Outbound(type),NativeCarrier {
 
         /** The network's DNS servers right now, for profiles that name no resolver. */
         fun systemResolvers():List<String> = runCatching {
-            val connectivity=app.qthrone.mobile.SagerNet.connectivity
-            val network=app.qthrone.mobile.SagerNet.underlyingNetwork ?: connectivity.activeNetwork
+            val connectivity=app.qcoldthrone.mobile.SagerNet.connectivity
+            val network=app.qcoldthrone.mobile.SagerNet.underlyingNetwork ?: connectivity.activeNetwork
             connectivity.getLinkProperties(network)?.dnsServers.orEmpty().mapNotNull { address ->
                 address.hostAddress?.substringBefore('%')?.let { Hosts.displayAddress(it,53) }
             }

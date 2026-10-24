@@ -1,9 +1,9 @@
-package app.qthrone.mobile.ui
+package app.qcoldthrone.mobile.ui
 
 import android.content.Context
 import android.graphics.Color
-import app.qthrone.mobile.database.DataStore
-import app.qthrone.mobile.utils.Theme
+import app.qcoldthrone.mobile.database.DataStore
+import app.qcoldthrone.mobile.utils.Theme
 import com.google.android.material.color.MaterialColors
 
 object MobilePalette {
