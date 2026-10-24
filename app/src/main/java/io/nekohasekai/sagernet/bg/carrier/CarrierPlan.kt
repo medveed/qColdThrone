@@ -16,11 +16,12 @@ class CarrierPlan private constructor(
         it.username=credentials.username;it.password=credentials.password
     }
     companion object {
-        fun qwdtt(profileId:Long, profile:NativeCarrier):CarrierPlan {
+        /** [withAccount] false checks the configuration only: automatic hashes are not requested from VK. */
+        fun qwdtt(profileId:Long, profile:NativeCarrier, withAccount:Boolean=true):CarrierPlan {
             val identity=(profile as app.qthrone.mobile.outbound.Outbound).exportToJson().also { it.remove("name");it.remove("tag") }.toCompact()
             val key=java.security.MessageDigest.getInstance("SHA-256").digest(identity.toByteArray()).joinToString("") { "%02x".format(it.toInt() and 255) }
             CarrierPool.activePlan(key)?.let { return it }
-            val runtimeProfile = if(profile is Qwdtt) NativeHashPolicy.runtimeProfile(profile, VkRelayAccount::hashes) else profile
+            val runtimeProfile = if(profile is Qwdtt && withAccount) NativeHashPolicy.runtimeProfile(profile, VkRelayAccount::hashes) else profile
             val loopback=InetAddress.getByName("127.0.0.1")
             val credentials=CarrierBridgeCredentials.fresh()
             return ServerSocket(0,1,loopback).use { tcp -> DatagramSocket(0,loopback).use { udp ->
