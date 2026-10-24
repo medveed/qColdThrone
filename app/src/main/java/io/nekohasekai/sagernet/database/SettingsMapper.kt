@@ -110,6 +110,7 @@ object SettingsMapper {
             adblockEnable = DataStore.adblockEnable,
             enableDnsRouting = DataStore.enableDnsRouting,
             enableTunRouting = DataStore.enableTunRouting,
+            blockQuic = DataStore.blockQuic,
             trafficStats = DataStore.enableStats,
             apiPort = DataStore.coreBoxApiPort,
             apiSecret = DataStore.coreBoxApiSecret,

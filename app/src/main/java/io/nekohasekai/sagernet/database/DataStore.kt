@@ -77,6 +77,7 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var seasonalDecoration by configurationStore.string("seasonal_decoration") { "auto" }
     var seasonalAuto151Migrated by configurationStore.boolean("seasonal_auto_151_migrated")
     var seasonalAuto153Migrated by configurationStore.boolean("seasonal_auto_153_migrated")
+    var testDefaults262Migrated by configurationStore.boolean("test_defaults_262_migrated")
     var mobilePinnedGroups by configurationStore.string("mobile_pinned_groups") { "" }
 
     var serviceMode by configurationStore.string(Key.SERVICE_MODE) { Key.MODE_VPN }
@@ -176,6 +177,7 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var lanSharingEnabled by SettingsRegistry.LAN_SHARING_ENABLED
     var vpnPrivateRanges by SettingsRegistry.VPN_PRIVATE_RANGES
     var enableTunRouting by SettingsRegistry.ENABLE_TUN_ROUTING
+    var blockQuic by SettingsRegistry.BLOCK_QUIC
 
     // routing
     var currentRouteId by SettingsRegistry.CURRENT_ROUTE_ID

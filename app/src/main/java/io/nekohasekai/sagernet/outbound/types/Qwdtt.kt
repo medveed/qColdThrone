@@ -29,6 +29,8 @@ open class Qwdtt : Outbound("qwdtt"), app.qcoldthrone.mobile.bg.carrier.NativeCa
     var deviceId=UUID.randomUUID().toString()
     var deviceIdProvided=false
     /** Same remote endpoint as privateConfig/CarrierPool, including RAW's separate port. */
+    /** The VK calls this profile joins; null with automatic hashes, which come from the account per launch. */
+    internal fun vkCallKey()=hashes.sorted().takeIf { hashSource!="auto" && hashSource!="auto_js" && it.isNotEmpty() }
     internal fun probeSessionKey()=listOf(type,server,
         (if(carrierKind==CarrierKind.QWDTT && mode=="raw") rawPort else serverPort).toString(),
         if(carrierKind==CarrierKind.CSQTT) password else deviceId)

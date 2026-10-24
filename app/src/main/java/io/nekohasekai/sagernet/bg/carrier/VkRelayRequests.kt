@@ -10,6 +10,11 @@ internal object VkRelayRequests {
     fun cookieHeader(cookies: Map<String,String>) = cookieDomains.flatMap { host ->
         cookies[host].orEmpty().split(';').map { it.trim() }.filter { it.isNotEmpty() }
     }.distinct().joinToString("; ")
+    fun finishCall(token: String,callId: String): Request = Request.Builder().url(
+        "https://api.vk.ru/method/calls.forceFinish".toHttpUrl().newBuilder()
+            .addQueryParameter("access_token",token).addQueryParameter("v","5.199")
+            .addQueryParameter("call_id",callId).build()
+    ).get().build()
     fun startCall(token: String): Request = Request.Builder().url(
         "https://api.vk.ru/method/calls.start".toHttpUrl().newBuilder()
             .addQueryParameter("access_token",token).addQueryParameter("v","5.199").build()

@@ -1042,6 +1042,9 @@ class ConfigGenerator @JvmOverloads constructor(
         }
 
         val allRules = JsonArray()
+        // A Tun without IPv6 cannot carry it: empty AAAA answers send browsers straight to IPv4.
+        if (!state.forTest && settings.vpnMode && !settings.ipv6Enabled)
+            allRules.add(jsonObjectOf("query_type" to JsonArray.of("AAAA"), "action" to "predefined"))
         for (rule in echRules) allRules.add(rule)
         for (rule in headRules) allRules.add(rule)
         for (rule in rules) allRules.add(rule)
@@ -1143,6 +1146,7 @@ class ConfigGenerator @JvmOverloads constructor(
         }
         rules.add(jsonObjectOf("protocol" to "dns", "action" to "hijack-dns"))
         if (!state.forTest) rules.add(jsonObjectOf("inbound" to Tags.DNS_IN, "action" to "reject"))
+        val quicGuardFrom = rules.size
         for (rule in profileRules) rules.add(rule)
         if (state.remotePrivateNetworks) {
             // Server-advertised include/exclude routes are matched dynamically by the endpoint.
@@ -1161,14 +1165,15 @@ class ConfigGenerator @JvmOverloads constructor(
         // A block default is a direct final that nothing reaches (:2064-2068, :2126-2128).
         if (defaultOutbound == OutboundIds.BLOCK) rules.add(jsonObjectOf("action" to "reject"))
 
-        val routeObj = JsonObject()
-        routeObj["rules"] = rules
-        routeObj["rule_set"] = buildRuleSetArray(state)
-        routeObj["final"] = when (defaultOutbound) {
+        val finalTag = when (defaultOutbound) {
             OutboundIds.BLOCK -> Tags.DIRECT
             OutboundIds.WARP_BYPASS -> if (settings.enableWarp) Tags.WARP_BYPASS else Tags.PROXY
             else -> OutboundIds.toName(defaultOutbound)
         }
+        val routeObj = JsonObject()
+        routeObj["rules"] = if (settings.blockQuic && !state.forTest) guardQuic(rules, quicGuardFrom, finalTag != Tags.DIRECT) else rules
+        routeObj["rule_set"] = buildRuleSetArray(state)
+        routeObj["final"] = finalTag
         if (settings.trafficStats) routeObj["find_process"] = true
         routeObj["default_domain_resolver"] = directDomainResolver(buildContext)
         if (settings.vpnMode) routeObj["auto_detect_interface"] = true
@@ -1250,7 +1255,8 @@ class ConfigGenerator @JvmOverloads constructor(
         // enabled is unconditional: the same file backs the remote rule-set cache and the auto-selector's last pick.
         experimental["cache_file"] = jsonObjectOf(
             "enabled" to true,
-            "store_fakeip" to settings.dnsPersistCache,
+            // Fake addresses outlive a core restart in the apps' DNS caches, so their mapping must too.
+            "store_fakeip" to (settings.dnsPersistCache || settings.fakeDns),
             "store_dns" to settings.dnsPersistCache,
         )
         state.coreConfig["experimental"] = experimental
@@ -1341,4 +1347,28 @@ private class RecordingProfiles(private val inner: ProfileProvider) : ProfilePro
     val ids = LinkedHashSet<Long>()
 
     override fun get(id: Long): Outbound? = inner.get(id)?.also { ids.add(id) }
+}
+
+/**
+ * QUIC that a proxy carries badly stalls the browser without an error; refused, it falls back to TCP at once.
+ * Only traffic headed for a proxy is refused: each proxy rule from [from] on gets a QUIC twin that rejects.
+ */
+internal fun guardQuic(rules: JsonArray, from: Int, finalIsProxy: Boolean): JsonArray {
+    val quic = jsonObjectOf("network" to "udp", "port" to 443)
+    val guarded = JsonArray()
+    for ((index, item) in rules.withIndex()) {
+        val rule = item as? JsonObject
+        val outbound = rule?.string("outbound").orEmpty()
+        if (rule != null && index >= from && rule.string("action").ifEmpty { "route" } == "route" && outbound.isNotEmpty() && outbound != Tags.DIRECT) {
+            val condition = rule.copy()
+            for (key in listOf("action", "outbound", "override_address", "override_port", "network_strategy", "network_type",
+                "fallback_network_type", "fallback_delay", "udp_disable_domain_unmatch", "udp_connect", "udp_timeout",
+                "tls_fragment", "tls_fragment_fallback_delay", "tls_record_fragment")) condition.remove(key)
+            guarded.add(if (condition.isEmpty()) quic.copy().also { it["action"] = "reject" }
+                else jsonObjectOf("type" to "logical", "mode" to "and", "rules" to JsonArray().add(condition).add(quic.copy()), "action" to "reject"))
+        }
+        guarded.add(item)
+    }
+    if (finalIsProxy) guarded.add(quic.copy().also { it["action"] = "reject" })
+    return guarded
 }

@@ -69,6 +69,39 @@ class ScopedUrlProbeTest {
         assertFalse(overlapping)
     }
 
+    @Test fun serversSharingVkCallsQueueWhileOtherCallsRun(): Unit = runBlocking {
+        val first = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        val unrelated = CompletableDeferred<Unit>()
+        var overlapping = false
+        var firstActive = false
+        val sweep = launch {
+            // Three servers, three devices: only the shared calls of 1 and 2 keep them apart.
+            runIndependentProbes(listOf(1,2,3), 3, { false }, { "device-$it" }, { if (it < 3) "calls-a" else "calls-b" }) { id ->
+                when (id) {
+                    1 -> { firstActive = true; first.complete(Unit); release.await(); firstActive = false }
+                    2 -> { if (firstActive) overlapping = true }
+                    3 -> unrelated.complete(Unit)
+                }
+            }
+        }
+        first.await(); withTimeout(1000) { unrelated.await() }
+        assertFalse(overlapping)
+        release.complete(Unit); sweep.join()
+        assertFalse(overlapping)
+    }
+
+    @Test fun slowCarrierCloseDoesNotHoldTheProbe() {
+        val release = java.util.concurrent.CountDownLatch(1)
+        val closed = java.util.concurrent.CountDownLatch(1)
+        val lease = AutoCloseable { release.await(); closed.countDown() }.closedInBackground()
+        val start = System.nanoTime()
+        lease.close()
+        assertTrue(System.nanoTime() - start < 1_000_000_000L)
+        release.countDown()
+        assertTrue(closed.await(5, java.util.concurrent.TimeUnit.SECONDS))
+    }
+
     @Test fun watchdogIncludesBothRequestsAndConcurrencyRounds() {
         assertEquals(75000L, urlProbeBudgetMs(1, 3, 15000))
         assertEquals(120000L, urlProbeBudgetMs(4, 3, 15000))

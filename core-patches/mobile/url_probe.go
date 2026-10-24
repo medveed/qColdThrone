@@ -29,8 +29,9 @@ func StartScopedURLTest(current *Instance, platform PlatformInterface, request *
 		ctx = probe.LiveInstance(ctx)
 	}
 	go func() {
+		// Closing Xray can take seconds; a repeated ping must not wait for it.
+		defer func() { go env.close() }()
 		defer handler.OnDone()
-		defer env.close()
 		defer cancel()
 		var mu sync.Mutex
 		failed := make(map[string]bool)
@@ -44,7 +45,9 @@ func StartScopedURLTest(current *Instance, platform PlatformInterface, request *
 				failed[result.Tag] = result.Error != nil
 				mu.Unlock()
 				handler.OnResult(result.Tag, int32(result.Duration.Milliseconds()), errorString(result.Error))
-			})
+			},
+			// The pinned core lacks the desktop's cold allowance; the unmeasured first request dials the server.
+			coldRequestAllowance(!request.TestCurrent))
 		// Aborted tags are deliberately not published by BatchURLTestTo.
 		for _, result := range results {
 			if result.Error == probe.ErrTestAborted {
@@ -59,4 +62,12 @@ func StartScopedURLTest(current *Instance, platform PlatformInterface, request *
 		}
 	}()
 	return task, nil
+}
+
+// Matches the desktop's probe.ColdRequestAllowance: five more seconds for the unmeasured first request.
+func coldRequestAllowance(twice bool) time.Duration {
+	if twice {
+		return 5 * time.Second
+	}
+	return 0
 }

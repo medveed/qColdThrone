@@ -95,7 +95,7 @@ data class GeneratorSettings(
     val dnsObject: String = "",
     /** dns_final_out: "remote" or "direct". */
     val dnsFinalOut: String = "remote",
-    val dnsOptimistic: Boolean = false,
+    val dnsOptimistic: Boolean = true,
     val dnsOptimisticTimeout: String = "",
     val dnsQueryTimeout: String = "",
     val dnsUseHosts: Boolean = false,
@@ -118,6 +118,8 @@ data class GeneratorSettings(
     val enableDnsRouting: Boolean = true,
     /** enable_tun_routing (SettingsRepo.h:222): the route profile's direct ip_cidr values bypass the tun. */
     val enableTunRouting: Boolean = false,
+    /** block_quic (SettingsRepo.h): QUIC (UDP 443) headed for a proxy is refused so browsers fall back to TCP. */
+    val blockQuic: Boolean = true,
     /** enable_stats (SettingsRepo.h:118): route.find_process and the api service. */
     val trafficStats: Boolean = true,
     /**

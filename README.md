@@ -1,8 +1,22 @@
+<div align="center">
+
+<img src="docs/screenshots/icon.png" width="128" alt="qThroneMobile">
+
 # qThroneMobile
 
-![GitHub Downloads](https://img.shields.io/github/downloads/ttrroyy/qThroneMobile/total?label=downloads-total&color=brightgreen)
+**Android-клиент на ядрах sing-box и Xray**
 
-Android-клиент на ядрах [sing-box](https://github.com/SagerNet/sing-box) и [Xray](https://github.com/XTLS/Xray-core). Форк [ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid).
+Форк [ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid)
+
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
+![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+[![sing-box](https://img.shields.io/badge/sing--box-1F2937?style=for-the-badge)](https://github.com/SagerNet/sing-box)
+[![Xray](https://img.shields.io/badge/Xray-2563EB?style=for-the-badge)](https://github.com/XTLS/Xray-core)
+
+[![Downloads](https://img.shields.io/github/downloads/ttrroyy/qThroneMobile/total?label=downloads-total&color=brightgreen)](https://github.com/ttrroyy/qThroneMobile/releases)
+
+</div>
 
 Помимо стандартных протоколов sing-box и Xray поддерживает qWDTT, CSQTT, olcRTC, OpenFlux, DNSTT, VayDNS, SlipStream, MasterDNS и S3 Bypass - с подписками, тестом пинга и раздельной маршрутизацией.
 
@@ -30,7 +44,7 @@ Android-клиент на ядрах [sing-box](https://github.com/SagerNet/sing
 |---|---|
 | Стандартные | VLESS, VMess, Trojan, Shadowsocks, SOCKS, HTTP(S), SSH |
 | QUIC | Hysteria, Hysteria2, TUIC, MASQUE |
-| VPN | WireGuard, AmneziaWG, OpenVPN, OpenConnect |
+| VPN | WireGuard, AmneziaWG, OpenVPN, OpenConnect, SSTP |
 | Другие прокси | ShadowTLS, NaïveProxy, AnyTLS, Mieru, Snell, Juicity, TrustTunnel |
 | VK и WebRTC | qWDTT, CSQTT, olcRTC, OpenFlux |
 | DNS-туннели | DNSTT, VayDNS, SlipStream, MasterDNS |
@@ -54,9 +68,10 @@ APK собирает CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml),
 
 - Ядра: [SagerNet/sing-box](https://github.com/SagerNet/sing-box), [XTLS/Xray-core](https://github.com/XTLS/Xray-core), [ThroneCore](https://github.com/ttrroyy/qThrone)
 - Основа клиента: [ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid), [NekoBoxForAndroid](https://github.com/MatsuriDayo/NekoBoxForAndroid), [SagerNet](https://github.com/SagerNet/SagerNet)
-- VK и WebRTC: [proxy-turn-vk-android](https://github.com/SpaceNeuroX/proxy-turn-vk-android) (qWDTT), [amurcanov/csqtt](https://github.com/amurcanov/csqtt), [olcRTC](https://github.com/openlibrecommunity/olcrtc), [OpenFlux](https://github.com/p1neappleXpress/OpenFlux)
+- VK и WebRTC: [proxy-turn-vk-android](https://github.com/SpaceNeuroX/proxy-turn-vk-android), [amurcanov/csqtt](https://github.com/amurcanov/csqtt), [olcRTC](https://github.com/openlibrecommunity/olcrtc), [OpenFlux](https://github.com/p1neappleXpress/OpenFlux)
 - DNS-туннели: [dnstt](https://www.bamsoftware.com/software/dnstt/), [VayDNS](https://github.com/net2share/vaydns), [slipstream-rust](https://github.com/Mygod/slipstream-rust), [MasterDnsVPN](https://github.com/masterking32/MasterDnsVPN), [dnst-url-spec](https://github.com/net2share/dnst-url-spec), [SlipNet](https://github.com/anonvector/SlipNet), [WhiteDNS](https://github.com/WhiteDNS/WhiteDNS-Android)
 - S3 Bypass и TrustTunnel: [s3-bypass](https://github.com/SpaceNeuroX/s3-bypass), [Xray-core-fedarisha](https://github.com/Fedarisha/Xray-core-fedarisha), [sing-trusttunnel](https://github.com/xchacha20-poly1305/sing-trusttunnel), [TrustTunnelClient](https://github.com/TrustTunnel/TrustTunnelClient)
+- SSTP: [SwiftSSTP](https://github.com/alichdrdzn/swiftsstp)
 - Прочее: [routeprofiles](https://github.com/throneproj/routeprofiles), [sing-box-dashboard](https://github.com/SagerNet/sing-box-dashboard), [flag-icons](https://github.com/lipis/flag-icons)
 
 ## Поддержать проект
@@ -67,6 +82,7 @@ APK собирает CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml),
 
 | Сеть | Адрес |
 |---|---|
+| <a href="https://boosty.to/ttrroyy/donate"><img src="https://img.shields.io/badge/Boosty-donate-F15F2C?style=flat-square&logo=boosty&logoColor=white" alt="Boosty"></a> | [boosty.to/ttrroyy/donate](https://boosty.to/ttrroyy/donate) |
 | <img src="https://img.shields.io/badge/USDT-TRC--20-26A17B?style=flat-square&logo=tether&logoColor=white" alt="USDT TRC-20"> | `TL22P1n3JmVkhYU8RyMXfRUURx4PN6h4WZ` |
 | <img src="https://img.shields.io/badge/USDT%20%2F%20BNB-BEP--20-F0B90B?style=flat-square&logo=bnbchain&logoColor=white" alt="USDT / BNB BEP-20"> | `0x0B7e9f024e92f7333AB9146c0351732B959D4e9A` |
 | <img src="https://img.shields.io/badge/BTC-Bitcoin-F7931A?style=flat-square&logo=bitcoin&logoColor=white" alt="Bitcoin"> | `bc1qw5larutup50tdk4vuskdzep5r9ydyzt4g0c6dm` |

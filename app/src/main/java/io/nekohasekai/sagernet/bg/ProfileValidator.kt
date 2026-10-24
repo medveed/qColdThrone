@@ -102,7 +102,7 @@ object ProfileValidator {
 
         if(outbound is app.qcoldthrone.mobile.bg.carrier.NativeCarrier) {
             return try {
-                app.qcoldthrone.mobile.bg.carrier.CarrierPlan.qwdtt(profile.id,outbound)
+                app.qcoldthrone.mobile.bg.carrier.CarrierPlan.qwdtt(profile.id,outbound,withAccount=false)
                 Verdict.VALID
             } catch(_:IllegalArgumentException) { invalid("Invalid native transport configuration") }
         }

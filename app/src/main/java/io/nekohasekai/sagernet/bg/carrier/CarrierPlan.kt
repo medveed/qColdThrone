@@ -18,9 +18,12 @@ class CarrierPlan private constructor(
     companion object {
         /**
          * A plan for any carrier-backed outbound (docs/offsite-json-config.md §6, §7): a free loopback port,
-         * fresh SOCKS credentials and the client's private JSON. [qwdtt] stays as the compatibility alias.
+         * fresh SOCKS credentials and the client's private JSON. [native] is the generic entry point.
+         * [withAccount] false checks the configuration only: automatic hashes are not requested from VK.
+         * [interactive] false (tests) never waits for a VK sign-in.
          */
-        fun native(profileId:Long, profile:NativeCarrier):CarrierPlan = qwdtt(profileId, profile)
+        fun native(profileId:Long, profile:NativeCarrier, withAccount:Boolean=true, interactive:Boolean=true):CarrierPlan =
+            qwdtt(profileId, profile, withAccount=withAccount, interactive=interactive)
 
         /** Stable identity of a carrier profile: `exportToJson` minus name/tag, SHA-256 (used for pool dedup). */
         @JvmStatic
@@ -29,10 +32,10 @@ class CarrierPlan private constructor(
             return java.security.MessageDigest.getInstance("SHA-256").digest(identity.toByteArray()).joinToString("") { "%02x".format(it.toInt() and 255) }
         }
 
-        fun qwdtt(profileId:Long, profile:NativeCarrier):CarrierPlan {
+        fun qwdtt(profileId:Long, profile:NativeCarrier, withAccount:Boolean=true, interactive:Boolean=true):CarrierPlan {
             val key=identityKey(profile)
             CarrierPool.activePlan(key)?.let { return it }
-            val runtimeProfile = if(profile is Qwdtt) NativeHashPolicy.runtimeProfile(profile, VkRelayAccount::hashes) else profile
+            val runtimeProfile = if(profile is Qwdtt && withAccount) NativeHashPolicy.runtimeProfile(profile, { VkRelayAccount.hashes(it, interactive) }) { VkRelayAccount.tokenForCalls(interactive) } else profile
             val loopback=InetAddress.getByName("127.0.0.1")
             val credentials=CarrierBridgeCredentials.fresh()
             return ServerSocket(0,1,loopback).use { tcp -> DatagramSocket(0,loopback).use { udp ->

@@ -39,6 +39,9 @@ import moe.matsuri.nb4a.Protocols
 import moe.matsuri.nb4a.utils.Util
 import java.net.UnknownHostException
 
+/** Shorter screen-off spells keep their connections: switching the screen off and on is not sleep. */
+private const val SLEEP_RESET_AFTER_MS = 30_000L
+
 class BaseService {
 
     enum class State(
@@ -81,7 +84,7 @@ class BaseService {
                 Action.AUTO_SELECTOR_AUTOMATIC -> AutoSelectorRuntime.releasePin(intent.getLongExtra(Action.EXTRA_PROFILE_ID, 0L))
                 PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED -> applyIdleMode()
                 Intent.ACTION_SCREEN_OFF -> screenOffAt = SystemClock.elapsedRealtime()
-                Intent.ACTION_SCREEN_ON -> if (screenOffAt > 0 && SystemClock.elapsedRealtime() - screenOffAt >= 60_000) checkAfterWake()
+                Intent.ACTION_SCREEN_ON -> resetAfterSleep()
 
                 Action.RESET_UPSTREAM_CONNECTIONS -> runOnDefaultDispatcher {
                     proxy?.boxOrNull?.resetNetwork()
@@ -111,29 +114,24 @@ class BaseService {
             Widgets.push(service as Context)
         }
 
+        @Volatile
         private var screenOffAt = 0L
-        private var wakeCheck: Job? = null
 
         /**
-         * After sleep a native transport's TURN session or a carrier socket may be gone while the network looks the
-         * same; the core cannot notice that. Probe the tunnel and reconnect only when it stays dead.
+         * Light doze and NAT timeouts kill upstream connections without a device idle event, and the
+         * stale ones then stall traffic and the current-connection test until they time out.
          */
-        fun checkAfterWake() {
-            if (state != State.Connected || wakeCheck?.isActive == true) return
-            wakeCheck = runOnDefaultDispatcher {
-                val proxy = proxy?.takeIf { it.isInitialized() } ?: return@runOnDefaultDispatcher
-                for (attempt in 0..1) {
-                    delay(if (attempt == 0) 2000 else 3000)
-                    if (state != State.Connected || this@Data.proxy !== proxy) return@runOnDefaultDispatcher
-                    val alive = runCatching {
-                        urlTestCurrent(proxy.box, proxy.core, DataStore.testUrl, 5000, exitsThroughVpn(proxy.profile))
-                        true
-                    }.getOrDefault(false)
-                    if (alive) return@runOnDefaultDispatcher
+        private fun resetAfterSleep() {
+            val off = screenOffAt
+            screenOffAt = 0L
+            if (off == 0L || SystemClock.elapsedRealtime() - off < SLEEP_RESET_AFTER_MS) return
+            runOnDefaultDispatcher {
+                idleLock.withLock {
+                    val box = proxy?.boxOrNull ?: return@withLock
+                    // Leaving device idle resets on its own.
+                    if (pausedBox === box || !DataStore.configurationStore.getBoolean(Key.WAKE_RESET_CONNECTIONS, true)) return@withLock
+                    box.resetNetwork()
                 }
-                Logs.i("No connection through the tunnel after wake; reconnecting")
-                TestEngine.stopAndJoin()
-                SagerNet.reloadService()
             }
         }
 
@@ -152,7 +150,6 @@ class BaseService {
                     if (DataStore.configurationStore.getBoolean(Key.WAKE_RESET_CONNECTIONS, true)) {
                         box.resetNetwork()
                     }
-                    checkAfterWake()
                 }
             }
         }
@@ -637,8 +634,8 @@ class BaseService {
                     addAction(Intent.ACTION_SHUTDOWN)
                     addAction(Action.CLOSE)
                     addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED)
-                    addAction(Intent.ACTION_SCREEN_ON)
                     addAction(Intent.ACTION_SCREEN_OFF)
+                    addAction(Intent.ACTION_SCREEN_ON)
                     addAction(Action.RESET_UPSTREAM_CONNECTIONS)
                     addAction(Action.SWITCH_NEXT)
                     addAction(Action.SWITCH_PREVIOUS)

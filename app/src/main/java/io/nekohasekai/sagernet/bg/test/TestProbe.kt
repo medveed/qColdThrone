@@ -20,6 +20,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -246,7 +247,8 @@ internal abstract class LatencySweep(protected val session: TestSession) {
         results: Channel<ProbeResult>,
     ) {
         val generated = try {
-            CoreConfigs.buildTest(ids)
+            // A native profile with automatic hashes fetches them from VK while building; a stop must interrupt that.
+            runInterruptible(Dispatchers.IO) { CoreConfigs.buildTest(ids) }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -277,7 +279,9 @@ internal abstract class LatencySweep(protected val session: TestSession) {
                 } else {
                     for (id in profileIds) {
                         val name = batch.firstOrNull { it.id == id }?.displayName().orEmpty()
-                        results.trySend(ProbeResult(id, error = session.startFailure(name, failure), measured = false))
+                        // A carrier a restart stopped mid-start failed only because of the stop.
+                        val error = if (session.cancelled) ERROR_ABORTED else session.startFailure(name, failure)
+                        results.trySend(ProbeResult(id, error = error, measured = false))
                     }
                 }
             }
@@ -300,7 +304,7 @@ internal abstract class LatencySweep(protected val session: TestSession) {
             // CSQTT must obtain its tunnel config before the short HTTP latency deadline starts.
             // CarrierProcess owns the startup deadline; coroutine cancellation still stops preparation.
             withPreparedTransports(probe.carrierPlans,{ plan -> app.qcoldthrone.mobile.bg.carrier.CarrierPool.acquire(plan,
-                session.interactive && session.kind!=TestSpec.KIND_URL,onStatus={ status?.update(it) }) }) {
+                session.interactive && session.kind!=TestSpec.KIND_URL,onStatus={ status?.update(it) }).closedInBackground() }) {
                 status?.update(app.qcoldthrone.mobile.bg.carrier.NativeConnectionStage.CONNECTED)
                 measure(probe, batch, emit)
             }
@@ -311,7 +315,9 @@ internal abstract class LatencySweep(protected val session: TestSession) {
             Logs.w("Test probe failed to start: ${e.readableMessage}")
             return e.readableMessage
         }
-        probe.profileIds.forEach { emit(ProbeResult(it, error = ERROR_NO_RESULT, measured = false)) }
+        // Unanswered because a restart stopped the probe, not because the server failed.
+        val missing = if (session.cancelled) ERROR_ABORTED else ERROR_NO_RESULT
+        probe.profileIds.forEach { emit(ProbeResult(it, error = missing, measured = false)) }
         return null
     }
 }

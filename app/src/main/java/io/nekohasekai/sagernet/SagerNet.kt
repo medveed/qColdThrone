@@ -93,6 +93,13 @@ class SagerNet : Application(),
                 DataStore.seasonalDecoration=SeasonalPolicy.migratedChoice(DataStore.seasonalDecoration,false)
                 DataStore.seasonalAuto153Migrated=true
             }
+            // 2.6.2 sets the test defaults once: 32 profiles at a time, 5 s for a ping and for a speed test.
+            if(!DataStore.testDefaults262Migrated) {
+                DataStore.testConcurrent=32
+                DataStore.urlTestTimeoutMs=5000
+                DataStore.speedTestTimeoutMs=5000
+                DataStore.testDefaults262Migrated=true
+            }
             val retainedDecoration=SeasonalPolicy.retainedChoice(DataStore.seasonalDecoration)
             if(retainedDecoration!=DataStore.seasonalDecoration) DataStore.seasonalDecoration=retainedDecoration
             Theme.apply(this)

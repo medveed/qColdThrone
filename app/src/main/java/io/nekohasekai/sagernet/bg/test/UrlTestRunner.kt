@@ -17,6 +17,8 @@ import app.qcoldthrone.core.mobile.URLTestHandler
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.atomic.AtomicBoolean
@@ -34,7 +36,7 @@ internal class UrlTestRunner(session: TestSession) : LatencySweep(session) {
         val (vk,native)=all.partition { it.type in listOf("qwdtt","csqtt","wdttplus") }
         launch { super.run(regular) }
         launch {
-            runIndependentProbes(vk,MAX_PARALLEL_PROBES,{ session.cancelled },{ (it.outbound as? Qwdtt)?.probeSessionKey() }) { profile ->
+            runIndependentProbes(vk,MAX_PARALLEL_PROBES,{ session.cancelled },{ (it.outbound as? Qwdtt)?.probeSessionKey() },{ (it.outbound as? Qwdtt)?.vkCallKey() }) { profile ->
                 if(profile.type=="qwdtt") report(listOf(ping(profile))) else super.run(listOf(profile))
             }
         }
@@ -82,15 +84,24 @@ internal class UrlTestRunner(session: TestSession) : LatencySweep(session) {
     /** qWDTT is measured by its own TURN/DTLS handshake, like the original app and the desktop client. */
     private suspend fun ping(profile: ProxyEntity): ProbeResult {
         if (session.cancelled) return ProbeResult(profile.id, error = ERROR_ABORTED, measured = false)
+        val timeout = QWDTT_PING_TIMEOUT_MS.coerceAtLeast(session.options.timeoutMs.toLong())
+        // Detached so that a ping stuck in a blocking call cannot hold its probe slot past the deadline.
+        val attempt = PING_SCOPE.async { QwdttPing.measure(profile.id, profile.outbound as NativeCarrier, timeout) }
         val outcome = try {
-            QwdttPing.measure(profile.id, profile.outbound as NativeCarrier,
-                QWDTT_PING_TIMEOUT_MS.coerceAtLeast(session.options.timeoutMs.toLong()))
+            withTimeoutOrNull(timeout + PING_OVERRUN_MS) { attempt.await() } ?: run {
+                Logs.w("qWDTT ping of profile ${profile.id} overran its deadline: ${QwdttPing.stuckThreads()}")
+                attempt.cancel()
+                QwdttPing.Outcome(0, "HTTP test timed out")
+            }
         } catch (e: CancellationException) {
+            attempt.cancel()
             throw e
         } catch (e: Exception) {
             QwdttPing.Outcome(0, e.readableMessage)
         }
         return if (outcome.error.isEmpty()) ProbeResult(profile.id, latency = outcome.latency)
+        // The handshake a restart killed says nothing about the server.
+        else if (session.cancelled) ProbeResult(profile.id, error = ERROR_ABORTED, measured = false)
         else ProbeResult(profile.id, error = outcome.error)
     }
 
@@ -183,5 +194,9 @@ internal class UrlTestRunner(session: TestSession) : LatencySweep(session) {
 
         /** Credentials, an automatic VK check and the handshake; the original app allows 20 s without a check. */
         const val QWDTT_PING_TIMEOUT_MS = 60_000L
+
+        /** Grace past a ping's own deadline before its result is given up on. */
+        private const val PING_OVERRUN_MS = 15_000L
+        private val PING_SCOPE = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO)
     }
 }

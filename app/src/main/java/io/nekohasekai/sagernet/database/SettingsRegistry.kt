@@ -175,6 +175,7 @@ object SettingsRegistry {
         ranges.all { SettingValidators.isPrivateRange(it) }
     }
     @JvmField val ENABLE_TUN_ROUTING = bool("enable_tun_routing", false)
+    @JvmField val BLOCK_QUIC = bool("block_quic", true)
 
     // ------------------------------------------------------------------------------------------------ routing
 
@@ -209,7 +210,7 @@ object SettingsRegistry {
     }
     @JvmField val DNS_CACHE_CAPACITY = int("dns_cache_capacity", 65536) { it >= 0 }
     @JvmField val DNS_QUERY_TIMEOUT = string("dns_query_timeout", "", SettingValidators::isDurationOrEmpty)
-    @JvmField val DNS_OPTIMISTIC = bool("dns_optimistic", false)
+    @JvmField val DNS_OPTIMISTIC = bool("dns_optimistic", true)
     @JvmField val DNS_OPTIMISTIC_TIMEOUT = string("dns_optimistic_timeout", "", SettingValidators::isDurationOrEmpty)
     @JvmField val DNS_DISABLE_CACHE = bool("dns_disable_cache", false)
     @JvmField val DNS_DISABLE_EXPIRE = bool("dns_disable_expire", false)
@@ -247,8 +248,8 @@ object SettingsRegistry {
     // ------------------------------------------------------------------------------------------------ testing
 
     @JvmField val TEST_URL = string("test_url", "http://www.google.com/generate_204") { it.isNotBlank() }
-    @JvmField val URL_TEST_TIMEOUT_MS = int("url_test_timeout_ms", 3000) { it > 0 }
-    @JvmField val TEST_CONCURRENT = int("test_concurrent", 10) { it > 0 }
+    @JvmField val URL_TEST_TIMEOUT_MS = int("url_test_timeout_ms", 5000) { it > 0 }
+    @JvmField val TEST_CONCURRENT = int("test_concurrent", 32) { it > 0 }
     @JvmField val DIRECT_TEST_URL = string("direct_test_url", "")
     /** 0 download + upload, 1 download, 2 upload, 3 simple download, 4 country (Const.hpp:39-49). */
     @JvmField val SPEED_TEST_MODE = int("speed_test_mode", 0) { it in 0..4 }

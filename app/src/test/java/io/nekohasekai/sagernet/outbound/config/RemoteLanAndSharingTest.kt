@@ -1,7 +1,9 @@
 package app.qcoldthrone.mobile.outbound.config
 
+import app.qcoldthrone.mobile.outbound.json.JsonArray
 import app.qcoldthrone.mobile.outbound.json.JsonInput
 import app.qcoldthrone.mobile.outbound.json.JsonObject
+import app.qcoldthrone.mobile.outbound.json.jsonObjectOf
 import app.qcoldthrone.mobile.outbound.types.OpenConnect
 import app.qcoldthrone.mobile.outbound.types.Socks
 import app.qcoldthrone.mobile.outbound.types.Qwdtt
@@ -107,5 +109,30 @@ class RemoteLanAndSharingTest {
         })
         assertTrue(original.ipv6Enabled)
         assertFalse(original.remoteDnsDisableIpv6)
+    }
+    @Test fun browsersFallBackFromQuicAndUnusableIpv6() {
+        val proxy=Socks().apply { server="192.0.2.1";serverPort=1080 }
+        val config=JsonInput.parseObject(ConfigGenerator(ProfileProvider { proxy },GeneratorSettings(vpnMode=true,ipv6Enabled=false)).build(1).coreConfig)
+        assertTrue(config.obj("route").array("rules").filterIsInstance<JsonObject>().any {
+            it.string("network")=="udp" && it.string("action")=="reject" && it.int("port")==443
+        })
+        val first=config.obj("dns").array("rules")[0] as JsonObject
+        assertEquals("predefined",first.string("action"))
+        assertTrue(first.array("query_type").contains("AAAA"))
+    }
+
+    @Test fun quicIsRefusedOnlyOnTheWayToAProxy() {
+        val rules=JsonArray()
+            .add(jsonObjectOf("action" to "sniff"))
+            .add(jsonObjectOf("domain_suffix" to JsonArray.of("example.ru"), "action" to "route", "outbound" to Tags.DIRECT))
+            .add(jsonObjectOf("domain_suffix" to JsonArray.of("example.com"), "action" to "route", "outbound" to Tags.PROXY))
+        val guarded=guardQuic(rules,1,finalIsProxy=true).filterIsInstance<JsonObject>()
+        assertEquals(listOf("sniff","route","reject","route","reject"),guarded.map { it.string("action") })
+        assertEquals("logical",guarded[2].string("type"))
+        assertEquals(jsonObjectOf("network" to "udp","port" to 443,"action" to "reject"),guarded.last())
+        assertEquals(4,guardQuic(rules,1,finalIsProxy=false).size)
+        val proxy=Socks().apply { server="192.0.2.1";serverPort=1080 }
+        val open=JsonInput.parseObject(ConfigGenerator(ProfileProvider { proxy },GeneratorSettings(vpnMode=true,blockQuic=false)).build(1).coreConfig)
+        assertTrue(open.obj("route").array("rules").filterIsInstance<JsonObject>().none { it.int("port")==443 || it.string("type")=="logical" })
     }
 }

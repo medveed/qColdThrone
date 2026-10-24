@@ -173,7 +173,7 @@ internal class ChainBuilder(
             val stored = profiles.get(id) ?: return "Null proxy in chain, you may want to check your configs"
             val outbound = if(stored is app.qcoldthrone.mobile.bg.carrier.NativeCarrier) {
                 try {
-                    state.carrierPlans.getOrPut(id) { app.qcoldthrone.mobile.bg.carrier.CarrierPlan.qwdtt(id,stored) }.outbound()
+                    state.carrierPlans.getOrPut(id) { app.qcoldthrone.mobile.bg.carrier.CarrierPlan.qwdtt(id,stored,interactive=!state.forTest) }.outbound()
                 } catch(_:IllegalArgumentException) { return "Native transport: invalid configuration" }
             } else stored
             if (outbound.invalid) return "Profile $id has a type this build cannot use: ${outbound.type}"
