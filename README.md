@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="docs/screenshots/icon.png" width="128" alt="qThroneMobile">
+<img src="docs/screenshots/icon.png" width="128" alt="qColdThrone">
 
-# qThroneMobile
+# qColdThrone
 
 **Android-клиент на ядрах sing-box и Xray**
 
-Форк [ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid)
+Форк [ttrroyy/qThroneMobile](https://github.com/ttrroyy/qThroneMobile) (в свою очередь форк [ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid))
 
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
@@ -14,11 +14,11 @@
 [![sing-box](https://img.shields.io/badge/sing--box-1F2937?style=for-the-badge)](https://github.com/SagerNet/sing-box)
 [![Xray](https://img.shields.io/badge/Xray-2563EB?style=for-the-badge)](https://github.com/XTLS/Xray-core)
 
-[![Downloads](https://img.shields.io/github/downloads/ttrroyy/qThroneMobile/total?label=downloads-total&color=brightgreen)](https://github.com/ttrroyy/qThroneMobile/releases)
+[![Downloads](https://img.shields.io/github/downloads/medveed/qColdThrone/total?label=downloads-total&color=brightgreen)](https://github.com/medveed/qColdThrone/releases)
 
 </div>
 
-Помимо стандартных протоколов sing-box и Xray поддерживает qWDTT, CSQTT, olcRTC, OpenFlux, DNSTT, VayDNS, SlipStream, MasterDNS и S3 Bypass - с подписками, тестом пинга и раздельной маршрутизацией.
+Помимо стандартных протоколов sing-box и Xray поддерживает qWDTT, CSQTT, olcRTC, OpenFlux, DNSTT, VayDNS, SlipStream, MasterDNS и S3 Bypass - с подписками, тестом пинга и раздельной маршрутизацией. Offsite-протоколы можно собрать в один **JSON-конфиг** в стиле Xray, с маршрутизацией и балансировкой внутри - см. [руководство](docs/offsite-json-config-guide.md).
 
 <p align="center">
   <img src="docs/screenshots/screenshot-subscriptions.png" width="300" alt="Подписки и тест пинга">
@@ -28,11 +28,13 @@
 
 ## Скачать
 
-Свежий APK - в [Releases](https://github.com/ttrroyy/qThroneMobile/releases/latest). Нужен Android 7.0 или новее; сборки есть для arm64-v8a, armeabi-v7a и x86_64. Приложение само сообщает о новых версиях.
+Свежий APK - в [Releases](https://github.com/medveed/qColdThrone/releases/latest) (собирается CI этого репозитория). Нужен Android 7.0 или новее; сборки есть для arm64-v8a, armeabi-v7a и x86_64. Приложение само сообщает о новых версиях.
 
 ## Особенности
 
 **Новые протоколы.** qWDTT, CSQTT, olcRTC, OpenFlux, DNS-туннели и S3 Bypass запускаются через оригинальные клиенты этих проектов. Работают как обычные профили: с маршрутизацией, цепочками и тестом пинга.
+
+**JSON-конфиги offsite-протоколов.** Все внешние протоколы (qWDTT, CSQTT, WDTT Plus, olcRTC, OpenFlux, DNSTT, VayDNS, SlipStream, MasterDNS, S3 Bypass, SSTP) можно объявить в одном Xray-совместимом JSON: `outbounds`, `routing.rules` и `routing.balancers` (`random` / `leastPing` / `leastLoad` + `fallbackTag`, в точности как в Xray). Профиль самодостаточен, поднимает клиентов сам и участвует в тесте пинга. Руководство - [docs/offsite-json-config-guide.md](docs/offsite-json-config-guide.md).
 
 **Привязка аккаунта VK.** Хеши звонков для qWDTT и CSQTT можно получать автоматически.
 
@@ -50,15 +52,22 @@
 | DNS-туннели | DNSTT, VayDNS, SlipStream, MasterDNS |
 | S3-хранилище | S3 Bypass |
 
-Также поддерживаются пользовательские outbound, полные конфиги sing-box и Xray, цепочки прокси и дополнительные ядра.
+Также поддерживаются пользовательские outbound, полные конфиги sing-box и Xray, цепочки прокси и дополнительные ядра, а также профиль **«Offsite JSON config»** - несколько offsite-протоколов с маршрутизацией и балансировкой в одном JSON.
 
 ## Как добавить профиль
 
-Кнопка «+» на главном экране: из буфера обмена, по QR-коду, из файла, по ссылке на подписку или вручную. Понимает ссылки всех перечисленных протоколов - в том числе `qwdtt://`, `csqtt://`, `olcrtc://`, `openflux://`, `dnst://`, `slipnet://` и `masterdns://`, - а также JSON-конфиги sing-box и Xray (S3 Bypass импортируется из Xray-конфига с outbound `fedarisha`).
+Кнопка «+» на главном экране: из буфера обмена, по QR-коду, из файла, по ссылке на подписку или вручную. Понимает ссылки всех перечисленных протоколов - в том числе `qwdtt://`, `csqtt://`, `olcrtc://`, `openflux://`, `dnst://`, `slipnet://` и `masterdns://`, - а также JSON-конфиги sing-box и Xray (S3 Bypass импортируется из Xray-конфига с outbound `fedarisha`). Отдельный пункт **«Offsite JSON config»** создаёт профиль из Xray-совместимого JSON с offsite-протоколами, `routing.rules` и `routing.balancers`.
 
 ## Сборка
 
 APK собирает CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml), шаги - в [`.github/actions/android-build`](.github/actions/android-build). Нативные клиенты протоколов собираются отдельно ([`carriers.yml`](.github/workflows/carriers.yml)) из закреплённых коммитов оригинальных репозиториев; их архивы и контрольные суммы записаны в [`native-transports.lock.json`](native-transports.lock.json), а `scripts/stage_native_transports.py` скачивает и проверяет их перед сборкой.
+
+Перед сборкой ядро ThroneCore расширяется точечными патчами: `scripts/patch_mobile_*.py` (SOCKS, TrustTunnel, Xray) и `scripts/patch_mobile_balancer.py` - последний добавляет в группу sing-box опции `fallback` (Xray `fallbackTag`) и `strategy: "leastPing"`; drop-in лежит в `core-patches/singbox/`. Порядок локальной пересборки ядра - в [`.github/actions/throne-core`](.github/actions/throne-core).
+
+## Документация
+
+- Руководство: JSON-конфиги offsite-протоколов - [docs/offsite-json-config-guide.md](docs/offsite-json-config-guide.md)
+- ТЗ фичи - [docs/offsite-json-config.md](docs/offsite-json-config.md)
 
 ## Лицензия
 
