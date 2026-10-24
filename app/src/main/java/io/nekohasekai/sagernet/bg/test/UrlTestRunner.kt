@@ -36,7 +36,7 @@ internal class UrlTestRunner(session: TestSession) : LatencySweep(session) {
         val (vk,native)=all.partition { it.type in listOf("qwdtt","csqtt","wdttplus") }
         launch { super.run(regular) }
         launch {
-            runIndependentProbes(vk,MAX_PARALLEL_PROBES,{ session.cancelled },{ (it.outbound as? Qwdtt)?.probeSessionKey() }) { profile ->
+            runIndependentProbes(vk,MAX_PARALLEL_PROBES,{ session.cancelled },{ (it.outbound as? Qwdtt)?.probeSessionKey() },{ (it.outbound as? Qwdtt)?.vkCallKey() }) { profile ->
                 if(profile.type=="qwdtt") report(listOf(ping(profile))) else super.run(listOf(profile))
             }
         }
