@@ -47,7 +47,7 @@ object AppShortcuts {
                     QuickDisableShortcut::class.java.name)
                 val updates = manager.pinnedShortcuts.mapNotNull { shortcut ->
                     val old = shortcut.intent ?: return@mapNotNull null
-                    if (old.component?.className !in targets || old.component?.packageName != context.packageName ||
+                    if ((old.component?.className ?: "") !in targets || old.component?.packageName != context.packageName ||
                         ShortcutAuthorization.isAuthorized(context, old)) return@mapNotNull null
                     ShortcutInfo.Builder(context, shortcut.id).setShortLabel(shortcut.shortLabel ?: "VPN")
                         .setIntent(ShortcutAuthorization.sign(context, Intent(old))).build()

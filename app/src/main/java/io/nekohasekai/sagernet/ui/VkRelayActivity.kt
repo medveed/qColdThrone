@@ -41,7 +41,7 @@ class VkRelayActivity : ThemedActivity() {
             var retryingLogin = false
             fun applySettings(view: WebView) {
                 view.settings.apply {
-                    javaScriptEnabled = true;domStorageEnabled = true;databaseEnabled = true
+                    javaScriptEnabled = true;domStorageEnabled = true
                     mediaPlaybackRequiresUserGesture = false;loadWithOverviewMode = true;useWideViewPort = true
                     cacheMode = WebSettings.LOAD_DEFAULT;javaScriptCanOpenWindowsAutomatically = true
                     setSupportMultipleWindows(true)

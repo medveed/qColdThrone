@@ -338,7 +338,8 @@ class ProviderRoutingActivity : ThemedActivity() {
                 preference.dialogTitle = preference.title
             }
             if (preference is EditTextPreference) MobilePreferenceDialog().apply {
-                arguments = Bundle().apply { putString("key",preference.key) }; setTargetFragment(this@Screen,0)
+                arguments = Bundle().apply { putString("key",preference.key) }
+                @Suppress("DEPRECATION") setTargetFragment(this@Screen,0)
             }.show(parentFragmentManager,"provider-input") else super.onDisplayPreferenceDialog(preference)
         }
     }

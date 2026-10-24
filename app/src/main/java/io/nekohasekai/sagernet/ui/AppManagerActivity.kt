@@ -278,8 +278,8 @@ class AppManagerActivity : ThemedActivity() {
             })
         }
         updateModeDescription()
-        binding.bypassGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
+        binding.bypassGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            when (checkedIds.firstOrNull()) {
                 R.id.appProxyModeDisable -> {
                     DataStore.proxyApps = false
                 }
@@ -297,7 +297,7 @@ class AppManagerActivity : ThemedActivity() {
             it.setTextColor(MobilePalette.text)
             it.isCheckedIconVisible = false
             it.chipStrokeWidth = 0f
-            it.chipCornerRadius = 12 * resources.displayMetrics.density
+            it.shapeAppearanceModel = it.shapeAppearanceModel.withCornerSize(12 * resources.displayMetrics.density)
             it.chipBackgroundColor = android.content.res.ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                 intArrayOf(androidx.core.graphics.ColorUtils.blendARGB(MobilePalette.surface, MobilePalette.accent(this), .25f), MobilePalette.surface))

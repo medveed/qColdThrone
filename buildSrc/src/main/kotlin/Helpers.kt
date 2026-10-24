@@ -5,8 +5,10 @@ import org.gradle.api.GradleException
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
+import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.getByName
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import java.util.Base64
 import java.util.Properties
 
@@ -63,11 +65,10 @@ fun Project.setupCommon() {
             sourceCompatibility = JavaVersion.VERSION_17
             targetCompatibility = JavaVersion.VERSION_17
         }
-        (android as ExtensionAware).extensions.getByName<KotlinJvmOptions>("kotlinOptions").apply {
-            jvmTarget = JavaVersion.VERSION_17.toString()
+        this@setupCommon.extensions.getByType(KotlinAndroidProjectExtension::class.java).compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
         }
-        lint {
-            showAll = true
+        lint {            showAll = true
             checkAllWarnings = true
             checkReleaseBuilds = true
             warningsAsErrors = true

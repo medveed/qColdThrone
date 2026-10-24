@@ -250,7 +250,8 @@ object SettingsMapper {
             .filter { it.address is java.net.Inet4Address && it.prefixLength in 8..32 }
             .map { link ->
                 val bits = java.nio.ByteBuffer.wrap(link.address.address).int and (-1 shl (32 - link.prefixLength))
-                java.net.InetAddress.getByAddress(java.nio.ByteBuffer.allocate(4).putInt(bits).array()).hostAddress + "/" + link.prefixLength
+                val address = java.net.InetAddress.getByAddress(java.nio.ByteBuffer.allocate(4).putInt(bits).array()).hostAddress ?: ""
+                "$address/${link.prefixLength}"
             }
     }.getOrDefault(emptyList())
 }

@@ -17,7 +17,12 @@ class ProfileSelectActivity : ThemedActivity(R.layout.layout_empty),
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState != null) return
-        val selected = intent.getParcelableExtra<ProxyEntity>(EXTRA_SELECTED)
+        // The typed getParcelableExtra is API 33+; below it the deprecated overload is the only one.
+        val selected: ProxyEntity? = if (android.os.Build.VERSION.SDK_INT >= 33) {
+            intent.getParcelableExtra(EXTRA_SELECTED, ProxyEntity::class.java)
+        } else {
+            @Suppress("DEPRECATION") intent.getParcelableExtra<ProxyEntity>(EXTRA_SELECTED)
+        }
 
         supportFragmentManager.beginTransaction()
             .replace(

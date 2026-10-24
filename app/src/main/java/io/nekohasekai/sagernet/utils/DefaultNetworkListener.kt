@@ -12,9 +12,11 @@ import android.os.SystemClock
 import app.qcoldthrone.mobile.SagerNet
 import app.qcoldthrone.mobile.ktx.Logs
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.actor
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.net.UnknownHostException
 
@@ -34,11 +36,14 @@ object DefaultNetworkListener {
         class Lost(val network: Network) : NetworkMessage()
     }
 
-    private val networkActor = GlobalScope.actor<NetworkMessage>(Dispatchers.Unconfined) {
+    private val networkChannel = Channel<NetworkMessage>()
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private val networkActor = GlobalScope.launch(Dispatchers.Unconfined) {
         val listeners = mutableMapOf<Any, (Network?) -> Unit>()
         var network: Network? = null
         val pendingRequests = arrayListOf<NetworkMessage.Get>()
-        for (message in channel) when (message) {
+        for (message in networkChannel) when (message) {
             is NetworkMessage.Start -> {
                 try {
                     if (listeners.isEmpty()) register()
@@ -95,7 +100,7 @@ object DefaultNetworkListener {
 
     suspend fun start(key: Any, listener: (Network?) -> Unit) {
         val message = NetworkMessage.Start(key, listener)
-        networkActor.send(message)
+        networkChannel.send(message)
         // send only queues the message; the Start branch and the cached network's first callback may still be pending.
         // Wait for processed, or a test box created meanwhile may get default=nil from the Go monitor
         // and its first dial fails before updateDefaultInterface(wlan0, index).
@@ -106,11 +111,11 @@ object DefaultNetworkListener {
         SagerNet.connectivity.activeNetwork
             ?: throw UnknownHostException() // failed to listen, return current if available
     } else NetworkMessage.Get().run {
-        networkActor.send(this)
+        networkChannel.send(this)
         response.await()
     }
 
-    suspend fun stop(key: Any) = networkActor.send(NetworkMessage.Stop(key))
+    suspend fun stop(key: Any) = networkChannel.send(NetworkMessage.Stop(key))
 
     // NB: below API 26 this runs on ConnectivityThread; 26+ dispatches through the callbackHandler given to register
     // onto a dedicated worker thread (dispatching to the main thread through mainHandler once blocked the UI
@@ -118,7 +123,7 @@ object DefaultNetworkListener {
     private object Callback : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             Logs.d("DefaultNetworkListener onAvailable enter network=$network thread=${Thread.currentThread().name}")
-            runBlocking { networkActor.send(NetworkMessage.Put(network)) }
+            runBlocking { networkChannel.send(NetworkMessage.Put(network)) }
         }
 
         override fun onCapabilitiesChanged(
@@ -126,12 +131,12 @@ object DefaultNetworkListener {
         ) { // it's a good idea to refresh capabilities
             // Storm source: debug per event (info would flood the log)
             Logs.d("DefaultNetworkListener onCapabilitiesChanged enter network=$network thread=${Thread.currentThread().name}")
-            runBlocking { networkActor.send(NetworkMessage.Update(network)) }
+            runBlocking { networkChannel.send(NetworkMessage.Update(network)) }
         }
 
         override fun onLost(network: Network) {
             Logs.d("DefaultNetworkListener onLost enter network=$network thread=${Thread.currentThread().name}")
-            runBlocking { networkActor.send(NetworkMessage.Lost(network)) }
+            runBlocking { networkChannel.send(NetworkMessage.Lost(network)) }
         }
     }
 

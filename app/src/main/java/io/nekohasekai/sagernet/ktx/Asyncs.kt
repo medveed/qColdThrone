@@ -1,3 +1,4 @@
+@file:OptIn(DelicateCoroutinesApi::class)
 @file:Suppress("EXPERIMENTAL_API_USAGE")
 
 package app.qcoldthrone.mobile.ktx

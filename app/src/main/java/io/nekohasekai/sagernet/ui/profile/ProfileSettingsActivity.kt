@@ -358,6 +358,7 @@ abstract class ProfileSettingsActivity<T : Outbound>(
         }
 
         @SuppressLint("CheckResult")
+        @Suppress("OVERRIDE_DEPRECATION")
         override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
             R.id.action_delete -> {
                 if (DataStore.editingId == 0L) {

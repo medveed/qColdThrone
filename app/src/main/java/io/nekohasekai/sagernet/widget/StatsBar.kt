@@ -11,7 +11,7 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenStarted
+import androidx.lifecycle.withStarted
 import com.google.android.material.bottomappbar.BottomAppBar
 import app.qcoldthrone.mobile.R
 import app.qcoldthrone.mobile.bg.BaseService
@@ -317,7 +317,7 @@ class StatsBar @JvmOverloads constructor(
         }
         transitionJob = activity.lifecycleScope.launch(Dispatchers.Main) {
             delay(INITIAL_HIDE_DELAY_MS)
-            activity.whenStarted {
+            activity.withStarted {
                 transitionJob = null
                 if (shouldShow()) {
                     commitVisible(animated = false)

@@ -35,11 +35,7 @@ internal class WdttPlusLifecycle(private val context: Context, private val send:
     init {
         try {
             // Ignore our VPN network: only Wi-Fi/mobile handovers invalidate the native path cache.
-            connectivity?.allNetworks?.forEach { network ->
-                val capabilities = connectivity?.getNetworkCapabilities(network)
-                if (capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
-                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)) networks += network
-            }
+            seedNetworks()
             connectivity?.registerNetworkCallback(NetworkRequest.Builder()
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN).build(), callback)
@@ -53,6 +49,16 @@ internal class WdttPlusLifecycle(private val context: Context, private val send:
         } catch (error: Exception) {
             close()
             throw error
+        }
+    }
+
+    /** `allNetworks` has no API-31 replacement that enumerates every network; the callback below tracks handovers. */
+    @Suppress("DEPRECATION")
+    private fun seedNetworks() {
+        connectivity?.allNetworks?.forEach { network ->
+            val capabilities = connectivity.getNetworkCapabilities(network)
+            if (capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)) networks += network
         }
     }
 

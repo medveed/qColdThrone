@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 abstract class TempDatabase : RoomDatabase() {
 
     companion object {
+        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
         @Suppress("EXPERIMENTAL_API_USAGE")
         private val instance by lazy {
             Room.inMemoryDatabaseBuilder(SagerNet.application, TempDatabase::class.java)

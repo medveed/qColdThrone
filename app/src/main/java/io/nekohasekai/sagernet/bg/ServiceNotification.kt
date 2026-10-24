@@ -272,11 +272,8 @@ class ServiceNotification(
 
     fun destroy() {
         listenPostSpeed = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            (service as Service).stopForeground(Service.STOP_FOREGROUND_REMOVE)
-        } else {
-            (service as Service).stopForeground(true)
-        }
+        // stopForeground(int) is API 24+, the app's minSdk, so the boolean overload is never needed.
+        (service as Service).stopForeground(Service.STOP_FOREGROUND_REMOVE)
         service.unregisterReceiver(this)
     }
 }

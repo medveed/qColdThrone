@@ -483,8 +483,8 @@ class TestPanelController(
             }
         }
         // Announce the outcome once, not every progress tick.
-        val region = if (s.running) ViewCompat.ACCESSIBILITY_LIVE_REGION_NONE else ViewCompat.ACCESSIBILITY_LIVE_REGION_POLITE
-        if (ViewCompat.getAccessibilityLiveRegion(status) != region) ViewCompat.setAccessibilityLiveRegion(status, region)
+        val region = if (s.running) View.ACCESSIBILITY_LIVE_REGION_NONE else View.ACCESSIBILITY_LIVE_REGION_POLITE
+        if (status.accessibilityLiveRegion != region) status.accessibilityLiveRegion = region
         status.setTextIfChanged(text)
         if (status.currentTextColor != color) status.setTextColor(color)
     }
@@ -493,7 +493,7 @@ class TestPanelController(
         val live = s.speed
         val show = !expanded && s.running && s.kind == TestSpec.KIND_SPEED && !s.countryMode && live != null
         liveLine.isVisible = show
-        if (!show || live == null) return
+        if (!show) return
         val detail = if (live.dlBps <= 0 && live.ulBps <= 0) {
             TestFormat.stageLabel(context, live.stage)
         } else {
