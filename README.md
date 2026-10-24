@@ -44,7 +44,7 @@
 |---|---|
 | Стандартные | VLESS, VMess, Trojan, Shadowsocks, SOCKS, HTTP(S), SSH |
 | QUIC | Hysteria, Hysteria2, TUIC, MASQUE |
-| VPN | WireGuard, AmneziaWG, OpenVPN, OpenConnect |
+| VPN | WireGuard, AmneziaWG, OpenVPN, OpenConnect, SSTP |
 | Другие прокси | ShadowTLS, NaïveProxy, AnyTLS, Mieru, Snell, Juicity, TrustTunnel |
 | VK и WebRTC | qWDTT, CSQTT, olcRTC, OpenFlux |
 | DNS-туннели | DNSTT, VayDNS, SlipStream, MasterDNS |
