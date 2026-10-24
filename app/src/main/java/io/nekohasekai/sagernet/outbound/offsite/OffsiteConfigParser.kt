@@ -27,6 +27,8 @@ object OffsiteConfigParser {
         "sourcePort", "network", "protocol", "user", "attrs", "ruleTag",
     )
     private val BALANCER_FIELDS = setOf("tag", "selector", "strategy", "fallbackTag")
+    /** Xray `routing.balancers[].strategy.settings` keys the generator reads. */
+    private val STRATEGY_SETTINGS = setOf("expected", "maxRTT", "tolerance", "basetime")
     private val DNS_FIELDS = setOf("servers", "queryStrategy", "rules", "hosts")
 
     /** Parse [text] into the model; see [OffsiteParseResult.ok]. */
@@ -254,6 +256,12 @@ object OffsiteConfigParser {
                         strategySettings = node.obj("settings").copy()
                         for (key in node.keys()) if (key !in setOf("type", "settings"))
                             issues += warning("$path.strategy.$key", "unknown field")
+                        for (key in strategySettings.keys()) if (key !in STRATEGY_SETTINGS)
+                            issues += warning("$path.strategy.settings.$key", "unknown setting; ignored")
+                        for (key in STRATEGY_SETTINGS) {
+                            if (strategySettings.contains(key) && !isNumberLike(strategySettings[key]))
+                                issues += warning("$path.strategy.settings.$key", "must be a number or a duration")
+                        }
                     }
                     else -> issues += warning("$path.strategy", "must be a string or an object")
                 }
@@ -334,6 +342,13 @@ object OffsiteConfigParser {
 
     /** An optional string (`inboundTag`) or array of strings. */
     private fun stringList(obj: JsonObject, key: String): List<String> = stringListOrString(obj, key)
+
+    /** A JSON number or a bare numeric duration like `300`, `300ms`, `30s`. */
+    private fun isNumberLike(value: Any?): Boolean = when (value) {
+        is Long, is Double -> true
+        is String -> Regex("^\\d+(ms|s|m|h)?$", RegexOption.IGNORE_CASE).matches(value.trim())
+        else -> false
+    }
 
     private fun error(path: String, message: String) =
         OffsiteIssue(OffsiteSeverity.Error, path, message)

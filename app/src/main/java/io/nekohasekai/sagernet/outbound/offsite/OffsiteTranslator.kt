@@ -38,9 +38,7 @@ object OffsiteTranslator {
 
     /** §6.3 defaults. */
     private const val DEFAULT_EXPECTED = 3
-    private const val DEFAULT_ACTIVE_SIZE = 8
     private const val DEFAULT_LEAST_PING_BASETIME = 300
-    private const val DEFAULT_LEAST_PING_TOLERANCE = 50
     private const val DEFAULT_LEAST_LOAD_BASETIME = 30
     private const val DEFAULT_LEAST_LOAD_TOLERANCE = 300
     private const val DEFAULT_RANDOM_BASETIME = 30
@@ -130,21 +128,18 @@ object OffsiteTranslator {
         }
 
         // Groups come after their members (§6.3).
-        val emittedTags = LinkedHashSet(outboundTags)
         for (balancer in document.balancers) {
             val members = JsonArray()
             val seen = LinkedHashSet<String>()
             for (tag in outboundTags) {
                 if (balancer.selectors.any { tag.startsWith(it) } && seen.add(tag)) members.add(tag)
             }
-            // A fallback must be an already-emitted tag: an unknown tag would make the core refuse to start.
-            balancer.fallbackTag?.takeIf { it.isNotEmpty() && it in emittedTags && seen.add(it) }?.let { members.add(it) }
             if (members.isEmpty()) {
                 fail("balancer ${balancer.tag} selects no outbounds")
                 continue
             }
+            // fallbackTag is a real core option resolved at start (the validator refused an unknown tag), not a member.
             outbounds.add(buildGroup(balancer, members, settings))
-            emittedTags.add(balancer.tag)
         }
 
         val route = JsonObject()
@@ -291,49 +286,38 @@ object OffsiteTranslator {
         }
     }
 
+    /**
+     * §6.3: an Xray balancer as a native `auto-selector`. `leastPing` is its ranked pick (the default),
+     * `random` maps to per-connection balancing, `leastLoad` to the core's least-load strategy, and
+     * `fallbackTag` to the core's `fallback` option. Only `leastLoad`'s `strategy.settings` map onto the group.
+     */
     private fun buildGroup(balancer: OffsiteBalancer, members: JsonArray, settings: GeneratorSettings): JsonObject {
         val strategy = balancer.strategy ?: "random"
-        return when (strategy) {
-            "leastPing" -> jsonObjectOf(
-                "type" to "urltest",
-                "tag" to balancer.tag,
-                "outbounds" to members,
-                "url" to settings.testUrl,
-                "interval" to "${settingsSeconds(balancer.settings, "basetime", DEFAULT_LEAST_PING_BASETIME)}s",
-                "tolerance" to settingsMillis(balancer.settings, "tolerance", DEFAULT_LEAST_PING_TOLERANCE),
-            )
+        val group = jsonObjectOf(
+            "type" to "auto-selector",
+            "tag" to balancer.tag,
+            "outbounds" to members,
+            "url" to settings.testUrl,
+        )
+        when (strategy) {
+            "leastPing" -> group["interval"] =
+                "${settingsSeconds(balancer.settings, "basetime", DEFAULT_LEAST_PING_BASETIME)}s"
             "leastLoad" -> {
-                val group = jsonObjectOf(
-                    "type" to "auto-selector",
-                    "tag" to balancer.tag,
-                    "outbounds" to members,
-                    "balance" to false,
-                    "expected" to (settingsInt(balancer.settings, "expected") ?: DEFAULT_EXPECTED),
-                    "active_size" to DEFAULT_ACTIVE_SIZE,
-                    "tolerance" to settingsMillis(balancer.settings, "tolerance", DEFAULT_LEAST_LOAD_TOLERANCE),
-                    "url" to settings.testUrl,
-                    "interval" to "${settingsSeconds(balancer.settings, "basetime", DEFAULT_LEAST_LOAD_BASETIME)}s",
-                )
-                val maxRtt = settingsMillis(balancer.settings, "maxRTT", 0)
-                if (maxRtt > 0) group["max_rtt"] = "${maxRtt}ms"
-                group
+                group["strategy"] = "leastLoad"
+                group["expected"] = settingsInt(balancer.settings, "expected") ?: DEFAULT_EXPECTED
+                group["tolerance"] = settingsMillis(balancer.settings, "tolerance", DEFAULT_LEAST_LOAD_TOLERANCE)
+                group["interval"] = "${settingsSeconds(balancer.settings, "basetime", DEFAULT_LEAST_LOAD_BASETIME)}s"
+                settingsMillis(balancer.settings, "maxRTT", 0).takeIf { it > 0 }?.let { group["max_rtt"] = "${it}ms" }
             }
+            // random (the Xray default): pick per dial, like Xray's random strategy.
             else -> {
-                val basetime = settingsSeconds(balancer.settings, "basetime", DEFAULT_RANDOM_BASETIME)
-                jsonObjectOf(
-                    "type" to "auto-selector",
-                    "tag" to balancer.tag,
-                    "outbounds" to members,
-                    "balance" to true,
-                    "balance_mode" to "connection",
-                    "balance_interval" to "${basetime}s",
-                    "expected" to (settingsInt(balancer.settings, "expected") ?: DEFAULT_EXPECTED),
-                    "active_size" to DEFAULT_ACTIVE_SIZE,
-                    "url" to settings.testUrl,
-                    "interval" to "${basetime}s",
-                )
+                group["balance"] = true
+                group["balance_mode"] = "connection"
+                group["interval"] = "${settingsSeconds(balancer.settings, "basetime", DEFAULT_RANDOM_BASETIME)}s"
             }
         }
+        balancer.fallbackTag?.takeIf { it.isNotEmpty() }?.let { group["fallback"] = it }
+        return group
     }
 
     /** §5.7/§6.4: a full `dns` object, or null when the document has no `dns` section. */

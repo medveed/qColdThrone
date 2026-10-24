@@ -74,7 +74,7 @@ class OffsiteConfigBuildTest {
         assertEquals("direct", core.outbound("direct").string("type"))
         assertEquals("block", core.outbound("block").string("type"))
         val group = core.outbound("auto")
-        assertEquals("urltest", group.string("type"))
+        assertEquals("auto-selector", group.string("type"))
         assertEquals(listOf("wdtt-1", "wdtt-2"), group.array("outbounds").strings())
         val domainRule = core.obj("route").array("rules").filterIsInstance<JsonObject>()
             .first { it.contains("domain_suffix") }

@@ -257,29 +257,30 @@
 
 1:1 по таблице §5.5. `geosite:`/`geoip:` конвертируются в `rule_set` через существующие `ProviderGeoAssets`/`RuleSetCatalog`; при недоступности ассетов — ошибка сборки с понятным текстом (как сейчас для route-профилей).
 
-### 6.3 Балансировка → нативные группы
+### 6.3 Балансировка → нативная группа `auto-selector`
 
-**Вариант A (зафиксирован): балансировка реализуется нативными группами ядра, без изменений Go-кода.**
+Всё строится на `auto-selector`; ядро **расширено** патчем `scripts/patch_mobile_balancer.py` (+ `core-patches/singbox/balancer_least_load.go`): добавлены опция `strategy: "leastLoad"` и `fallback`.
 
 | Xray `strategy.type` | Группа ядра | Параметры | Точность |
 |---|---|---|---|
-| `random` | `auto-selector` | `balance: true`, `balance_mode: "connection"`, `balance_interval` = `settings.basetime` (30s), `expected`/`active_size` из settings | близко: выбор на соединение; распределение может отличаться от равномерно случайного |
-| `leastPing` | `urltest` | `url` = глобальный test URL, `interval` = `settings.basetime` (300s), `tolerance` = `settings.tolerance` (50ms) | практически эквивалентно |
-| `leastLoad` | `auto-selector` | `balance: false`, `expected` (3), `active_size` (8), `tolerance` (300ms), `max_rtt` = `settings.maxRTT` (0 = без потолка) | приближение: RTT + health, **без метрики нагрузки** |
-| (нет `strategy`) | `auto-selector` | как `random` — Xray по умолчанию использует `random` | близко |
+| `random` | `auto-selector` | `balance: true`, `balance_mode: "connection"` | эквивалент: случайный годный участник на соединение |
+| `leastPing` | `auto-selector` | ранжирование по RTT (по умолчанию), `interval` 300s | эквивалент |
+| `leastLoad` | `auto-selector` | `strategy: "leastLoad"`, `expected`/`tolerance`/`max_rtt`/`interval` из settings | эквивалент по смыслу: метрика — **число активных соединений** участника (не байты), тай-брейк — RTT-ранг |
+| (нет `strategy`) | `auto-selector` | как `random` — Xray по умолчанию использует `random` | — |
+| `fallbackTag` | опция `fallback` группы | — | реальный резерв: диал идёт в него, когда ни один участник не годен |
 
-Дефолты транслятора (фиксируются константами и показываются в UI):
+Дефолты транслятора (константы):
 
-- `expected` = 3, `maxRTT` = 0 (без потолка), `tolerance` = 50 ms для `leastPing` и 300 ms для `leastLoad`;
-- `basetime` = 30 s для `random`/`leastLoad`, 300 s для `leastPing`;
-- `balance_interval` = `basetime`.
+- `leastLoad`: `expected` = 3, `tolerance` = 300 ms, `interval` = `settings.basetime` (30 s), `max_rtt` — только если задан;
+- `leastPing`: `interval` = `settings.basetime` (300 s);
+- `random`: `interval` = `basetime` (30 s), без `balance_interval`/`active_size` (устаревшие поля не задаются).
 
-Замечание по режиму `random`: целевой режим — `connection` (Xray выбирает узел на соединение). При реализации сверить фактическое поведение `balance_mode` в ядре; если `connection` не даёт per-connection выбор, использовать `rotate` и зафиксировать это в §12.
+`strategy.settings` читаются только для `leastLoad`; неизвестные ключи и неверные типы — предупреждение (не ошибка).
 
 Дополнительно:
 
 - Группа получает `tag` = `balancer.tag`.
-- `fallbackTag`: добавляется последним участником группы. `route.final` по умолчанию — первый outbound (как в Xray), если не задан `routing.final`; отдельного «мягкого» fallback у нативных групп нет. **Ограничение фиксируется в UI/доках.**
+- `route.final` по умолчанию — первый outbound (как в Xray), если не задан `routing.final`.
 - Группы не могут участвовать в `detour`-цепочках как промежуточный хоп (как и `auto-selector` сейчас).
 
 ### 6.4 DNS
@@ -394,8 +395,7 @@ Instrumented / ручное:
 - Профиль **самодостаточен**: встроенные профили роутинга приложения и настройки группы для него не применяются (маршрутизация — из JSON).
 - Профиль **не участвует в цепочках** как хоп (аналог `fullconfig`/`xrayfullconfig`): это конфиг целиком. В будущем — опционально как финальный хоп.
 - **Пинг** профиля измеряется реальным ядром по его основному egress (`routing.final`, иначе первый outbound/группа) в отдельном тест-боксе; правила маршрутизации в тест-бокс не попадают (на dial не влияют), carrier-планы поднимаются перед пробой.
-- Балансировка — **вариант A** (см. §6.3): `leastPing` практически эквивалентен (`urltest`), `random` близок (`auto-selector`), `leastLoad` — приближение по RTT/здоровью **без метрики нагрузки**. Точные алгоритмы Xray не воспроизводятся. Go-ядро не меняется.
-- `fallbackTag` — best-effort: участник добавляется в группу последним; при отсутствии явного финального правила `route.final` = `fallbackTag`. Мягкий fallback зависит от стратегии.
+- Балансировка — нативная группа `auto-selector`, расширенная в ядре (§6.3): `random` — случайный участник на соединение, `leastPing` — по RTT, `leastLoad` — по числу активных соединений; `fallbackTag` — реальный `fallback`. Ядро собирается патчем `patch_mobile_balancer.py`.
 - `inbounds` игнорируются; пользовательские DNS-правила (`dns.rules`) — v2.
 - Xray-протоколы вне набора ядра — ошибка. Стандартные outbound'ы в v1 принимаются только в sing-box-форме `settings`; Xray-форма (`vnext`/`servers`/`streamSettings`) не конвертируется (Phase 3).
 
@@ -525,3 +525,10 @@ Instrumented / ручное:
 ### Пинг offsite-профилей
 
 Offsite-профили тестируются как отдельный тест-бокс ядра (`ConfigGenerator.buildTest`): собирается egress-граф документа (outbounds/endpoints/группы) с DNS приложения (прямой резолвер, чтобы адрес сервера туннеля не резолвился через сам туннель) и явным `route.final`; `inbounds` пустые, правила маршрутизации не переносятся. Carrier-планы пробы поднимаются через `TestProbe`/`CarrierPool` (новое поле `GeneratedConfig.fullConfigCarrierPlans`). Задержка в списке — это задержка основного egress (`route.final`, иначе первый outbound/группа).
+
+### Устранение упрощений балансировки (A + B + C + D2)
+
+- **A.** `fallbackTag` — теперь реальная опция `fallback` группы в ядре: диал уходит в резервный outbound, когда ни один участник не годен. Больше не «последний участник».
+- **B.** `strategy.settings` читаются только для `leastLoad`; неизвестные ключи и неверные типы — предупреждение; убраны мёртвые `balance_interval`/`active_size`, а `random` подтверждён как per-connection.
+- **C.** Документация: точная таблица маппинга и метрики.
+- **D2.** Ядро (`throneproj/sing-box`) расширено патчем: `strategy: "leastLoad"` (наименьшее число активных соединений, тай-брейк — RTT-ранг) и `fallback`. Артефакты: `scripts/patch_mobile_balancer.py`, `core-patches/singbox/balancer_least_load.go`; шаг добавлен в `.github/actions/throne-core` (и в ключ кэша).

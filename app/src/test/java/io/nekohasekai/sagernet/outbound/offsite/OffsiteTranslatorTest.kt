@@ -96,16 +96,59 @@ class OffsiteTranslatorTest {
     }
 
     @Test
-    fun leastPingBalancerBecomesUrlTestAfterItsMembers() {
+    fun leastPingBalancerBecomesAutoSelectorWithAFallback() {
         val translation = translate()
         val group = translation.outbounds.filterIsInstance<JsonObject>().first { it.string("tag") == "auto" }
-        assertEquals("urltest", group.string("type"))
+        assertEquals("auto-selector", group.string("type"))
         assertEquals(GeneratorSettings().testUrl, group.string("url"))
         assertEquals("300s", group.string("interval"))
-        assertEquals(50L, group["tolerance"])
-        assertEquals(listOf("wdtt-1", "wdtt-2", "direct"), group.array("outbounds").strings())
+        assertEquals(listOf("wdtt-1", "wdtt-2"), group.array("outbounds").strings())
+        // fallbackTag is a real core option, not a group member.
+        assertEquals("direct", group.string("fallback"))
+        assertTrue(!group.array("outbounds").strings().contains("direct"))
         // The group is appended after every regular outbound.
         assertEquals("auto", (translation.outbounds[translation.outbounds.size - 1] as JsonObject).string("tag"))
+    }
+
+    @Test
+    fun leastLoadBalancerUsesTheCoreLeastLoadStrategyAndItsSettings() {
+        val doc = OffsiteConfigParser.parse(
+            """
+            {"outbounds":[{"tag":"a","protocol":"freedom"},{"tag":"b","protocol":"freedom"}],
+             "routing":{"balancers":[{"tag":"auto","selector":["a","b"],
+               "strategy":{"type":"leastLoad","settings":{"expected":2,"maxRTT":500,"tolerance":100,"basetime":45}}}]}}
+            """.trimIndent(),
+        ).document!!
+        val translation = OffsiteTranslator.translate(
+            doc, GeneratorSettings(), BuildContext.DEFAULT,
+            RoutingInput(RouteProfile.defaultProfile(), RuleSetCatalog(emptyList())),
+        )
+        val group = translation.outbounds.filterIsInstance<JsonObject>().first { it.string("tag") == "auto" }
+        assertEquals("auto-selector", group.string("type"))
+        assertEquals("leastLoad", group.string("strategy"))
+        assertEquals(2, group.int("expected"))
+        assertEquals(100, group.int("tolerance"))
+        assertEquals("500ms", group.string("max_rtt"))
+        assertEquals("45s", group.string("interval"))
+    }
+
+    @Test
+    fun randomBalancerBalancesPerConnection() {
+        val doc = OffsiteConfigParser.parse(
+            """
+            {"outbounds":[{"tag":"a","protocol":"freedom"},{"tag":"b","protocol":"freedom"}],
+             "routing":{"balancers":[{"tag":"auto","selector":["a","b"]}]}}
+            """.trimIndent(),
+        ).document!!
+        val translation = OffsiteTranslator.translate(
+            doc, GeneratorSettings(), BuildContext.DEFAULT,
+            RoutingInput(RouteProfile.defaultProfile(), RuleSetCatalog(emptyList())),
+        )
+        val group = translation.outbounds.filterIsInstance<JsonObject>().first { it.string("tag") == "auto" }
+        assertEquals("auto-selector", group.string("type"))
+        assertTrue(group.bool("balance"))
+        assertEquals("connection", group.string("balance_mode"))
+        assertTrue(!group.contains("balance_interval"))
     }
 
     @Test
