@@ -91,6 +91,17 @@ class ScopedUrlProbeTest {
         assertFalse(overlapping)
     }
 
+    @Test fun slowCarrierCloseDoesNotHoldTheProbe() {
+        val release = java.util.concurrent.CountDownLatch(1)
+        val closed = java.util.concurrent.CountDownLatch(1)
+        val lease = AutoCloseable { release.await(); closed.countDown() }.closedInBackground()
+        val start = System.nanoTime()
+        lease.close()
+        assertTrue(System.nanoTime() - start < 1_000_000_000L)
+        release.countDown()
+        assertTrue(closed.await(5, java.util.concurrent.TimeUnit.SECONDS))
+    }
+
     @Test fun watchdogIncludesBothRequestsAndConcurrencyRounds() {
         assertEquals(75000L, urlProbeBudgetMs(1, 3, 15000))
         assertEquals(120000L, urlProbeBudgetMs(4, 3, 15000))

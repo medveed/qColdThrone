@@ -302,7 +302,7 @@ internal abstract class LatencySweep(protected val session: TestSession) {
             // CSQTT must obtain its tunnel config before the short HTTP latency deadline starts.
             // CarrierProcess owns the startup deadline; coroutine cancellation still stops preparation.
             withPreparedTransports(probe.carrierPlans,{ plan -> app.qthrone.mobile.bg.carrier.CarrierPool.acquire(plan,
-                session.interactive && session.kind!=TestSpec.KIND_URL,onStatus={ status?.update(it) }) }) {
+                session.interactive && session.kind!=TestSpec.KIND_URL,onStatus={ status?.update(it) }).closedInBackground() }) {
                 status?.update(app.qthrone.mobile.bg.carrier.NativeConnectionStage.CONNECTED)
                 measure(probe, batch, emit)
             }
