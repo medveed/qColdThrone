@@ -9,6 +9,7 @@ import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 
 /**
@@ -22,7 +23,8 @@ object QwdttPing {
     private val result = Regex("^PING_RESULT\\|([0-9]{1,9})$")
 
     suspend fun measure(profileId: Long, profile: NativeCarrier, timeoutMs: Long): Outcome = withContext(Dispatchers.IO) {
-        val plan = CarrierPlan.qwdtt(profileId, profile)
+        // Automatic hashes come from VK over blocking calls (and may wait for a sign-in); a stop must interrupt them.
+        val plan = runInterruptible { CarrierPlan.qwdtt(profileId, profile) }
         val json = JsonInput.parseObject(
             NativeSessionPolicy.probeConfig(CarrierKind.QWDTT, plan.privateJson, interactive = false, latencyProbe = true)).also { config ->
             // The handshake is DTLS; the RAW port speaks without it. The original app pings the DTLS port in every mode.

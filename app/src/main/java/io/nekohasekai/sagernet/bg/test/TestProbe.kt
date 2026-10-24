@@ -20,6 +20,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -244,7 +245,8 @@ internal abstract class LatencySweep(protected val session: TestSession) {
         results: Channel<ProbeResult>,
     ) {
         val generated = try {
-            CoreConfigs.buildTest(ids)
+            // A native profile with automatic hashes fetches them from VK while building; a stop must interrupt that.
+            runInterruptible(Dispatchers.IO) { CoreConfigs.buildTest(ids) }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
