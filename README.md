@@ -1,8 +1,22 @@
+<div align="center">
+
+<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="128" alt="qThroneMobile">
+
 # qThroneMobile
 
-![GitHub Downloads](https://img.shields.io/github/downloads/ttrroyy/qThroneMobile/total?label=downloads-total&color=brightgreen)
+**Android-клиент на ядрах sing-box и Xray**
 
-Android-клиент на ядрах [sing-box](https://github.com/SagerNet/sing-box) и [Xray](https://github.com/XTLS/Xray-core). Форк [ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid).
+Форк [ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid)
+
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
+![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+[![sing-box](https://img.shields.io/badge/sing--box-1F2937?style=for-the-badge)](https://github.com/SagerNet/sing-box)
+[![Xray](https://img.shields.io/badge/Xray-2563EB?style=for-the-badge)](https://github.com/XTLS/Xray-core)
+
+[![Downloads](https://img.shields.io/github/downloads/ttrroyy/qThroneMobile/total?label=downloads-total&color=brightgreen)](https://github.com/ttrroyy/qThroneMobile/releases)
+
+</div>
 
 Помимо стандартных протоколов sing-box и Xray поддерживает qWDTT, CSQTT, olcRTC, OpenFlux, DNSTT, VayDNS, SlipStream, MasterDNS и S3 Bypass - с подписками, тестом пинга и раздельной маршрутизацией.
 
