@@ -1,11 +1,18 @@
-"""Patch the pinned sing-box auto-selector with least-load balancing and an external fallback.
+"""Patch the pinned sing-box auto-selector for the Xray-compatible offsite JSON config.
 
-The offsite JSON config maps Xray `routing.balancers[]` onto the group: `strategy: "leastLoad"`
-spreads dials by the connections a member already carries, and `fallback` is the tag dialed when no
-member of the group is usable at all (Xray `fallbackTag`). Sources are copied from the checksummed
-Go module cache; the shared cache itself is never mutated.
+Two things the fork's group does not have on its own:
+
+* `fallback` — Xray `routing.balancers[].fallbackTag`: the tag dialed when no member of the group is
+  usable at all.
+* `strategy: "leastPing"` — Xray's leastPing orders the healthy members by average RTT; the fork's
+  default orders by deviation first, which is exactly Xray's leastLoad comparator. leastLoad itself
+  needs no new code: `balance`/`balance_mode`/`expected`/`baselines`/`max_rtt`/`fail_tolerance`
+  already reproduce it (random among the top-expected healthy members).
+
+Sources are copied from the checksummed Go module cache; the shared cache is never mutated.
 """
 import json
+import os
 import shutil
 import stat
 import subprocess
@@ -26,6 +33,25 @@ def replace_once(path: Path, before: str, after: str):
     path.write_text(text.replace(before, after), newline="\n")
 
 
+def rmtree_writable(path: Path):
+    if not path.exists():
+        return
+    # Directories can be left mode 000 by a failed removal; restore rwx top-down so the walk can descend.
+    os.chmod(path, stat.S_IRWXU)
+    for root, dirs, files in os.walk(path):
+        for name in dirs:
+            try:
+                os.chmod(os.path.join(root, name), stat.S_IRWXU)
+            except OSError:
+                pass
+        for name in files:
+            try:
+                os.chmod(os.path.join(root, name), stat.S_IRWXU)
+            except OSError:
+                pass
+    shutil.rmtree(path)
+
+
 def copy_writable(source, destination):
     path = Path(destination)
     if path.exists():
@@ -44,7 +70,8 @@ def patch(core: Path):
     if info.get("Sum") != SUM or info.get("GoModSum") != MOD_SUM:
         raise ValueError("Pinned sing-box source checksum mismatch")
     target = core / ".qthrone" / "sing-box"
-    shutil.copytree(info["Dir"], target, dirs_exist_ok=True, copy_function=copy_writable)
+    rmtree_writable(target)
+    shutil.copytree(info["Dir"], target, copy_function=copy_writable)
 
     options = target / "option" / "group.go"
     expected_field = '\tExpected      int                  `json:"expected,omitempty"`\n'
@@ -52,8 +79,8 @@ def patch(core: Path):
         "\n\t// Fallback is the tag dialed when no member of the group is usable at all\n"
         "\t// (Xray routing.balancers[].fallbackTag). Optional.\n"
         "\tFallback string `json:\"fallback,omitempty\"`\n"
-        "\t// Strategy selects among the healthy set: \"\" is the ranked pick, \"leastLoad\"\n"
-        "\t// picks the member carrying the fewest connections (rank order on ties).\n"
+        "\t// Strategy \"leastPing\" ranks healthy members by average RTT first (Xray leastPing);\n"
+        "\t// the default orders by deviation first (Xray leastLoad).\n"
         "\tStrategy string `json:\"strategy,omitempty\"`\n")
 
     selector = target / "protocol" / "group" / "autoselector.go"
@@ -61,13 +88,12 @@ def patch(core: Path):
         "\tbalanceInterval time.Duration\n\tdialRetries     int\n",
         "\tbalanceInterval  time.Duration\n\tdialRetries      int\n"
         "\tfallbackTag      string\n\tfallbackOutbound adapter.Outbound\n"
-        "\tstrategy         string\n\tactiveConns      map[string]int\n")
+        "\tstrategy         string\n")
     replace_once(selector,
         "\t\tdialRetries:                  options.DialRetries,\n",
         "\t\tdialRetries:                  options.DialRetries,\n"
         "\t\tfallbackTag:                  options.Fallback,\n"
-        "\t\tstrategy:                     options.Strategy,\n"
-        "\t\tactiveConns:                  make(map[string]int),\n")
+        "\t\tstrategy:                     options.Strategy,\n")
     replace_once(selector,
         "\ts.access.Lock()\n\t// The caller's ordering is the ranking prior:",
         "\tif s.fallbackTag != \"\" {\n"
@@ -78,14 +104,7 @@ def patch(core: Path):
         "\t\ts.fallbackOutbound = fallback\n"
         "\t}\n\n"
         "\ts.access.Lock()\n\t// The caller's ordering is the ranking prior:")
-    replace_once(selector,
-        "\tbalancing := s.balance && s.pinnedTag == \"\"\n",
-        "\tbalancing := s.balance && s.pinnedTag == \"\"\n"
-        "\tif s.strategy == StrategyLeastLoad && s.pinnedTag == \"\" && len(s.qualified) > 1 {\n"
-        "\t\tif detour := s.pickLeastLoadLocked(network, tried, now); detour != nil {\n"
-        "\t\t\treturn detour\n"
-        "\t\t}\n"
-        "\t}\n")
+    replace_once(selector, "\tsortNodes(ordered)\n", "\tsortNodes(ordered, s.strategy)\n")
     replace_once(selector,
         "\t// Everything is cooling down. Better to retry a penalised member than to\n"
         "\t// hand the client a failure.\n"
@@ -105,38 +124,41 @@ def patch(core: Path):
         "\tif s.fallbackOutbound != nil && !tried[s.fallbackOutbound.Tag()] {\n"
         "\t\treturn s.fallbackOutbound\n"
         "\t}\n\treturn nil\n}")
-    replace_once(selector,
-        "\t\tconn, err := detour.DialContext(ctx, network, destination)\n"
-        "\t\tif err == nil {\n"
-        "\t\t\ts.noteDialResult(detour, N.NetworkName(network), nil)\n"
-        "\t\t\treturn s.interruptGroup.NewConn(conn, interrupt.IsExternalConnectionFromContext(ctx)), nil\n"
-        "\t\t}",
-        "\t\tconn, err := detour.DialContext(ctx, network, destination)\n"
-        "\t\tif err == nil {\n"
-        "\t\t\ts.noteDialResult(detour, N.NetworkName(network), nil)\n"
-        "\t\t\tconn = s.trackConn(detour.Tag(), conn)\n"
-        "\t\t\treturn s.interruptGroup.NewConn(conn, interrupt.IsExternalConnectionFromContext(ctx)), nil\n"
-        "\t\t}")
-    replace_once(selector,
-        "\t\tconn, err := detour.ListenPacket(ctx, destination)\n"
-        "\t\tif err == nil {\n"
-        "\t\t\ts.noteDialResult(detour, N.NetworkUDP, nil)\n"
-        "\t\t\treturn s.interruptGroup.NewPacketConn(conn, interrupt.IsExternalConnectionFromContext(ctx)), nil\n"
-        "\t\t}",
-        "\t\tconn, err := detour.ListenPacket(ctx, destination)\n"
-        "\t\tif err == nil {\n"
-        "\t\t\ts.noteDialResult(detour, N.NetworkUDP, nil)\n"
-        "\t\t\tconn = s.trackPacketConn(detour.Tag(), conn)\n"
-        "\t\t\treturn s.interruptGroup.NewPacketConn(conn, interrupt.IsExternalConnectionFromContext(ctx)), nil\n"
-        "\t\t}")
-    replace_once(selector,
-        "\t// While balancing, every qualified member carries traffic, not only the current pick.\n"
-        "\tif s.balance && s.pinnedTag == \"\" {",
-        "\t// While balancing (or least-load balancing), every qualified member carries traffic.\n"
-        "\tif (s.balance || s.strategy == StrategyLeastLoad) && s.pinnedTag == \"\" {")
+
+    health = target / "protocol" / "group" / "autoselector_health.go"
+    replace_once(health,
+        "func sortNodes(nodes []*rankedNode) {",
+        "func sortNodes(nodes []*rankedNode, strategy string) {")
+    replace_once(health,
+        "\t\tif l.stats.Deviation != r.stats.Deviation {\n"
+        "\t\t\treturn l.stats.Deviation < r.stats.Deviation\n"
+        "\t\t}\n"
+        "\t\tif l.stats.Average != r.stats.Average {\n"
+        "\t\t\treturn l.stats.Average < r.stats.Average\n"
+        "\t\t}\n",
+        "\t\tif strategy == StrategyLeastPing {\n"
+        "\t\t\tif l.stats.Average != r.stats.Average {\n"
+        "\t\t\t\treturn l.stats.Average < r.stats.Average\n"
+        "\t\t\t}\n"
+        "\t\t\tif l.stats.Deviation != r.stats.Deviation {\n"
+        "\t\t\t\treturn l.stats.Deviation < r.stats.Deviation\n"
+        "\t\t\t}\n"
+        "\t\t} else {\n"
+        "\t\t\tif l.stats.Deviation != r.stats.Deviation {\n"
+        "\t\t\t\treturn l.stats.Deviation < r.stats.Deviation\n"
+        "\t\t\t}\n"
+        "\t\t\tif l.stats.Average != r.stats.Average {\n"
+        "\t\t\t\treturn l.stats.Average < r.stats.Average\n"
+        "\t\t\t}\n"
+        "\t\t}\n")
 
     helper_dir = target / "protocol" / "group"
     helper_dir.chmod(helper_dir.stat().st_mode | stat.S_IWUSR)
+    health_test = helper_dir / "autoselector_health_test.go"
+    test_text = health_test.read_text()
+    if test_text.count("sortNodes(nodes)") < 1:
+        raise ValueError("Pinned sing-box health test changed; review the balancer patch")
+    health_test.write_text(test_text.replace("sortNodes(nodes)", 'sortNodes(nodes, "")'), newline="\n")
     for source in (Path(__file__).resolve().parents[1] / "core-patches" / "singbox").glob("*.go"):
         copy_writable(source, helper_dir / source.name)
     subprocess.run(["go", "mod", "edit", "-replace=" + MODULE + "=./.qthrone/sing-box"], cwd=core, check=True)

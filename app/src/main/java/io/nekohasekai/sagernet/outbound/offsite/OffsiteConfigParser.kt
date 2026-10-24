@@ -28,7 +28,7 @@ object OffsiteConfigParser {
     )
     private val BALANCER_FIELDS = setOf("tag", "selector", "strategy", "fallbackTag")
     /** Xray `routing.balancers[].strategy.settings` keys the generator reads. */
-    private val STRATEGY_SETTINGS = setOf("expected", "maxRTT", "tolerance", "basetime")
+    private val STRATEGY_SETTINGS = setOf("expected", "maxRTT", "tolerance", "basetime", "baselines")
     private val DNS_FIELDS = setOf("servers", "queryStrategy", "rules", "hosts")
 
     /** Parse [text] into the model; see [OffsiteParseResult.ok]. */
@@ -259,8 +259,13 @@ object OffsiteConfigParser {
                         for (key in strategySettings.keys()) if (key !in STRATEGY_SETTINGS)
                             issues += warning("$path.strategy.settings.$key", "unknown setting; ignored")
                         for (key in STRATEGY_SETTINGS) {
-                            if (strategySettings.contains(key) && !isNumberLike(strategySettings[key]))
+                            if (!strategySettings.contains(key)) continue
+                            if (key == "baselines") {
+                                if (!strategySettings.isArray(key))
+                                    issues += warning("$path.strategy.settings.baselines", "must be an array of durations")
+                            } else if (!isNumberLike(strategySettings[key])) {
                                 issues += warning("$path.strategy.settings.$key", "must be a number or a duration")
+                            }
                         }
                     }
                     else -> issues += warning("$path.strategy", "must be a string or an object")

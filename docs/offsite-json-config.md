@@ -259,23 +259,23 @@
 
 ### 6.3 Балансировка → нативная группа `auto-selector`
 
-Всё строится на `auto-selector`; ядро **расширено** патчем `scripts/patch_mobile_balancer.py` (+ `core-patches/singbox/balancer_least_load.go`): добавлены опция `strategy: "leastLoad"` и `fallback`.
+Всё строится на `auto-selector` (он **уже** ранжирует здоровые участники по Xray-порядку: джиттер → средняя RTT → неудачи → пробы, и поддерживает `baselines`/`max_rtt`/`fail_tolerance`). Патч `scripts/patch_mobile_balancer.py` (+ `core-patches/singbox/balancer_strategy.go`) добавляет только `fallback` (Xray `fallbackTag`) и `strategy: "leastPing"` (сортировка по средней RTT).
 
 | Xray `strategy.type` | Группа ядра | Параметры | Точность |
 |---|---|---|---|
-| `random` | `auto-selector` | `balance: true`, `balance_mode: "connection"` | эквивалент: случайный годный участник на соединение |
-| `leastPing` | `auto-selector` | ранжирование по RTT (по умолчанию), `interval` 300s | эквивалент |
-| `leastLoad` | `auto-selector` | `strategy: "leastLoad"`, `expected`/`tolerance`/`max_rtt`/`interval` из settings | эквивалент по смыслу: метрика — **число активных соединений** участника (не байты), тай-брейк — RTT-ранг |
+| `random` | `auto-selector` | `balance: true`, `balance_mode: "connection"`, `expected` = число участников | эквивалент: равномерно случайный живой участник на соединение |
+| `leastPing` | `auto-selector` | `strategy: "leastPing"` (минимум средней RTT), `interval` 300 s | эквивалент |
+| `leastLoad` | `auto-selector` | `balance: true`, `balance_mode: "connection"`, `expected`, `max_rtt`, `fail_tolerance`, `baselines`, `interval` | эквивалент: джиттер-ранг + случайный выбор из top-`expected` (Xray `leastloadSort`/`dice.Roll`) |
 | (нет `strategy`) | `auto-selector` | как `random` — Xray по умолчанию использует `random` | — |
 | `fallbackTag` | опция `fallback` группы | — | реальный резерв: диал идёт в него, когда ни один участник не годен |
 
 Дефолты транслятора (константы):
 
-- `leastLoad`: `expected` = 3, `tolerance` = 300 ms, `interval` = `settings.basetime` (30 s), `max_rtt` — только если задан;
+- `leastLoad`: `expected` = 3, `interval` = `settings.basetime` (30 s); `max_rtt`/`fail_tolerance`/`baselines` — только если заданы;
 - `leastPing`: `interval` = `settings.basetime` (300 s);
-- `random`: `interval` = `basetime` (30 s), без `balance_interval`/`active_size` (устаревшие поля не задаются).
+- `random`: `interval` = `basetime` (30 s), `expected` = число участников.
 
-`strategy.settings` читаются только для `leastLoad`; неизвестные ключи и неверные типы — предупреждение (не ошибка).
+`strategy.settings` читаются только для `leastLoad`; `tolerance` — **доля неудач** 0..1 (→ `fail_tolerance`), `baselines` — массив длительностей. Неизвестные ключи и неверные типы — предупреждение (не ошибка).
 
 Дополнительно:
 
@@ -395,7 +395,7 @@ Instrumented / ручное:
 - Профиль **самодостаточен**: встроенные профили роутинга приложения и настройки группы для него не применяются (маршрутизация — из JSON).
 - Профиль **не участвует в цепочках** как хоп (аналог `fullconfig`/`xrayfullconfig`): это конфиг целиком. В будущем — опционально как финальный хоп.
 - **Пинг** профиля измеряется реальным ядром по его основному egress (`routing.final`, иначе первый outbound/группа) в отдельном тест-боксе; правила маршрутизации в тест-бокс не попадают (на dial не влияют), carrier-планы поднимаются перед пробой.
-- Балансировка — нативная группа `auto-selector`, расширенная в ядре (§6.3): `random` — случайный участник на соединение, `leastPing` — по RTT, `leastLoad` — по числу активных соединений; `fallbackTag` — реальный `fallback`. Ядро собирается патчем `patch_mobile_balancer.py`.
+- Балансировка — нативная группа `auto-selector` (§6.3): `leastLoad` воспроизводится её штатной логикой (ранг по джиттеру + случайный выбор из top-`expected`), к Xray-семантике добавляются патчем `patch_mobile_balancer.py` только `fallback` (`fallbackTag`) и `strategy: leastPing`.
 - `inbounds` игнорируются; пользовательские DNS-правила (`dns.rules`) — v2.
 - Xray-протоколы вне набора ядра — ошибка. Стандартные outbound'ы в v1 принимаются только в sing-box-форме `settings`; Xray-форма (`vnext`/`servers`/`streamSettings`) не конвертируется (Phase 3).
 
@@ -528,7 +528,7 @@ Offsite-профили тестируются как отдельный тест
 
 ### Устранение упрощений балансировки (A + B + C + D2)
 
-- **A.** `fallbackTag` — теперь реальная опция `fallback` группы в ядре: диал уходит в резервный outbound, когда ни один участник не годен. Больше не «последний участник».
-- **B.** `strategy.settings` читаются только для `leastLoad`; неизвестные ключи и неверные типы — предупреждение; убраны мёртвые `balance_interval`/`active_size`, а `random` подтверждён как per-connection.
-- **C.** Документация: точная таблица маппинга и метрики.
-- **D2.** Ядро (`throneproj/sing-box`) расширено патчем: `strategy: "leastLoad"` (наименьшее число активных соединений, тай-брейк — RTT-ранг) и `fallback`. Артефакты: `scripts/patch_mobile_balancer.py`, `core-patches/singbox/balancer_least_load.go`; шаг добавлен в `.github/actions/throne-core` (и в ключ кэша).
+- **A.** `fallbackTag` — реальная опция `fallback` группы в ядре: диал уходит в резервный outbound, когда ни один участник не годен.
+- **B.** `strategy.settings` читаются для `leastLoad` (`expected`, `maxRTT`, `tolerance` как доля неудач, `basetime`, `baselines`); неизвестные ключи и неверные типы — предупреждение. Убраны мёртвые `balance_interval`/`active_size`.
+- **C.** Документация: точная таблица маппинга.
+- **D2.** Сверено с исходником Xray `strategy_leastload.go`: leastLoad — это **джиттер-ранг** здоровых узлов + случайный выбор из top-`expected`, а **не** метрика трафика. Форк уже ранжирует именно так (`autoselector_health.go`), и `baselines`/`max_rtt`/`fail_tolerance` у него есть, поэтому `leastLoad` — чисто конфиг (без новой стратегии). Патч ядра (`core-patches/singbox/balancer_strategy.go`) добавляет только `fallback` и `strategy: "leastPing"` (сортировка по средней RTT); есть Go-тест `sortNodes`. Ранняя версия с учётом числа соединений удалена как неверная.

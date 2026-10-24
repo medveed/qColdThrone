@@ -40,7 +40,6 @@ object OffsiteTranslator {
     private const val DEFAULT_EXPECTED = 3
     private const val DEFAULT_LEAST_PING_BASETIME = 300
     private const val DEFAULT_LEAST_LOAD_BASETIME = 30
-    private const val DEFAULT_LEAST_LOAD_TOLERANCE = 300
     private const val DEFAULT_RANDOM_BASETIME = 30
 
     private val DURATION = Regex("^(\\d+)(ms|s|m|h)?$", RegexOption.IGNORE_CASE)
@@ -287,9 +286,12 @@ object OffsiteTranslator {
     }
 
     /**
-     * §6.3: an Xray balancer as a native `auto-selector`. `leastPing` is its ranked pick (the default),
-     * `random` maps to per-connection balancing, `leastLoad` to the core's least-load strategy, and
-     * `fallbackTag` to the core's `fallback` option. Only `leastLoad`'s `strategy.settings` map onto the group.
+     * §6.3: an Xray balancer as a native `auto-selector`.
+     *
+     * `leastPing` ranks by average RTT (the new group `strategy`), `leastLoad` is Xray's jitter-ranked
+     * random pick over the top-`expected` members (`balance_mode: connection`), and `random` does the same
+     * over every healthy member. `maxRTT` gates on latency, `tolerance` is Xray's failure ratio
+     * (`fail_tolerance`), `baselines` are deviation cut-offs, `fallbackTag` becomes the `fallback` option.
      */
     private fun buildGroup(balancer: OffsiteBalancer, members: JsonArray, settings: GeneratorSettings): JsonObject {
         val strategy = balancer.strategy ?: "random"
@@ -300,19 +302,24 @@ object OffsiteTranslator {
             "url" to settings.testUrl,
         )
         when (strategy) {
-            "leastPing" -> group["interval"] =
-                "${settingsSeconds(balancer.settings, "basetime", DEFAULT_LEAST_PING_BASETIME)}s"
-            "leastLoad" -> {
-                group["strategy"] = "leastLoad"
-                group["expected"] = settingsInt(balancer.settings, "expected") ?: DEFAULT_EXPECTED
-                group["tolerance"] = settingsMillis(balancer.settings, "tolerance", DEFAULT_LEAST_LOAD_TOLERANCE)
-                group["interval"] = "${settingsSeconds(balancer.settings, "basetime", DEFAULT_LEAST_LOAD_BASETIME)}s"
-                settingsMillis(balancer.settings, "maxRTT", 0).takeIf { it > 0 }?.let { group["max_rtt"] = "${it}ms" }
+            "leastPing" -> {
+                group["strategy"] = "leastPing"
+                group["interval"] = "${settingsSeconds(balancer.settings, "basetime", DEFAULT_LEAST_PING_BASETIME)}s"
             }
-            // random (the Xray default): pick per dial, like Xray's random strategy.
+            "leastLoad" -> {
+                group["balance"] = true
+                group["balance_mode"] = "connection"
+                group["expected"] = settingsInt(balancer.settings, "expected") ?: DEFAULT_EXPECTED
+                settingsMillis(balancer.settings, "maxRTT", 0).takeIf { it > 0 }?.let { group["max_rtt"] = "${it}ms" }
+                settingsRatio(balancer.settings, "tolerance")?.let { group["fail_tolerance"] = it }
+                settingsBaselines(balancer.settings)?.let { group["baselines"] = it }
+                group["interval"] = "${settingsSeconds(balancer.settings, "basetime", DEFAULT_LEAST_LOAD_BASETIME)}s"
+            }
+            // random (the Xray default): a uniformly random healthy member, so every one stays qualified.
             else -> {
                 group["balance"] = true
                 group["balance_mode"] = "connection"
+                group["expected"] = maxOf(members.size, 1)
                 group["interval"] = "${settingsSeconds(balancer.settings, "basetime", DEFAULT_RANDOM_BASETIME)}s"
             }
         }
@@ -448,6 +455,24 @@ object OffsiteTranslator {
         !obj.contains(key) -> emptyList()
         obj.isArray(key) -> obj.array(key).map { JsonValues.variantToString(it) }.filter { it.isNotEmpty() }
         else -> listOf(JsonValues.variantToString(obj[key])).filter { it.isNotEmpty() }
+    }
+
+    /** A 0..1 ratio (`tolerance` is a failure ratio in Xray leastLoad); null when absent or out of range. */
+    private fun settingsRatio(settings: JsonObject, key: String): Double? {
+        val value = settings[key] ?: return null
+        val ratio = when (value) {
+            is Double -> value
+            is Long -> value.toDouble()
+            is String -> value.trim().toDoubleOrNull()
+            else -> null
+        } ?: return null
+        return ratio.takeIf { it > 0.0 && it <= 1.0 }
+    }
+
+    /** `baselines` (Xray durations, passed through unchanged): RTT-deviation cut-offs for the qualified set. */
+    private fun settingsBaselines(settings: JsonObject): JsonArray? {
+        val array = settings["baselines"] as? JsonArray ?: return null
+        return array.takeIf { it.isNotEmpty() }
     }
 
     private fun settingsInt(settings: JsonObject, key: String): Int? {

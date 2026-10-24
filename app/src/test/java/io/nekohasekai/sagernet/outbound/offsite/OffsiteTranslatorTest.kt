@@ -100,6 +100,7 @@ class OffsiteTranslatorTest {
         val translation = translate()
         val group = translation.outbounds.filterIsInstance<JsonObject>().first { it.string("tag") == "auto" }
         assertEquals("auto-selector", group.string("type"))
+        assertEquals("leastPing", group.string("strategy"))
         assertEquals(GeneratorSettings().testUrl, group.string("url"))
         assertEquals("300s", group.string("interval"))
         assertEquals(listOf("wdtt-1", "wdtt-2"), group.array("outbounds").strings())
@@ -111,12 +112,12 @@ class OffsiteTranslatorTest {
     }
 
     @Test
-    fun leastLoadBalancerUsesTheCoreLeastLoadStrategyAndItsSettings() {
+    fun leastLoadBalancerUsesTheCoreLeastLoadSemantics() {
         val doc = OffsiteConfigParser.parse(
             """
             {"outbounds":[{"tag":"a","protocol":"freedom"},{"tag":"b","protocol":"freedom"}],
              "routing":{"balancers":[{"tag":"auto","selector":["a","b"],
-               "strategy":{"type":"leastLoad","settings":{"expected":2,"maxRTT":500,"tolerance":100,"basetime":45}}}]}}
+               "strategy":{"type":"leastLoad","settings":{"expected":2,"maxRTT":500,"tolerance":0.5,"basetime":45,"baselines":["100ms","300ms"]}}}]}}
             """.trimIndent(),
         ).document!!
         val translation = OffsiteTranslator.translate(
@@ -125,15 +126,19 @@ class OffsiteTranslatorTest {
         )
         val group = translation.outbounds.filterIsInstance<JsonObject>().first { it.string("tag") == "auto" }
         assertEquals("auto-selector", group.string("type"))
-        assertEquals("leastLoad", group.string("strategy"))
+        // Xray leastLoad = a random pick over the top-`expected` healthy members (jitter-ranked by the core).
+        assertTrue(group.bool("balance"))
+        assertEquals("connection", group.string("balance_mode"))
         assertEquals(2, group.int("expected"))
-        assertEquals(100, group.int("tolerance"))
         assertEquals("500ms", group.string("max_rtt"))
+        // Xray leastLoad `tolerance` is a failure ratio, not milliseconds.
+        assertEquals(0.5, group.double("fail_tolerance"), 0.0)
         assertEquals("45s", group.string("interval"))
+        assertEquals(listOf("100ms", "300ms"), group.array("baselines").strings())
     }
 
     @Test
-    fun randomBalancerBalancesPerConnection() {
+    fun randomBalancerBalancesPerConnectionOverEveryMember() {
         val doc = OffsiteConfigParser.parse(
             """
             {"outbounds":[{"tag":"a","protocol":"freedom"},{"tag":"b","protocol":"freedom"}],
@@ -148,7 +153,10 @@ class OffsiteTranslatorTest {
         assertEquals("auto-selector", group.string("type"))
         assertTrue(group.bool("balance"))
         assertEquals("connection", group.string("balance_mode"))
+        // expected = member count keeps every healthy member qualified (a uniformly random pick).
+        assertEquals(2, group.int("expected"))
         assertTrue(!group.contains("balance_interval"))
+        assertTrue(!group.contains("strategy"))
     }
 
     @Test

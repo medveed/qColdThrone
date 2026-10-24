@@ -327,13 +327,15 @@ offsite-протоколов, правил и балансировщиков.
 
 | Xray | Реализация ядра | Точность |
 |---|---|---|
-| `leastPing` | `auto-selector` (ранжирование по RTT) | эквивалент |
-| `random` | `auto-selector` + `balance_mode: connection` | эквивалент: случайный годный участник на соединение |
-| `leastLoad` | `auto-selector` + `strategy: leastLoad` | эквивалент по смыслу: **число активных соединений** участника (не байты) |
+| `leastPing` | `strategy: leastPing` — сортировка по **средней RTT**, выбирается лучший | эквивалент |
+| `random` | `balance: true`, `balance_mode: connection`, `expected` = число участников | эквивалент: случайный живой участник на соединение |
+| `leastLoad` | `balance: true`, `balance_mode: connection`, `expected`, `max_rtt`, `fail_tolerance`, `baselines` | эквивалент: ранжирование по **джиттеру (deviation)**, затем по средней RTT; выбирается случайный из top-`expected` |
 | нет `strategy` | как `random` | — |
 | `fallbackTag` | опция `fallback` группы | реальный резерв: диал идёт в него, когда нет ни одного годного участника |
 
-`tolerance` у `leastLoad` — «липкость» выбора (насколько новый лидер должен обойти текущего), а не RTT-полоса.
+`strategy.settings` (только для `leastLoad`): `expected` (сколько лучших держать), `maxRTT` (мс, порог задержки),
+`tolerance` (**доля неудач** 0..1 → `fail_tolerance`), `basetime` (интервал опроса), `baselines` (порог отклонения).
+
 Группы не могут быть звеном цепочки (как и раньше).
 
 ---
