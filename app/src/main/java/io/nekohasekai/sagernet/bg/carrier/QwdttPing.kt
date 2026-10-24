@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withContext
 
 /**
@@ -23,8 +25,13 @@ object QwdttPing {
     private val result = Regex("^PING_RESULT\\|([0-9]{1,9})$")
 
     suspend fun measure(profileId: Long, profile: NativeCarrier, timeoutMs: Long): Outcome = withContext(Dispatchers.IO) {
-        // Automatic hashes come from VK over blocking calls (and may wait for a sign-in); a stop must interrupt them.
-        val plan = runInterruptible { CarrierPlan.qwdtt(profileId, profile) }
+        // Automatic hashes come from VK over blocking calls: a stop interrupts them, the ping's deadline bounds them,
+        // and a ping never waits for a sign-in.
+        val plan = try {
+            withTimeout(timeoutMs) { runInterruptible { CarrierPlan.qwdtt(profileId, profile, interactive = false) } }
+        } catch (_: TimeoutCancellationException) {
+            return@withContext Outcome(0, "VK не выдал хеши звонков вовремя")
+        }
         val json = JsonInput.parseObject(
             NativeSessionPolicy.probeConfig(CarrierKind.QWDTT, plan.privateJson, interactive = false, latencyProbe = true)).also { config ->
             // The handshake is DTLS; the RAW port speaks without it. The original app pings the DTLS port in every mode.

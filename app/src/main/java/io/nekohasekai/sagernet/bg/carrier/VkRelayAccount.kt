@@ -164,14 +164,15 @@ object VkRelayAccount {
         }
         return null
     }
-    fun tokenForCalls(): String = synchronized(hashCreationLock) {
+    fun tokenForCalls(interactive: Boolean=true): String = synchronized(hashCreationLock) {
         val session=read()
         check(session.optString("authClient")=="qwdtt-account-turn") { "Перепривяжите аккаунт VK" }
-        tokenForCalls(session).also { check(it.isNotBlank()) { "Откройте привязку VK для подтверждения входа" } }
+        tokenForCalls(session, interactive).also { check(it.isNotBlank()) { "Откройте привязку VK для подтверждения входа" } }
     }
-    private fun tokenForCalls(session: JSONObject): String = VkRelayOAuth.obtainToken(
+    // Without [interactive] an expired session fails at once instead of waiting for a sign-in nobody sees (a ping).
+    private fun tokenForCalls(session: JSONObject, interactive: Boolean=true): String = VkRelayOAuth.obtainToken(
         session.optString("token"),session.optLong("expires"),System.currentTimeMillis(),
-        { refreshToken(session) }, { VkTokenRequest.obtain()?.let { (token,expires) ->
+        { refreshToken(session) }, { if(!interactive) null else VkTokenRequest.obtain()?.let { (token,expires) ->
             session.put("token",token).put("expires",if(expires>0) System.currentTimeMillis()+expires*1000 else Long.MAX_VALUE)
             writeCurrent(session)
             token
@@ -206,14 +207,14 @@ object VkRelayAccount {
         writeCurrent(session)
         unfinished
     }
-    fun hashes(count: Int): List<String> {
+    fun hashes(count: Int, interactive: Boolean=true): List<String> {
       synchronized(hashCreationLock) {
         require(count in 1..MAX_HASHES)
         val session = read()
         check(session.optString("authClient") == "qwdtt-account-turn") { "Перепривяжите аккаунт VK: способ авторизации обновлён" }
         val cached = session.optJSONArray("hashes")
         if(cached != null && cached.length() >= count) return (0 until count).map { cached.getString(it) }
-        var token = tokenForCalls(session)
+        var token = tokenForCalls(session, interactive)
         check(token.isNotBlank()) { "Откройте привязку VK для подтверждения входа" }
         check(session.optLong("retryAfter") <= System.currentTimeMillis()) { "VK ограничил запросы. Повторите позже или используйте ручные хеши" }
         val hashes = mutableListOf<String>()
@@ -234,7 +235,7 @@ object VkRelayAccount {
                 writeCurrent(session)
                 if(code in listOf(4,5,27,28) && !refreshedToken) {
                     refreshedToken=true
-                    token=tokenForCalls(session)
+                    token=tokenForCalls(session, interactive)
                     check(token.isNotBlank()) { "Откройте привязку VK для подтверждения входа" }
                     continue
                 }
