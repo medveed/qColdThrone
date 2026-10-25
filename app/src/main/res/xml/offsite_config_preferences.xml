@@ -13,6 +13,12 @@
         app:selectable="false"
         app:title="@string/offsite_config_summary_title" />
 
+    <Preference
+        app:icon="@drawable/ic_baseline_view_list_24"
+        app:key="offsiteContents"
+        app:persistent="false"
+        app:title="@string/offsite_config_contents" />
+
     <!-- No schema roots: the sing-box schema does not describe this document, so the editor checks syntax only. -->
     <moe.matsuri.nb4a.ui.EditConfigPreference
         app:icon="@drawable/ic_baseline_layers_24"

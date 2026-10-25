@@ -14,6 +14,7 @@ import app.qcoldthrone.mobile.SagerNet
 import app.qcoldthrone.mobile.aidl.ISagerNetService
 import app.qcoldthrone.mobile.aidl.ISagerNetServiceCallback
 import app.qcoldthrone.mobile.appwidget.Widgets
+import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorCore
 import app.qcoldthrone.mobile.bg.autoselector.AutoSelectorRuntime
 import app.qcoldthrone.mobile.bg.proto.DeferredRuleSets
 import app.qcoldthrone.mobile.bg.proto.LocalDnsFailedException
@@ -274,6 +275,23 @@ class BaseService {
         override fun autoSelectorRecheck() = AutoSelectorRuntime.recheck()
 
         override fun autoSelectorSelect(memberProfileId: Long) = AutoSelectorRuntime.select(memberProfileId)
+
+        /** An offsite JSON config's balancer group [tag], for the profile screen's live selection. */
+        override fun autoSelectorGroupSample(tag: String): String {
+            if (tag.isEmpty()) return ""
+            val box = data?.takeIf { it.state.connected }?.proxy?.boxOrNull ?: return ""
+            return try {
+                val sample = AutoSelectorCore(box, tag).sample() ?: return ""
+                jsonObjectOf(
+                    "selected" to sample.selectedTag,
+                    "pinned" to sample.pinnedTag,
+                    "phase" to sample.phase,
+                    "balance" to sample.balance,
+                ).toCompact()
+            } catch (e: Throwable) {
+                ""
+            }
+        }
 
         fun stateChanged(s: State, msg: String?) = launch {
             val profileName = profileName

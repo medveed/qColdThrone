@@ -24,4 +24,8 @@ interface ISagerNetService {
   String autoSelectorStatus(boolean withMembers);
   void autoSelectorRecheck();
   void autoSelectorSelect(long memberProfileId);
+
+  // The running core's outbound group [tag] (an offsite JSON config's balancer) as JSON
+  // {"selected":"<member tag>","pinned":"","phase":"ready","balance":false}, or "" when it is not running it.
+  String autoSelectorGroupSample(String tag);
 }

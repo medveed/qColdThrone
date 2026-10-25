@@ -179,6 +179,17 @@
     <string name="offsite_config_warning">Warning</string>
     <string name="offsite_config_issue_path">%1$s: %2$s</string>
     <string name="offsite_config_issue_line">%1$s: %2$s</string>
+    <string name="offsite_config_contents">Contents</string>
+    <string name="offsite_config_contents_title">Config contents</string>
+    <string name="offsite_config_contents_default_exit">Default exit: %1$s</string>
+    <string name="offsite_config_contents_used">selected</string>
+    <string name="offsite_config_contents_outbounds">Outbounds</string>
+    <string name="offsite_config_contents_balancers">Balancers</string>
+    <string name="offsite_config_contents_kind_offsite">offsite</string>
+    <string name="offsite_config_contents_kind_endpoint">endpoint</string>
+    <string name="offsite_config_contents_kind_standard">sing-box</string>
+    <string name="offsite_config_contents_fallback">fallback: %1$s</string>
+    <string name="offsite_config_contents_now">now: %1$s</string>
     <string name="chain_settings">Chain settings</string>
     <string name="circular_reference">Circular reference</string>
     <string name="circular_reference_sum">The route cannot contain itself.</string>
